@@ -1,0 +1,15 @@
+[furplag.github.io]
+name=https://raw.github.com/furplag/archive
+baseurl=https://raw.githubusercontent.com/furplag/archive/rpm/el7/x86_64
+skip_if_unavailable=1
+enabled=0
+gpgcheck=1
+gpgkey=https://raw.githubusercontent.com/furplag/archive/rpm/RPM-GPG-KEY-furplag.github.io
+
+[furplag.github.io-source]
+name=https://raw.github.com/furplag/archive
+baseurl=https://raw.githubusercontent.com/furplag/archive/rpm/el7/SRPMS
+skip_if_unavailable=1
+enabled=0
+gpgcheck=1
+gpgkey=https://raw.githubusercontent.com/furplag/archive/rpm/RPM-GPG-KEY-furplag.github.io
