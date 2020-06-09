@@ -33,5 +33,5 @@
 # affected after reboot .
 ```
 
-### Minimal (CUI) to (GUI)
+### Minimal (CUI) to Desktop (GUI)
 [WIP]
