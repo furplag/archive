@@ -1,0 +1,8 @@
+# Other
+.project
+*.log
+*.swp
+*.bak
+.data
+.db
+logs
