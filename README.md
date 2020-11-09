@@ -1,4 +1,4 @@
-# RHEL, Cent OS
+# RHEL, CentOS
 
 ## Using RPM repository
 
