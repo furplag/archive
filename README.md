@@ -37,7 +37,7 @@ _EOT_
 ### install packages .
 ```using.repo.sh
 # DNF
-[root@gte el8]# dnf install [ package name (s) ] --enablerepo=furplag.github.io
+[root@gte el8]# dnf install [ package name (s) ] --disablerepo=AppStream --enablerepo=furplag.github.io
 
 # YUM
 [root@gte el8]# yum install [ package name (s) ] --enablerepo=furplag.github.io
