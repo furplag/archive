@@ -7,5 +7,5 @@
 
 ## Getting start
 + [install OpenJDK 8](install.jdk.8.md) .
-+ [install OpenJDK 11](install.jdk.11.md)
-+ [install OpenJDK 16](install.jdk.16.md)
++ [install OpenJDK 11](install.jdk.11.md) .
++ [install OpenJDK 16](install.jdk.16.md) .
