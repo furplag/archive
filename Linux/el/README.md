@@ -1,4 +1,4 @@
-# RHEL, Cent OS
+# RHEL, Cent OS, Oracle Linux
 
 ## General Setting
 
