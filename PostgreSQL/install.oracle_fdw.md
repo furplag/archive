@@ -27,7 +27,7 @@ _EOT_
 [root@gte8 ~]# su - postgres
 [postgres@gte8 ~]$ initdb -E UTF8 --locale=C -A scram-sha-256 -W
 [postgres@gte8 ~]$ exit
-~~ Configure $PGDATA/postgresql.conf ~~
+# ~~ Configure $PGDATA/postgresql.conf ~~
 [root@gte8 ~]# systemctl start postgresql-13
 [root@gte8 ~]# createuser -U postgres -W -l -P -D -R -S ${ROLE:-"test"} 
 [root@gte8 ~]# createdb -U postgres -W -T template0 -E UTF8 -O ${ROLE:-"test"} ${DATABASE:-"test"}
@@ -46,7 +46,7 @@ _EOT_
 [root@gte8 ~]# source /etc/profile
 [root@gte8 ~]# ldconfig
 [root@gte8 ~]# mkdir -p $ORACLE_HOME/network/admin
-~~ put OCI Wallet files into $ORACLE_HOME/network/admin . ~~
+# ~~ put OCI Wallet files into $ORACLE_HOME/network/admin . ~~
 [root@gte8 ~]# sqlplus ${OCI_USER:-"test"}@${OCI_SID:-"test_high"}
 ```
 
