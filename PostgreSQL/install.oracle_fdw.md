@@ -54,7 +54,7 @@ _EOT_
 ```terminal.bash
 [root@gte8 ~]# curl -LO https://github.com/laurenz/oracle_fdw/archive/refs/tags/ORACLE_FDW_${ORACLE_FDW_VERSION:-"2_3_0"}.tar.gz
 [root@gte8 ~]# tar zxvf ORACLE_FDW_${ORACLE_FDW_VERSION:-"2_3_0"}.tar.gz -C /opt/.
-[root@gte8 ~]# cd /opt/oracle_fdw-ORACLE_FDW_${ORACLE_FDW_VERSION:-"2_3_0"}/
+[root@gte8 ~]# cd /opt/oracle_fdw-ORACLE_FDW_${ORACLE_FDW_VERSION:-"2_3_0"}
 [root@gte8 ~]# C_INCLUDE_PATH=/usr/include/oracle/21/client64 make
 [root@gte8 ~]# C_INCLUDE_PATH=/usr/include/oracle/21/client64 make install
 [root@gte8 ~]# systemctl start postgresql-13
