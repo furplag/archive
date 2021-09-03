@@ -1,6 +1,6 @@
 [furplag.github.io]
 name=https://github.com/furplag/archive/rpm
-baseurl=https://raw.githubusercontent.com/furplag/archive/rpm/el8/x86_64
+baseurl=https://raw.githubusercontent.com/furplag/archive/rpm/el8/RPMS
 skip_if_unavailable=1
 enabled=0
 gpgcheck=1
