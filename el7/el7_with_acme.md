@@ -25,14 +25,12 @@ yum install -y apr{,-util} httpd mod_{http2,md,ssl} --enablerepo=furplag.github.
 ```
 
 ### [mod_md](https://httpd.apache.org/docs/trunk/mod/mod_md.html) configuration
-* "STAGING" first .
-+ restart Apache twice .
+#### "STAGING" first .
 ```ssl.conf
 # example for "example.com" in /etc/httpd/conf.d/ssl.conf .
 
 <IfModule md_module>
   MDomain example.com admin.example.com www.example.com
-# MDCertificateAuthority https://acme-v02.api.letsencrypt.org/directory
   MDCertificateAuthority https://acme-staging-v02.api.letsencrypt.org/directory
   MDCertificateAgreement accepted
 </IfModule>
@@ -48,3 +46,24 @@ yum install -y apr{,-util} httpd mod_{http2,md,ssl} --enablerepo=furplag.github.
   ...
 </VirtualHost>
 ```
+
+#### ( re ) start Apache twice .
+restart after appearing message in error_log .
+```terminal.sh
+[md:notice] [pid xxxxx:tid xxxxx] AH10059: The Managed Domain example.com has been setup and changes will be activated on next (graceful) server restart.
+```
+
+#### Swith staging certificate to production .
+
+```ssl.conf
+<IfModule md_module>
+  MDomain example.com admin.example.com www.example.com
+# MDCertificateAuthority https://acme-staging-v02.api.letsencrypt.org/directory
+  MDCertificateAgreement accepted
+</IfModule>
+```
+
+and remove "staging" challenges .
+`rm -rf /var/lib/httpd/md/staging`
+
+and restart Apache .
