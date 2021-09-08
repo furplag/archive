@@ -63,6 +63,18 @@ restart after appearing message in error_log .
 </IfModule>
 ```
 
+enable /md-status
+```server-status.conf
+<IfModule md_module>
+  <Location /md-status>
+    SetHandler md-status
+    <RequireAny>
+      Require ip 127.0.0.1
+    </RequireAny>
+  </Location>
+</IfModule>
+```
+
 and remove "staging" challenges .
 `rm -rf /var/lib/httpd/md/staging`
 
