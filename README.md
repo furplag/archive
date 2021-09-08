@@ -8,7 +8,8 @@
 [root@gte-el8 ~]# dnf config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el8.repo
 
 # YUM
-[root@lte-el6 ~]# yum-config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.[el6/el7/el8].repo
+[root@el7 ~]# yum-config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el7.repo
+[root@el6 ~]# yum-config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el6.repo
 ```
 
 or, 
