@@ -28,8 +28,11 @@ yum install -y apr{,-util} httpd mod_{http2,md,ssl} --enablerepo=furplag.github.
 #### "STAGING" first .
 ```ssl.conf
 # example for "example.com" in /etc/httpd/conf.d/ssl.conf .
-
+<IfModule !md_module>
+  Protocols h2 http/1.1
+</IfModule>
 <IfModule md_module>
+  Protocols h2 http/1.1 acme-tls/1
   MDomain example.com admin.example.com www.example.com
   MDCertificateAuthority https://acme-staging-v02.api.letsencrypt.org/directory
   MDCertificateAgreement accepted
