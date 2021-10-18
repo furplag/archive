@@ -43,6 +43,30 @@ if ! declare -p assign_public_ip >/dev/null 2>&1; then declare -i assign_public_
 if ! declare -p not_assign_private_dns_record >/dev/null 2>&1; then declare -i not_assign_private_dns_record=1; fi
 
 # [WIP]
+echo "name=[${name}]";
+echo "basedir=[${basedir}]";
+
+# variable ( required )
+echo "compartment_id=[${compartment_id}]";
+echo "availability_domain=[${availability_domain}]";
+echo "subnet_id=[${subnet_id}]";
+echo "image_id=[${image_id}]";
+echo "display_name=[${display_name}]";
+
+echo "ssh_authorized_keys_file=[${ssh_authorized_keys_file}]";
+
+# variable ( optional )
+echo "shape=[${shape}]";
+echo "private_ip=[${private_ip}]";
+echo "availability_config=[${availability_config}]";
+echo "instance_options=[${instance_options}]";
+echo "shape_config=[${shape_config}]";
+
+# variable ( flag: true if specified and the value is 0 )
+echo "assign_public_ip=[${assign_public_ip}]";
+echo "not_assign_private_dns_record=[${not_assign_private_dns_record}]";
+
+cat <<_EOT_
 oci compute instance launch \
  --compartment-id "${compartment_id}" \
  --availability-domain "${availability_domain}" \
@@ -57,4 +81,5 @@ oci compute instance launch \
  --instance-options "${instance_options}" \
  --shape_config "${shape_config}" \
  --ssh-authorized-keys-file "${ssh_authorized_keys_file}";
-
+_EOT_
+;
