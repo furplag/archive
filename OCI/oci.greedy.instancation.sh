@@ -21,7 +21,7 @@ if ! declare -p name >/dev/null 2>&1; then declare -r name=`basename ${0:-}`; fi
 if ! declare -p basedir >/dev/null 2>&1; then declare -r basedir=$(cd $(dirname $0); pwd); fi
 
 # variable ( required )
-if ! declare -p compartment_id >/dev/null 2>&1; then declare -r compartment-id=; fi
+if ! declare -p compartment_id >/dev/null 2>&1; then declare -r compartment_id=; fi
 if ! declare -p availability_domain >/dev/null 2>&1; then declare -r availability_domain=; fi
 if ! declare -p subnet_id >/dev/null 2>&1; then declare -r subnet_id=; fi
 if ! declare -p image_id >/dev/null 2>&1; then declare image_id=; fi
