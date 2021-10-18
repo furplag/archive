@@ -8,6 +8,7 @@ export LC_ALL=C
 if ! declare -p jdk_root >/dev/null 2>&1; then declare -r jdk_root=/opt/java; fi
 if ! declare -p source_url >/dev/null 2>&1; then
   declare -r source_url=https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17%2B35/OpenJDK17-jdk_aarch64_linux_hotspot_17_35.tar.gz;
+#  declare -r source_url=https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17%2B35/OpenJDK17-jdk_x64_linux_hotspot_17_35.tar.gz;
 fi
 if ! declare -p priority >/dev/null 2>&1; then declare -r priority=17035; fi
 # declare -r source="${jdk_root}/$(echo "${source_url}" | sed -e 's@^\.*\/@@')";
