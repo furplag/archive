@@ -296,7 +296,15 @@ if [[ $((${config[set_env]:-1})) -eq 0 ]]; then
 export JAVA_HOME=\$(readlink /etc/alternatives/java | sed -e 's/\/bin\/java//g')
 
 _EOT_
-source /etc/profile.d/java.sh
+  if [[ $((${config[maven]:-1})) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
+    cat <<_EOT_>> /etc/profile.d/java.sh
+# Set Environment with alternatives for Maven.
+export MAVEN_HOME=\$(readlink /etc/alternatives/mvn | sed -e 's/\/bin\/mvn//g')
+export M2_HOME=\${MAVEN_HOME}
+
+_EOT_
+  fi
+  source /etc/profile.d/java.sh
 fi
 
 if [[ "${_basedir}/${_java_home}" = "${JAVA_HOME}" ]]; then
