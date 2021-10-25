@@ -73,7 +73,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [maven]=0
   [maven_url]='https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz'
 
-  [setenv]=0
+  [set_env]=0
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
 if ! declare -p log_errors >/dev/null 2>&1; then declare -ar log_errors=(ERROR FATAL); fi
@@ -288,7 +288,7 @@ fi
 alternatives --set java "${_basedir}/${_java_home}/bin/java"
 
 # environment
-if [[ $((${config[env]:-1})) -eq 0 ]]; then
+if [[ $((${config[set_env]:-1})) -eq 0 ]]; then
   cat <<_EOT_> /etc/profile.d/java.sh
 # /etc/profile.d/java.sh
 
