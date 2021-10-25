@@ -285,7 +285,6 @@ if [[ -n "${_alternatives}" ]]; then
   bash -c "${_alternatives}"
   if alternatives --display java | grep "${_basedir}/${_java_home}/bin/java" >/dev/null; then _log INFO "alternatives \"java\" successfully installed as \"${_version}\" ."; fi
 fi
-alternatives --set java "${_basedir}/${_java_home}/bin/java"
 
 # environment
 if [[ $((${config[set_env]:-1})) -eq 0 ]]; then
@@ -304,8 +303,8 @@ export M2_HOME=\${MAVEN_HOME}
 
 _EOT_
   fi
-  source /etc/profile.d/java.sh
-fi
+  alternatives --set java "${_basedir}/${_java_home}/bin/java" && source /etc/profile.d/java.sh
+else alternatives --set java "${_basedir}/${_java_home}/bin/java"; fi
 
 if [[ "${_basedir}/${_java_home}" = "${JAVA_HOME}" ]]; then
   _log SUCCESS "java \"${_basedir}/${_java_home}\" successfully installed ."
