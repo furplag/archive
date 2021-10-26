@@ -13,18 +13,15 @@ export LC_ALL=C
 # Overview
 # 1. Requirement
 #      all commands need you are "root" or you listed in "wheel"
-# 2. parameter (declare before execute, using defaults if undefined )
-#      jdk_root: path to install JDK ( default: /opt/java ) .
-#      source_url: using latest LTS JDK in Adoptium to default .
-# 3. usage
-#    A. cat ./jdk.binary.install.sh | bash
-#    B. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash
+# 2. usage
+#    A. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash
+#    B. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash -s -- \
+#       https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 #    C. cat <<_EOT_| bash
-#       declare -r jdk_root=/usr/local/java
-#       declare -r source_url=https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.12%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.12_7.tar.gz'
-#
+#       declare -r basedir=/usr/java
 #       source <(curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh)
 #       _EOT_
+#    D. jdk.binary.install.sh ./jdk.# custom configuration for your own .
 
 ###
 # utilities
@@ -36,9 +33,16 @@ export LC_ALL=C
 # - combine consecutive spaces to one space .
 # - then returns trimmed text .
 #
-# returns single lineared string
+# returns single-lineared string
 function linearize(){ echo -e "${1:-}" | sed -z -e 's/[\r\n]\+//g' -e 's/\s\+/ /g' -e 's/^\s\+\|\s\+$//g'; }
 
+###
+# sanitizing url and path .
+# - combine consecutive slashes to one .
+# - remove trailing slash .
+# - relative paths convert to absolute one .
+#
+# returns sanitized string
 function sanitize() {
   local -r _path="$(linearize "${1:-}" | sed -e 's/\s/\//g' -e 's/\/\+/\//g' -e 's/\/$//')"
   echo "$(
@@ -48,7 +52,9 @@ function sanitize() {
   )"
 }
 
-### variable
+###
+# variable
+#
 # statics
 if ! declare -p name >/dev/null 2>&1; then declare -r name='jdk.binary.install'; fi
 if ! declare -p basedir >/dev/null 2>&1; then declare -r basedir='/opt/java'; fi
@@ -62,11 +68,11 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [workdir]="${workdir:-}"
   [configuration_file]="${configuration_file:-}"
 
-  [logging]=0
+  [logging]=1
   [log_dir]="${log_dir:-}"
   [log]="${log:-}"
   [log_console]=0
-  [debug]=0
+  [debug]=1
 
   [url]="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17+35/OpenJDK17-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_17_35.tar.gz"
 
@@ -92,16 +98,16 @@ if ! declare -p result >/dev/null 2>&1; then declare -i result=0; fi
 ###
 # argument
 #
-
 # 1: source url
 config[url]="$(_1="$(linearize "${1:-}")"; if [[ "${_1}" == '' ]]; then echo "${config[url]}"; else echo "${_1:-}"; fi)"
 
 ###
-# functionsee
+# functions
 #
 
 ###
 # _log: simply logging
+#
 # usase: _log [level] [message]
 # Note: no output any "debug" calls under mod_md processing, even if debug=0 .
 function _log(){
@@ -128,7 +134,9 @@ function _log(){
   return 0
 }
 
-### processing
+###
+# processing
+#
 # read configuration
 if [[ " ${config[@]} " =~ ' initialized ' ]]; then :;
 elif ! curl --version >/dev/null 2>&1; then _log FATAL "enable to command \"curl\" first"; result=1
@@ -161,13 +169,13 @@ elif [[ ! -d "${_workdir}" ]]; then mkdir -p "${_workdir}"; fi
 
 declare -r _url="$(sanitize "${config[url]}")"
 declare -r _source="$(_name="${_url##*/}"; echo "${_name:-`date +"%Y%m%d"`.downloadsource}")"
-if echo "${_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then echo _log ERROR "$(cat <<_EOT_
-
-should better use the command below to install,
-dnf install "${_source}"
-_EOT_
-)"
-result=1
+if echo "${_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then
+  _log ERROR "should better use the command below to install,"
+  _log ERROR ''
+  _log ERROR "$(if dnf --version >/dev/null 2>&1; then echo 'dnf'; else echo 'yum'; fi) install \\"
+  _log ERROR "  ${_url}"
+  _log ERROR ''
+  result=1
 fi
 
 _log debug "_basedir=[${_basedir}]"
@@ -177,6 +185,7 @@ _log debug "_source=[${_source}]"
 
 if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
 
+# install JDK
 if [[ -f "${_workdir}/${_source}" ]]; then _log IGNORE "JDK binary already exists at \"${_workdir}${_source}\" ."
 elif echo "${_url}" | grep -E '^https?' >/dev/null 2>&1; then _log INFO "downloading JDK binary from \"${_url}\" ..."; curl -fL "${_url}" -o "${_workdir}/${_source}"
 elif [[ -f "${_url}" ]]; then _log INFO "copying JDK binary from \"${_url}\" ..."; cp -p "${_url}" "${_workdir}/${_source}"; fi
@@ -195,6 +204,7 @@ if ! "${_basedir}/${_java_home}/bin/java" -version >/dev/null 2>&1; then _log ER
 else _log INFO "java: \"${_basedir}/${_java_home}/bin/java\" installed ."; fi
 if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
 
+# install Maven
 declare _maven_home=
 if [[ $((${config[maven]:-1})) -eq 0 ]]; then
   declare -r _maven_url="$(sanitize "${config[maven_url]}")"
@@ -204,18 +214,18 @@ if [[ $((${config[maven]:-1})) -eq 0 ]]; then
     result=1
   else
     declare -r _maven_source="$(_name="${_maven_url##*/}"; echo "${_name:-`date +"%Y%m%d"`.downloadsource}")"
-    if echo "${_maven_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then echo _log ERROR "$(cat <<_EOT_
-
-should better use the command below to install,
-dnf install "${_maven_source}"
-_EOT_
-)"
-    result=1
+    if echo "${_maven_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then
+      _log ERROR "should better use the command below to install,"
+      _log ERROR ''
+      _log ERROR "$(if dnf --version >/dev/null 2>&1; then echo 'dnf'; else echo 'yum'; fi) install \\"
+      _log ERROR "  ${_maven_url}"
+      _log ERROR ''
+      result=1
     elif [[ -f "${_workdir}/${_maven_source}" ]]; then _log IGNORE "Maven binary already exists at \"${_workdir}/${_maven_source}\" ."
     elif echo "${_maven_url}" | grep -E '^https?' >/dev/null 2>&1; then _log INFO "downloading Maven binary from \"${_maven_url}\" ..."; curl -fL "${_maven_url}" -o "${_workdir}/${_maven_source}"
     elif [[ -f "${_maven_url}" ]]; then _log INFO "copying Maven binary from \"${_maven_url}\" ..."; cp -p "${_maven_url}" "${_workdir}/${_maven_source}"; fi
   fi
-_log debug "_maven_source=[${_workdir}/${_maven_source}]"
+  _log debug "_maven_source=[${_workdir}/${_maven_source}]"
 
   if [[ $(("${result:-1}")) -ne 0 ]]; then :;
   elif [[ ! -f "${_workdir}/${_maven_source}" ]]; then _log ERROR "could not download Maven binary ."; result=1
@@ -236,6 +246,7 @@ _log debug "_maven_source=[${_workdir}/${_maven_source}]"
 fi
 if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
 
+# generate priority
 if [[ $((${config[debug]:-1})) -eq 0 ]]; then
   __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
   _log debug "version string: [$__v]"
@@ -254,13 +265,13 @@ if [[ $((${config[debug]:-1})) -eq 0 ]]; then
 fi
 
 declare -ir _version="$(_v="$(
-__v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
-_major_version="${__v//.*}"
-_minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//'; else echo '00'; fi)"
-_minor_version="$(if [[ $((${_minor_version})) -gt 99 ]]; then echo '99'; else echo $(("${_minor_version##0}")); fi)"
-_build_version="$(if echo "${__v}" | grep _ >/dev/null 2>&1; then echo "${__v//*_}" | sed -e 's/[^0-9]/0/gi'; else echo '00'; fi)"
-_build_version="$(if [[ $((${_build_version})) -gt 99 ]]; then echo '99'; else echo $(("${_build_version##0}")); fi)"
-echo "$(printf '%02d' "${_major_version:-00}")$(printf '%02d' "${_minor_version:-00}")$(printf '%02d' "${_build_version:-00}")"
+  __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
+  _major_version="${__v//.*}"
+  _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//'; else echo '00'; fi)"
+  _minor_version="$(if [[ $((${_minor_version})) -gt 99 ]]; then echo '99'; else echo $(("${_minor_version##0}")); fi)"
+  _build_version="$(if echo "${__v}" | grep _ >/dev/null 2>&1; then echo "${__v//*_}" | sed -e 's/[^0-9]/0/gi'; else echo '00'; fi)"
+  _build_version="$(if [[ $((${_build_version})) -gt 99 ]]; then echo '99'; else echo $(("${_build_version##0}")); fi)"
+  echo "$(printf '%02d' "${_major_version:-00}")$(printf '%02d' "${_minor_version:-00}")$(printf '%02d' "${_build_version:-00}")"
 )"; echo "${_v##0}")"
 _log debug "_version=[${_version}]"
 
@@ -295,7 +306,8 @@ if [[ $((${config[set_env]:-1})) -eq 0 ]]; then
 export JAVA_HOME=\$(readlink /etc/alternatives/java | sed -e 's/\/bin\/java//g')
 
 _EOT_
-  if [[ $((${config[maven]:-1})) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
+
+if [[ $((${config[maven]:-1})) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
     cat <<_EOT_>> /etc/profile.d/java.sh
 # Set Environment with alternatives for Maven.
 export MAVEN_HOME=\$(readlink /etc/alternatives/mvn | sed -e 's/\/bin\/mvn//g')
