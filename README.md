@@ -14,8 +14,8 @@
   - using Oracle Autonomous Database on Spring boot [WiP]
 
 - ### [PostgreSQL](./PostgreSQL)
-  - [install Oracle FDW](./PostgreSQL/install_oracle_fdw.md)
-  - [install MySQL FDW](./PostgreSQL/install_mysql_fdw.md)
+  - [install Oracle FDW](./PostgreSQL/install.oracle_fdw.md)
+  - [install MySQL FDW](./PostgreSQL/install.mysql_fdw.md)
 
 - ### [SSL Certificate with Let's Encrypt](./SSL/LetsEncrypt)
   - DNS challenge with Cloudflare on mod_md [WiP]
