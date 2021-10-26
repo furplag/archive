@@ -43,3 +43,6 @@ _EOT_
 # YUM
 [root@gte el8]# yum install [ package name (s) ] --enablerepo=furplag.github.io
 ```
+
+## License
+the work is licensed under a [APACHE LICENSE, VERSION 2.0](./LICENSE).
