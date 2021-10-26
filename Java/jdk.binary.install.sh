@@ -170,9 +170,9 @@ elif [[ ! -d "${_workdir}" ]]; then mkdir -p "${_workdir}"; fi
 declare -r _url="$(sanitize "${config[url]}")"
 declare -r _source="$(_name="${_url##*/}"; echo "${_name:-`date +"%Y%m%d"`.downloadsource}")"
 if echo "${_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then
-  _log ERROR "should better use the command below to install,"
+  _log ERROR "should better use the command below to install from RPM,"
   _log ERROR ''
-  _log ERROR "$(if dnf --version >/dev/null 2>&1; then echo 'dnf'; else echo 'yum'; fi) install \\"
+  _log ERROR "$(if dnf --version >/dev/null 2>&1; then echo 'dnf'; else echo 'yum'; fi) install \\\\"
   _log ERROR "  ${_url}"
   _log ERROR ''
   result=1
@@ -215,9 +215,9 @@ if [[ $((${config[maven]:-1})) -eq 0 ]]; then
   else
     declare -r _maven_source="$(_name="${_maven_url##*/}"; echo "${_name:-`date +"%Y%m%d"`.downloadsource}")"
     if echo "${_maven_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then
-      _log ERROR "should better use the command below to install,"
+      _log ERROR "should better use the command below to install Maven from RPM,"
       _log ERROR ''
-      _log ERROR "$(if dnf --version >/dev/null 2>&1; then echo 'dnf'; else echo 'yum'; fi) install \\"
+      _log ERROR "$(if dnf --version >/dev/null 2>&1; then echo 'dnf'; else echo 'yum'; fi) install \\\\"
       _log ERROR "  ${_maven_url}"
       _log ERROR ''
       result=1
