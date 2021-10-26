@@ -52,4 +52,4 @@ _EOT_
 [root@el8+ ~]# curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash
 ```
 
-and customize configuration for your own .
+and customize configuration [for your own](./jdk.binary.install.sh) .
