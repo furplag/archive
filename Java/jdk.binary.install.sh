@@ -74,8 +74,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [log_console]=0
   [debug]=1
 
-  [url]="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17+35/OpenJDK17-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_17_35.tar.gz"
-
+  [url]="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_17.0.1_12.tar.gz"
   [maven]=0
   [maven_url]='https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz'
 
@@ -265,7 +264,7 @@ if [[ $((${config[debug]:-1})) -eq 0 ]]; then
 fi
 
 declare -ir _version="$(_v="$(
-  __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
+  __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/i' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
   _major_version="${__v//.*}"
   _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//'; else echo '00'; fi)"
   _minor_version="$(if [[ $((${_minor_version})) -gt 99 ]]; then echo '99'; else echo $(("${_minor_version##0}")); fi)"

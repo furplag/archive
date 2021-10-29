@@ -6,10 +6,10 @@
 1. Set $JAVA_HOME ( relate to alternatives config ) .
 
 ## Getting start
-by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/jdk-xx . 
+by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/jdk-xx .
 
 ### requirement
-> unfortunately, only works on x64 and aarch64, currently . 
+> unfortunately, only works on x64 and aarch64, currently .
 * [ ] all commands need you are "root" or you listed in "wheel"
 * [ ] `curl` enabled ( package: curl )
 * [ ] `sed` enabled ( package: sed )
@@ -17,7 +17,7 @@ by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/j
 * [ ] `tee` enabled ( package: coreutils )
 
 #### using standard
-- install [Adoptium JDK 17+35](https://adoptium.net/)
+- install [Adoptium JDK 17.0.1+12](https://adoptium.net/)
 - install [Apache Maven 3.8.3](https://maven.apache.org/)
 - set alternatives `java`, some commands in "${JAVA_HOME}/bin/" and `mvn{,Debug}`
 - set environments "JAVA_HOME" and "M2_HOME" ( "MAVNE_HOME" )
@@ -28,7 +28,7 @@ by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/j
 #### custom install: JDK
 ```root.terminal.bash
 [root@el8+ ~]# curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash -s -- \
-               > https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz
+               > https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz
 ```
 
 #### custom install: JDK install directory
