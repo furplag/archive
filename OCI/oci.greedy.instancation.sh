@@ -1,6 +1,7 @@
 #!/bin/bash
 set -ue -o pipefail
-export LC_ALL=C
+export LC_ALL=${LC_ALL:-C.utf8}
+export LC_LANG=${LC_LANG:-C.utf8}
 
 # oci.greedy.instancation.sh
 # https://github.com/furplag/archive/OCI
