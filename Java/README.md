@@ -28,7 +28,7 @@ by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/j
 #### custom install: JDK
 ```root.terminal.bash
 [root@el8+ ~]# curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash -s -- \
-[root@el8+ ~]# https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz
+               > https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz
 ```
 
 #### custom install: JDK install directory
