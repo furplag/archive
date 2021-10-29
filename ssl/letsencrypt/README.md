@@ -46,19 +46,26 @@
 <details>
   <summary>C. can not edit DNS records, anyway</summary>
 
-  
-      I have an idea, you create SSL certificate in another place, and then copy them into the server . 
+    I have an idea, you create SSL certificate in another place, and then copy them into the server . 
   
 </details>
 
-make a wildcard certificate of the domain, and also includes itself .
-- nested subdomains walkthrough .
-- [access endpoint in Azure VM validly using the url of public DNS name, like a "https://vm.somewhere.cloudapp.azure.com"](./certbot.azure.dns.md) .
-- sharing SSL certs both webserver and database .
-- <details>
-  <summary>A. I'm sure that I was install python ( or any versioned ) .</summary>
-  here's a test .
-  <details>
+### wildcard certs with nested subdomains walkthrough .
+
+#### Overview
++ root domain, e. g. ) "web.workspace.everywhere" is a web service subscribable .
++ a tenant has subdomain, like "customer-one.web.workspace.everywhere" .
++ employee of tenants have personal workspace, which has a domain like "taro.customer-one.web.workspace.everywhere" .
+
+#### tried out
+```
+[WiP]
+```
+
+### [access endpoint in Azure VM validly using the url of public DNS name, like a "https://vm.somewhere.cloudapp.azure.com"](./certbot.azure.dns.md) .
+
+### sharing SSL certs both webserver and database .
+
 ## mod_md
 
 ### install mod_md on RHEL 7 ( [RPM](https://github.com/furplag/archive/tree/rpm/) ) ( external ) .
