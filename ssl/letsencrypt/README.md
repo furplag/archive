@@ -5,7 +5,7 @@
 ### using certbot under the server which without Public IP .
 
 <details>
-  <summary>A. enable to edit DNS records ( TXT ) </summary>
+  <summary>A. can edit DNS records ( TXT ) </summary>
   
   using [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge), e.g. )
   ```certbot.dns-challenge.manually.sh
@@ -18,7 +18,7 @@
 </details>
 
 <details>
-  <summary>B. enable to edit DNS records ( TXT ), and also API (CLI) callable </summary>
+  <summary>B. can edit DNS records ( TXT ), and also API (CLI) callable </summary>
   
   using [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) .
   1. create a script to add DNS record for validation ( auth-hook ) , which use the argument below,
