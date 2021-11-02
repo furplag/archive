@@ -206,6 +206,7 @@ if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
 # install Maven
 declare _maven_home=
 if [[ $((${config[maven]:-1})) -eq 0 ]]; then
+  [[ "${JAVA_HOME:-}" ]] || export JAVA_HOME="${_basedir}/${_java_home}"
   declare -r _maven_url="$(sanitize "${config[maven_url]}")"
   if [[ "${_maven_url}" = '' ]]; then :;
   elif [[ "$([[ -d "${_basedir}/maven" ]] || mkdir -p "${_basedir}/maven"; if [[ -d "${_basedir}/maven" ]]; then echo 'y'; else echo ''; fi)" = '' ]]; then
