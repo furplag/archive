@@ -147,7 +147,7 @@ else
   done
 fi
 
-for _required in basedir workdir source_url; do
+for _required in basedir workdir url; do
   [[ "$(echo config[$_required])" = '' ]] && _log ERROR "${_required} must not be empty" && result=1;
 done
 
