@@ -209,6 +209,8 @@ else
   elif getent passwd "${_user}" >/dev/null 2>&1; then _log IGNORE "user \"${_user}\" already exists ."
   elif useradd "${_user}" -d ${_basedir} >/dev/null 2>&1; then _log INFO "create user \"${_user}\" ( $(getent passwd "${_user}" | awk -F '[::]' '{print $3}') ) ."
   else _log ERROR "could not create user \"${_user}\" ."; result=1; fi
+
+  if [[ $(("${result:-1}")) -eq 0 ]]; then usermod -aG tty,${_group} ${_user}; fi
 fi
 
 if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
