@@ -313,7 +313,6 @@ ProtectControlGroups=true
 
 WorkingDirectory=${_basedir}/%i
 ExecStart=${_basedir}/%i/startup
-ExecReload=/bin/bash -c "screen -p 0 -S %i -X eval 'stuff \"reload\"\\015'"
 ExecStop=/bin/bash -c "waits=$(_i=${config[shutdown_delay_seconds]}; if [[ $((${_i:-0})) -lt 0 ]]; then echo '0'; else echo "${_i:-0}"; fi); while [[ \$((waits)) -gt 0 ]]; do screen -p 0 -S %i -X eval \"stuff 'say the world freezing, at least in \$waits sec ...'\\015\"; waits=\$((waits - 5)); sleep 5; done"
 ExecStop=/bin/bash -c "screen -p 0 -S %i -X eval 'stuff \"save-all\"\\015'"
 ExecStop=/bin/sleep 5
