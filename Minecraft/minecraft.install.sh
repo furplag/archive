@@ -214,6 +214,7 @@ else
 fi
 
 if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+for _d in "${_basedir}" "${_bindir}" "${_imagedir}" "${_basedir}/${_instance}"; do chown "${_user}:${_group}" "${_d}"; done
 
 # install Minecraft server JAR
 if [[ -f "${_imagedir}/${_source}" ]]; then _log IGNORE "server JAR already exists at \"${_imagedir}${_source}\" ."
@@ -301,17 +302,8 @@ Type=forking
 User=${_user}
 Group=${_group}
 
-PrivateUsers=true
-# Users Database is not available for within the unit, only root and minecraft is available, everybody else is nobody
-
 User=minecraft
 Group=minecraft
-
-ProtectSystem=full
-ProtectHome=true
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
 
 WorkingDirectory=${_basedir}/%i
 ExecStart=${_basedir}/%i/startup
