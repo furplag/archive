@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus
+After=network-online.target
+
+[Service]
+Type=simple
+
+WorkingDirectory=/opt/prometheus
+
+ExecStart=/opt/prometheus/prometheus --config.file=/etc/prometheus.yml
+ExecReload=/bin/kill -HUP
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
