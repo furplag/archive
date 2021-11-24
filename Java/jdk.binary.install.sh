@@ -76,7 +76,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
 
   [url]="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_17.0.1_12.tar.gz"
   [maven]=0
-  [maven_url]='https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz'
+  [maven_url]='https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz'
 
   [set_env]=0
 ); fi
