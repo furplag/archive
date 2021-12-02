@@ -34,18 +34,20 @@ document.addEventListener('adobe_dc_view_sdk.ready', () => {
         divId: viewerId,
         locale: locale,
       });
+
       adobeDCView.registerCallback(AdobeDC.View.Enum.CallbackType.GET_USER_PROFILE_API,
-         () => new Promise((resolve, reject) => {
-           resolve({ code: AdobeDC.View.Enum.ApiResponseCode.SUCCESS,
-             data: { userProfile: {
-               name: 'PDF editor via FURPLAG',
-               firstName: 'PDF editor',
-               lastName: 'via FURPLAG',
-               email: 'pdf.editor@furplag.jp',
-             }}
-           }).catch(error => console.error(error))
-         }), {}
-       );
+        () => new Promise((resolve, reject) => {
+          resolve({ code: AdobeDC.View.Enum.ApiResponseCode.SUCCESS,
+            data: { userProfile: {
+              name: 'PDF editor via FURPLAG',
+              firstName: 'PDF editor',
+              lastName: 'via FURPLAG',
+              email: 'pdf.editor@furplag.jp',
+            }}
+          }).catch(error => console.error(error))
+        }), {}
+      );
+
       const fileReader = new FileReader();
       fileReader.onloadend = (_event) => {
         adobeDCView.previewFile({
