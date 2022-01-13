@@ -12,7 +12,7 @@ yum-config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag
 yum install -y apr{,-util} httpd mod_{http2,md,ssl} --enablerepo=furplag.github.io
 ```
 
-### Rewuirement
+### Requirement
 * [x] http2_module
 * [x] md_module
 * [x] mpm_event_module
