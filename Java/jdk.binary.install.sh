@@ -12,7 +12,7 @@ export LC_ALL=C
 #
 # Overview
 # 1. Requirement
-#      all commands need you are "root" or you listed in "wheel"
+#    all commands need you are "root" or you listed in "wheel"
 # 2. usage
 #    A. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash
 #    B. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash -s -- \
@@ -21,7 +21,7 @@ export LC_ALL=C
 #       declare -r basedir=/usr/java
 #       source <(curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh)
 #       _EOT_
-#    D. jdk.binary.install.sh ./jdk.# custom configuration for your own .
+#    D. jdk.binary.install.sh.# custom configuration for your own .
 
 ###
 # utilities
@@ -185,7 +185,7 @@ _log debug "_source=[${_source}]"
 if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # install JDK
-if [[ -f "${_workdir}/${_source}" ]]; then _log IGNORE "JDK binary already exists at \"${_workdir}${_source}\" ."
+if [[ -f "${_workdir}/${_source}" ]]; then _log IGNORE "JDK binary already exists at \"${_workdir}/${_source}\" ."
 elif echo "${_url}" | grep -E '^https?' >/dev/null 2>&1; then _log INFO "downloading JDK binary from \"${_url}\" ..."; curl -fL "${_url}" -o "${_workdir}/${_source}"
 elif [[ -f "${_url}" ]]; then _log INFO "copying JDK binary from \"${_url}\" ..."; cp -p "${_url}" "${_workdir}/${_source}"; fi
 
