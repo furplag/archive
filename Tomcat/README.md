@@ -75,9 +75,10 @@ firewall-cmd --add-service=tomcat{x} --permanent && firewall-cmd --reload
 ## enable to remote access `/manager` ( take care security to your server )
 edit file `$TOMCAT_HOME/webapps/manager/META_INF/context.xml`
 ```context.xml
+<!-- only accepts to local accesses by default -->
   <Valve className="org.apache.catalina.valves.RemoteAddrValve"
          allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:0" />
-<!-- to -->
+<!-- append to -->
   <Valve className="org.apache.catalina.valves.RemoteAddrValve"
          allow="{access.enable.you.wants}|127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:0" />
 ```
