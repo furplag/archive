@@ -54,3 +54,26 @@ _EOT_
 ```
 
 and customize configuration [for your own](./tomcat.binary.install.sh) .
+
+## enable to remote access `/manager` ( take care security to your server )
+edit file `$TOMCAT_HOME/webapps/manager/META_INF/context.xml`
+```context.xml
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:0" />
+<!-- to -->
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="{access.enable.you.wants}|127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:0" />
+```
+
+## enable to Standalone SSL ( with APR )
+edit file `$TOMCAT_HOME/conf/server.xml`
+```server.xml
+  <Connector port="${connector.port}" protocol="org.apache.coyote.http11.Http11AprProtocol" maxThreads="150" SSLEnabled="true">
+    <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+      <SSLHostConfig>
+        <Certificate certificateKeyFile="{path.to.keyfile.your.server}" 
+                     certificateFile="{path.to.certfile.your.server}" 
+                     certificateChainFile="{path.to.chainfile.your.server}" type="RSA" /> 
+      </SSLHostConfig>
+  </Connector>
+```
