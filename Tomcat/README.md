@@ -55,6 +55,16 @@ _EOT_
 
 and customize configuration [for your own](./tomcat.binary.install.sh) .
 
+## Firewalld service
+```terminal.bash
+cat <<_EOT_> /etc/systemd/system/tomcat{x}.xml
+
+_EOT_
+```
+
+## add JVM parameter to setenv.sh
+> No, do not, write environment value 'JAVA_OPTS' or 'CATALINA_OPTS' in $TOMCAT_HOME/conf/tomcat{x}.conf .
+
 ## enable to remote access `/manager` ( take care security to your server )
 edit file `$TOMCAT_HOME/webapps/manager/META_INF/context.xml`
 ```context.xml
