@@ -58,8 +58,15 @@ and customize configuration [for your own](./tomcat.binary.install.sh) .
 ## Firewalld service
 ```terminal.bash
 cat <<_EOT_> /etc/systemd/system/tomcat{x}.xml
-
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Tomcat{x}</short>
+  <description>Apache Tomcat Web Application Container</description>
+  <port protocol="tcp" port="{connector.port}"/>
+  <port protocol="tcp" port="{connector.port.ajp.if.you.need.remote.proxy}"/>
+</service>
 _EOT_
+firewall-cmd --add-service=tomcat{x} --permanent && firewall-cmd --reload
 ```
 
 ## add JVM parameter to setenv.sh
