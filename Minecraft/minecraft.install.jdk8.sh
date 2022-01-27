@@ -66,7 +66,6 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [user]='minecraft'
 
   [url]="https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/175/downloads/paper-1.18.1-175.jar"
-  [jvm_memory]=2G
   [shutdown_delay_seconds]=30
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
@@ -131,7 +130,7 @@ function _log(){
 if [[ " ${config[@]} " =~ ' initialized ' ]]; then :;
 elif ! curl --version >/dev/null 2>&1; then _log FATAL "enable to command \"curl\" first"; result=1
 elif ! tee --version >/dev/null 2>&1; then _log FATAL "enable to command \"tee\" first"; result=1
-elif ! java -version >/dev/null 2>&1; then _log FATAL "install JDK ( 16 or later ) first"; result=1
+elif ! java -version >/dev/null 2>&1; then _log FATAL "install JDK 8 first"; result=1
 elif ! which screen >/dev/null 2>&1; then _log FATAL "enable to command \"screen\" first"; result=1
 elif [[ ! -f "${config[configuration_file]}" ]]; then _log IGNORE "configuration_file ( \"${config[configuration_file]}\" ) not found"
 else
@@ -240,8 +239,8 @@ export LC_ALL=C
 if ! declare -p instance_name >/dev/null 2>&1; then declare -r instance_name=; fi
 if ! declare -p server_jar_path >/dev/null 2>&1; then declare -r server_jar_path=; fi
 
-if ! declare -p server_xms >/dev/null 2>&1; then declare -r server_xms='${config[jvm_memory]:-4G}'; fi
-if ! declare -p server_xmx >/dev/null 2>&1; then declare -r server_xmx='${config[jvm_memory]:-4G}'; fi
+if ! declare -p server_xms >/dev/null 2>&1; then declare -r server_xms='512M'; fi
+if ! declare -p server_xmx >/dev/null 2>&1; then declare -r server_xmx='2G'; fi
 
 if ! declare -p result >/dev/null 2>&1; then declare -i result=0; fi
 

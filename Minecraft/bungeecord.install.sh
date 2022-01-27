@@ -3,7 +3,7 @@ set -ue -o pipefail
 export LC_ALL=C
 
 ###
-# minecraft.install.sh
+# bungeecord.install.sh
 # https://github.com/furplag/archive/Minecraft
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
@@ -42,13 +42,13 @@ function sanitize() {
 # variable
 #
 # statics
-if ! declare -p name >/dev/null 2>&1; then declare -r name='paper'; fi
-if ! declare -p basedir >/dev/null 2>&1; then declare -r basedir='/opt/minecraft'; fi
+if ! declare -p name >/dev/null 2>&1; then declare -r name='waterfall'; fi
+if ! declare -p basedir >/dev/null 2>&1; then declare -r basedir='/opt/bungeecord'; fi
 if ! declare -p bindir >/dev/null 2>&1; then declare -r bindir="${basedir}/_bin"; fi
 if ! declare -p imagedir >/dev/null 2>&1; then declare -r imagedir="${basedir}/_images"; fi
 if ! declare -p log_dir >/dev/null 2>&1; then declare -r log_dir="${basedir}/_logs"; fi
 if ! declare -p log >/dev/null 2>&1; then declare -r log="${name}.$(date +"%Y-%m-%d").log"; fi
-if ! declare -p configuration_file >/dev/null 2>&1; then declare -r configuration_file="${basedir}/.minecraft.install.config"; fi
+if ! declare -p configuration_file >/dev/null 2>&1; then declare -r configuration_file="${basedir}/.bungeecord.install.config"; fi
 if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [name]="${name:-}"
   [basedir]="${basedir:-}"
@@ -65,9 +65,8 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group]='minecraft'
   [user]='minecraft'
 
-  [url]="https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/175/downloads/paper-1.18.1-175.jar"
-  [jvm_memory]=2G
-  [shutdown_delay_seconds]=30
+  [url]="https://papermc.io/api/v2/projects/waterfall/versions/1.18/builds/475/downloads/waterfall-1.18-475.jar"
+  [shutdown_delay_seconds]=15
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
 if ! declare -p log_errors >/dev/null 2>&1; then declare -ar log_errors=(ERROR FATAL); fi
@@ -234,14 +233,14 @@ set -ue -o pipefail
 export LC_ALL=C
 
 ###
-# Startup script for Minecraft server .
+# Startup script for Bungeecord proxy .
 #
 
 if ! declare -p instance_name >/dev/null 2>&1; then declare -r instance_name=; fi
 if ! declare -p server_jar_path >/dev/null 2>&1; then declare -r server_jar_path=; fi
 
-if ! declare -p server_xms >/dev/null 2>&1; then declare -r server_xms='${config[jvm_memory]:-4G}'; fi
-if ! declare -p server_xmx >/dev/null 2>&1; then declare -r server_xmx='${config[jvm_memory]:-4G}'; fi
+if ! declare -p server_xms >/dev/null 2>&1; then declare -r server_xms='512M'; fi
+if ! declare -p server_xmx >/dev/null 2>&1; then declare -r server_xmx='512M'; fi
 
 if ! declare -p result >/dev/null 2>&1; then declare -i result=0; fi
 
@@ -254,26 +253,13 @@ elif [[ ! -f "\${server_jar_path}" ]]; then echo "server JAR not found ( \"\${se
 if [[ \$(("\${result:-1}")) -ne 0 ]]; then exit \$((\${result:-1})); fi
 
 screen -UmdS \${instance_name} java -server \\
--Xms${server_xms:-4G} \\
--Xmx${server_xmx:-4G} \\
+-Xms\${server_xms:-512M} \\
+-Xmx\${server_xmx:-512M} \\
 -XX:+UseG1GC \\
+-XX:G1HeapRegionSize=4M \\
+-XX:+UnlockExperimentalVMOptions
 -XX:+ParallelRefProcEnabled \\
--XX:MaxGCPauseMillis=200 \\
--XX:+UnlockExperimentalVMOptions \\
--XX:+DisableExplicitGC \\
--XX:+AlwaysPreTouch \\
--XX:G1NewSizePercent=30 \\
--XX:G1MaxNewSizePercent=40 \\
--XX:G1HeapRegionSize=8M \\
--XX:G1ReservePercent=20 \\
--XX:G1HeapWastePercent=5 \\
--XX:G1MixedGCCountTarget=4 \\
--XX:InitiatingHeapOccupancyPercent=15 \\
--XX:G1MixedGCLiveThresholdPercent=90 \\
--XX:G1RSetUpdatingPauseTimePercent=5 \\
--XX:SurvivorRatio=32 \\
--XX:+PerfDisableSharedMem \\
--XX:MaxTenuringThreshold=1 \\
+-XX:+AlwaysPreTouch
 -Dfile.encoding=UTF-8 \\
 -Duser.language=ja \\
 -Duser.country=JP \\
@@ -305,10 +291,10 @@ fi
 
 chown -R ${_group}:${_user} "${_home}" >/dev/null 2>&1
 
-if [[ -f "/etc/systemd/system/minecraft@.service" ]]; then _log IGNORE "systemd \"/etc/systemd/system/minecraft@.service\" already exists ."
-else cat <<_EOT_> "/etc/systemd/system/minecraft@.service"
+if [[ -f "/etc/systemd/system/bungeecord@.service" ]]; then _log IGNORE "systemd \"/etc/systemd/system/bungeecord@.service\" already exists ."
+else cat <<_EOT_> "/etc/systemd/system/bungeecord@.service"
 [Unit]
-Description=Minecraft Server %i
+Description=Minecraft Bungeecord proxy %i
 After=network.target
 
 [Service]
@@ -340,15 +326,15 @@ WantedBy=multi-user.target
 _EOT_
 fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then _log FATAL "failed install Minecraft server \"${_source}\" ."
-elif ! systemctl daemon-reload >/dev/null 2>&1; then _log ERROR "failed install Minecraft server \"${_source}\" ."; result=1
+if [[ $(("${result:-1}")) -ne 0 ]]; then _log FATAL "failed install Minecraft Bungeecord proxy \"${_source}\" ."
+elif ! systemctl daemon-reload >/dev/null 2>&1; then _log ERROR "failed install Minecraft Bungeecord proxy \"${_source}\" ."; result=1
 else
-  _log SUCCESS "Minecraft server \"${_source}\" ( instance: \"${_instance}\" ) launched ."
+  _log SUCCESS "Minecraft Bungeecord proxy \"${_source}\" ( instance: \"${_instance}\" ) launched ."
   _log SUCCESS ''
   _log SUCCESS "server startup command:"
-  _log SUCCESS "(sudo) systemctl start minecraft@${_instance}"
+  _log SUCCESS "(sudo) systemctl start bungeecord@${_instance}"
   _log SUCCESS ''
   _log SUCCESS "server shutdown command:"
-  _log SUCCESS "(sudo) systemctl stop minecraft@${_instance}"
+  _log SUCCESS "(sudo) systemctl stop bungeecord@${_instance}"
 fi
 exit $((${result:-1}))
