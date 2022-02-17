@@ -289,7 +289,7 @@ cd "${_workdir}/${_tomcat_native_extract}/native"
 --libdir=/usr/lib64 \
 --with-java-home=${JAVA_HOME} \
 --with-apr=/usr/bin/apr-1-config \
---with-ssl=/usr/include/openssl && \
+--with-ssl=/usr/include/openssl >/dev/null 2>&1 && \
   make && \
   make install
 _EOT_
