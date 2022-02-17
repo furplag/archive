@@ -16,7 +16,7 @@
 * [ ] env JAVA_HOME enabled ( 1.8 or later )
 
 #### using standard
-- install [Apache Tomcat v10.0.14](https://tomcat.apache.org/whichversion.html)
+- install [Apache Tomcat v10.0.16](https://tomcat.apache.org/whichversion.html)
 ```root.terminal.bash
 [root@el8+ ~]# curl -fLsS https://github.com/furplag/archive/raw/master/Tomcat/tomcat.binary.install.sh | bash
 ```
@@ -89,9 +89,9 @@ edit file `$TOMCAT_HOME/conf/server.xml`
   <Connector port="${connector.port}" protocol="org.apache.coyote.http11.Http11AprProtocol" maxThreads="150" SSLEnabled="true">
     <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
       <SSLHostConfig>
-        <Certificate certificateKeyFile="{path.to.keyfile.your.server}" 
-                     certificateFile="{path.to.certfile.your.server}" 
-                     certificateChainFile="{path.to.chainfile.your.server}" type="RSA" /> 
+        <Certificate certificateKeyFile="{path.to.keyfile.your.server}"
+                     certificateFile="{path.to.certfile.your.server}"
+                     certificateChainFile="{path.to.chainfile.your.server}" type="RSA" />
       </SSLHostConfig>
   </Connector>
 ```

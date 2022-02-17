@@ -17,8 +17,8 @@ by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/j
 * [ ] `tee` enabled ( package: coreutils )
 
 #### using standard
-- install [Adoptium JDK 17.0.1+12](https://adoptium.net/)
-- install [Apache Maven 3.8.3](https://maven.apache.org/)
+- install [Adoptium JDK 17.0.2+8](https://adoptium.net/)
+- install [Apache Maven 3.8.4](https://maven.apache.org/)
 - set alternatives `java`, some commands in "${JAVA_HOME}/bin/" and `mvn{,Debug}`
 - set environments "JAVA_HOME" and "M2_HOME" ( "MAVNE_HOME" )
 ```root.terminal.bash

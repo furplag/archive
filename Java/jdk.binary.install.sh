@@ -44,7 +44,7 @@ function linearize(){ echo -e "${1:-}" | sed -z -e 's/[\r\n]\+//g' -e 's/\s\+/ /
 #
 # returns sanitized string
 function sanitize() {
-  local -r _path="$(linearize "${1:-}" | sed -e 's/\s/\//g' -e 's/\/\+/\//g' -e 's/\/$//')"
+  local -r _path="$(linearize "${1:-}" | sed -e 's/\s/\//g' -e 's/^\/\+/\//' -e 's@\([^:]\)/\{2,\}@\1/@g' -e 's/\/$//')"
   echo "$(
     if echo "${_path:-}" | grep -E '^ *$' >/dev/null 2>&1; then echo ''
     elif echo "${_path:-}" | grep -E '^\.' >/dev/null 2>&1; then echo "$(realpath ${_path})"
@@ -73,8 +73,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [log]="${log:-}"
   [log_console]=0
   [debug]=1
-
-  [url]="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_17.0.1_12.tar.gz"
+  [url]="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.2%2B8/OpenJDK17U-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_17.0.2_8.tar.gz"
   [maven]=0
   [maven_url]='https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz'
 
@@ -153,7 +152,7 @@ done
 
 _log DEBUG "config=(\\n$(for k in ${!config[@]}; do echo "  $k=${config[$k]}"; done)\\n)"
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1}));
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $(( ${result:-1} ));
 else config[initialized]="${0:-${name}}"; fi
 
 declare -r _basedir="$(_path="$(sanitize "${config[basedir]}")"; echo "${_path:-${basedir}}")"
@@ -182,7 +181,7 @@ _log debug "_workdir=[${_workdir}]"
 _log debug "_url=[${_url}]"
 _log debug "_source=[${_source}]"
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # install JDK
 if [[ -f "${_workdir}/${_source}" ]]; then _log IGNORE "JDK binary already exists at \"${_workdir}/${_source}\" ."
@@ -190,22 +189,22 @@ elif echo "${_url}" | grep -E '^https?' >/dev/null 2>&1; then _log INFO "downloa
 elif [[ -f "${_url}" ]]; then _log INFO "copying JDK binary from \"${_url}\" ..."; cp -p "${_url}" "${_workdir}/${_source}"; fi
 
 if [[ ! -f "${_workdir}/${_source}" ]]; then _log ERROR "could not download JDK binary ."; result=1; fi
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 declare -r _java_home="$(tar ztf "${_workdir}/${_source}" 2>/dev/null | grep -m 1 -e / | sed -e 's/\/.*$//')"
 if [[ "${_java_home}" = '' ]]; then _log ERROR "could not detect JDK home from source \"${_source}\" ."; result=1
 elif "${_basedir}/${_java_home}/bin/java" -version >/dev/null 2>&1; then _log IGNORE "JDK already installed at \"${_basedir}/${_java_home}\" ."
 elif [[ -d "${_basedir}/${_java_home}" ]]; then _log FATAL "directory \"${_basedir}/${_java_home}\" already exists, but it's not work ."; result=1; fi
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 if [[ ! -d "${_basedir}/${_java_home}" ]]; then tar zxf "${_workdir}/${_source}" -C "${_basedir}" >/dev/null 2>&1; fi
 if ! "${_basedir}/${_java_home}/bin/java" -version >/dev/null 2>&1; then _log ERROR "java not found ( \"${_basedir}/${_java_home}/bin/java\" ) ."; result=1
 else _log INFO "java: \"${_basedir}/${_java_home}/bin/java\" installed ."; fi
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # install Maven
 declare _maven_home=
-if [[ $((${config[maven]:-1})) -eq 0 ]]; then
+if [[ $(( ${config[maven]:-1} )) -eq 0 ]]; then
   [[ "${JAVA_HOME:-}" ]] || export JAVA_HOME="${_basedir}/${_java_home}"
   declare -r _maven_url="$(sanitize "${config[maven_url]}")"
   if [[ "${_maven_url}" = '' ]]; then :;
@@ -227,7 +226,7 @@ if [[ $((${config[maven]:-1})) -eq 0 ]]; then
   fi
   _log debug "_maven_source=[${_workdir}/${_maven_source}]"
 
-  if [[ $(("${result:-1}")) -ne 0 ]]; then :;
+  if [[ $(( ${result:-1} )) -ne 0 ]]; then :;
   elif [[ ! -f "${_workdir}/${_maven_source}" ]]; then _log ERROR "could not download Maven binary ."; result=1
   else
     declare -r _maven="$(tar ztf "${_workdir}/${_maven_source}" | grep -m 1 -e / | sed -e 's/\/.*$//')";
@@ -235,19 +234,19 @@ if [[ $((${config[maven]:-1})) -eq 0 ]]; then
     elif "${_basedir}/maven/${_maven}/bin/mvn" -version >/dev/null 2>&1; then _log IGNORE "Maven already installed at \"${_basedir}/maven/${_maven_home}\" ."
     elif [[ -d "${_basedir}/maven/${_maven}" ]]; then _log FATAL "directory \"${_basedir}/maven/${_maven_home}\" already exists, but it's not work ."; result=1; fi
 
-    if [[ $(("${result:-1}")) -ne 0 ]]; then :;
+    if [[ $(( ${result:-1} )) -ne 0 ]]; then :;
     else tar zxf "${_workdir}/${_maven_source}" -C "${_basedir}/maven" >/dev/null 2>&1; fi
 
-    if [[ $(("${result:-1}")) -ne 0 ]]; then :;
+    if [[ $(( ${result:-1} )) -ne 0 ]]; then :;
     elif ! "${_basedir}/maven/${_maven}/bin/mvn" -version >/dev/null 2>&1; then _log ERROR "mvn not found ( \"${_basedir}/maven/${_maven}/bin/mvn\" ) ."; result=1
     else _log SUCCESS "Maven: \"${_basedir}/maven/${_maven}/bin/mvn\" installed ."; fi
   fi
-  if [[ $(("${result:-1}")) -eq 0 ]]; then _maven_home="${_maven}"; fi
+  if [[ $(( ${result:-1} )) -eq 0 ]]; then _maven_home="${_maven}"; fi
 fi
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # generate priority
-if [[ $((${config[debug]:-1})) -eq 0 ]]; then
+if [[ $(( ${config[debug]:-1} )) -eq 0 ]]; then
   __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
   _log debug "version string: [$__v]"
 
@@ -258,9 +257,9 @@ if [[ $((${config[debug]:-1})) -eq 0 ]]; then
   _build_version="$(if echo "${__v}" | grep _ >/dev/null 2>&1; then echo "${__v//*_}" | sed -e 's/[^0-9]/0/gi'; else echo '00'; fi)"
   _log debug "build version: [$_build_version]"
 
-  _minor_version="$(if [[ $((${_minor_version})) -gt 99 ]]; then echo '99'; else echo $(("${_minor_version##0}")); fi)"
+  _minor_version="$(if [[ $(( ${_minor_version} )) -gt 99 ]]; then echo '99'; else echo "$(( ${_minor_version##0} ))"; fi)"
   _log debug "->minor version: [$_minor_version]"
-  _build_version="$(if [[ $((${_build_version})) -gt 99 ]]; then echo '99'; else echo $(("${_build_version##0}")); fi)"
+  _build_version="$(if [[ $(( ${_build_version} )) -gt 99 ]]; then echo '99'; else echo "$(( ${_build_version##0} ))"; fi)"
   _log debug "->build version: [$_build_version]"
 fi
 
@@ -268,9 +267,9 @@ declare -ir _version="$(_v="$(
   __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/i' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
   _major_version="${__v//.*}"
   _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//'; else echo '00'; fi)"
-  _minor_version="$(if [[ $((${_minor_version})) -gt 99 ]]; then echo '99'; else echo $(("${_minor_version##0}")); fi)"
+  _minor_version="$(if [[ $(( ${_minor_version} )) -gt 99 ]]; then echo '99'; else echo "$(( ${_minor_version##0} ))"; fi)"
   _build_version="$(if echo "${__v}" | grep _ >/dev/null 2>&1; then echo "${__v//*_}" | sed -e 's/[^0-9]/0/gi'; else echo '00'; fi)"
-  _build_version="$(if [[ $((${_build_version})) -gt 99 ]]; then echo '99'; else echo $(("${_build_version##0}")); fi)"
+  _build_version="$(if [[ $(( ${_build_version} )) -gt 99 ]]; then echo '99'; else echo "$(( ${_build_version##0} ))"; fi)"
   echo "$(printf '%02d' "${_major_version:-00}")$(printf '%02d' "${_minor_version:-00}")$(printf '%02d' "${_build_version:-00}")"
 )"; echo "${_v##0}")"
 _log debug "_version=[${_version}]"
@@ -281,14 +280,14 @@ for child in `ls "${_basedir}/${_java_home}/bin" | grep -vE "^java$"`; do
   [[ "${_alternatives:-}" = '' ]] && _alternatives="alternatives --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
   _alternatives="${_alternatives} --slave /usr/bin/${child} ${child} ${_basedir}/${_java_home}/bin/${child}"
 done
-if [[ $((${config[maven]:-1})) -eq 0 ]] && [[ -f "${_basedir}/maven/${_maven_home}" ]] && [[ -f "${_basedir}/maven/${_maven_home}" ]]; then
+if [[ $(( ${config[maven]:-1} )) -eq 0 ]] && [[ -f "${_basedir}/maven/${_maven_home}" ]] && [[ -f "${_basedir}/maven/${_maven_home}" ]]; then
   for child in `ls "${_basedir}/${_java_home}/bin" | grep -vE "^java$"`; do
     [[ "${_alternatives:-}" = '' ]] && _alternatives="alternatives --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
     _alternatives="${_alternatives} --slave /usr/bin/${child} ${child} ${_basedir}/${_java_home}/bin/${child}"
   done
 fi
 if [[ -n "${_alternatives}" ]]; then
-  if [[ $((${config[maven]:-1})) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
+  if [[ $(( ${config[maven]:-1} )) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
     for child in mvn mvnDebug; do
       _alternatives="${_alternatives} --slave /usr/bin/${child} ${child} ${_basedir}/maven/${_maven_home}/bin/${child}"
     done
@@ -298,7 +297,7 @@ if [[ -n "${_alternatives}" ]]; then
 fi
 
 # environment
-if [[ $((${config[set_env]:-1})) -eq 0 ]]; then
+if [[ $(( ${config[set_env]:-1} )) -eq 0 ]]; then
   cat <<_EOT_> /etc/profile.d/java.sh
 # /etc/profile.d/java.sh
 
@@ -307,7 +306,7 @@ export JAVA_HOME=\$(readlink /etc/alternatives/java | sed -e 's/\/bin\/java//g')
 
 _EOT_
 
-if [[ $((${config[maven]:-1})) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
+if [[ $(( ${config[maven]:-1} )) -eq 0 ]] && [[ -n "${_maven_home}" ]]; then
     cat <<_EOT_>> /etc/profile.d/java.sh
 # Set Environment with alternatives for Maven.
 export MAVEN_HOME=\$(readlink /etc/alternatives/mvn | sed -e 's/\/bin\/mvn//g')

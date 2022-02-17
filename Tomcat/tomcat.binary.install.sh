@@ -46,7 +46,7 @@ function linearize(){ echo -e "${1:-}" | sed -z -e 's/[\r\n]\+//g' -e 's/\s\+/ /
 #
 # returns sanitized string
 function sanitize() {
-  local -r _path="$(linearize "${1:-}" | sed -e 's/\s/\//g' -e 's/\/\+/\//g' -e 's/\/$//')"
+  local -r _path="$(linearize "${1:-}" | sed -e 's/\s/\//g' -e 's/^\/\+/\//' -e 's@\([^:]\)/\{2,\}@\1/@g' -e 's/\/$//')"
   echo "$(
     if echo "${_path:-}" | grep -E '^ *$' >/dev/null 2>&1; then echo ''
     elif echo "${_path:-}" | grep -E '^\.' >/dev/null 2>&1; then echo "$(realpath ${_path})"
@@ -74,7 +74,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [installdir]="${installdir:-}"
   [configuration_file]="${configuration_file:-}"
 
-  [logging]=1
+  [logging]=0
   [log_dir]="${log_dir:-}"
   [log]="${log:-}"
   [log_console]=0
@@ -85,7 +85,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group_id]=53
   [user_id]=53
 
-  [url]="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.14/bin/apache-tomcat-10.0.14.tar.gz"
+  [url]="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.16/bin/apache-tomcat-10.0.16.tar.gz"
   [manager]=tomcat
   [manager_pw]=tomcat
   [xms]=256M
@@ -106,7 +106,7 @@ if ! declare -p log_errors >/dev/null 2>&1; then declare -ar log_errors=(ERROR F
 if ! declare -p log_symbols >/dev/null 2>&1; then declare -Ar log_symbols=(
   [DEBUG]='\xF0\x9F\x9A\xA7' # 🚧
   [INFO]='\xF0\x9F\x90\xB5' # 🐵
-  [WARN]='\xF0\x9F\x99\x88' # 🙈
+  [WARN]='\xF0\x9F\x99\x88' #
   [ERROR]='\xF0\x9F\x99\x89' # 🙉
   [FATAL]='\xF0\x9F\x91\xBA' # 🙊
   [SUCCESS]='\xF0\x9F\x8D\xA3' # 🍣
@@ -176,7 +176,7 @@ done
 
 _log DEBUG "config=(\\n$(for k in ${!config[@]}; do echo "  $k=${config[$k]}"; done)\\n)"
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1}));
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1}));
 else config[initialized]="${0:-${name}}"; fi
 
 declare -r _basedir="$(_path="$(sanitize "${config[basedir]}")"; echo "${_path:-${basedir}}")"
@@ -202,7 +202,7 @@ elif echo "${_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then
   _log ERROR ''
   result=1
 fi
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 declare -r _version="$(echo "${_source}" | sed -e 's/^.*\-//' -e 's/\.tar\.gz$//')"
 declare -r _ver="$(echo "${_version}" | sed -e 's/\..*$//')"
@@ -222,7 +222,7 @@ _log debug "_source=[${_source}]"
 _log debug "_source=[${_version}]"
 _log debug "_home=[${_home}]"
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 if [[ ! -d "${_basedir}" ]]; then _log ERROR "could not create directory \"${_basedir}\" ."; result=1
 elif [[ ! -d "${_imagedir}" ]]; then _log ERROR "could not create directory \"${_imagedir}\" ."; result=1
@@ -244,15 +244,15 @@ else
   elif groupadd -g "${_gid}" "${_group}" 2>/dev/null; then _log INFO "create Tomcat group \"${_group}\" ( $(getent group "${_group}" | awk -F '[::]' '{print $3}') ) ."
   else _log ERROR "could not create group \"${_group}\" ."; fi
 
-  if [[ $(("${result:-1}")) -ne 0 ]]; then :;
+  if [[ $(( ${result:-1} )) -ne 0 ]]; then :;
   elif getent passwd "${_user}" >/dev/null 2>&1; then _log IGNORE "user \"${_user}\" already exists ."
   elif useradd -u "${_uid}" "${_user}" -d ${_basedir} >/dev/null 2>&1; then _log INFO "create user \"${_user}\" ( $(getent passwd "${_user}" | awk -F '[::]' '{print $3}') ) ."
   else _log ERROR "could not create user \"${_user}\" ."; result=1; fi
 
-  if [[ $(("${result:-1}")) -eq 0 ]]; then usermod -aG tty,${_group} ${_user}; fi
+  if [[ $(( ${result:-1} )) -eq 0 ]]; then usermod -aG tty,${_group} ${_user}; fi
 fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # download
 if [[ -f "${_imagedir}/${_source}" ]]; then _log IGNORE "source already exists at \"${_imagedir}/${_source}\" ."
@@ -261,7 +261,7 @@ elif [[ -f "${_url}" ]]; then _log INFO "copying source from \"${_url}\" ..."; c
 
 if [[ ! -f "${_imagedir}/${_source}" ]]; then _log ERROR "could not download source ."; result=1; fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # extract
 _extract=$(tar tf "${_imagedir}/${_source}" | sed -n -e 1p | sed -e 's/\/.*//')
@@ -269,7 +269,7 @@ tar xf "${_imagedir}/${_source}" -C "${_workdir}"
 if [[ ! -d "${_workdir}/${_extract}" ]]; then _log ERROR "could not extract source ."; result=1
 elif ! mv "${_workdir}/${_extract}" "${_home}"; then _log ERROR "could not extract source to \"${_home}\" ."; result=1; fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # install tomcat-native
 if ! ls "${_home}/bin" | grep tomcat-native >/dev/null; then _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat native ."
@@ -279,9 +279,9 @@ else
     _tomcat_native_extract=$(tar tf "${_home}/bin/${_tomcat_native_source}" | sed -n -e 1p | sed -e 's/\/.*//')
     tar xf "${_home}/bin/${_tomcat_native_source}" -C "${_workdir}"
     if [[ ! -d "${_workdir}/${_tomcat_native_extract}" ]]; then _log ERROR "could not extract Tomcat native source ."; result=1
-    else :;
+    else
       _log INFO "installing Tomcat native ..."
-      if ! bash -c "${packagemanager:-dnf} install -y -q automake apr-devel gcc openssl-devel" 1>/dev/null; then _log ERROR "could not install dependencies ."; result=1
+      if ! bash -c "${packagemanager:-dnf} install -y automake apr-devel gcc openssl-devel" 1>/dev/null; then _log ERROR "could not install dependencies ."; result=1
       else cat <<_EOT_|bash
 cd "${_workdir}/${_tomcat_native_extract}/native"
 ./configure \
@@ -289,9 +289,9 @@ cd "${_workdir}/${_tomcat_native_extract}/native"
 --libdir=/usr/lib64 \
 --with-java-home=${JAVA_HOME} \
 --with-apr=/usr/bin/apr-1-config \
---with-ssl=/usr/include/openssl >/dev/null 2>&1 && \
-  make >/dev/null 2>&1 && \
-  make install >/dev/null 2>&1
+--with-ssl=/usr/include/openssl && \
+  make && \
+  make install
 _EOT_
         if ! ls /usr/lib64 | grep tcnative >/dev/null; then _log ERROR "Tomcat native install failed ."; result=1; fi
       fi
@@ -299,7 +299,7 @@ _EOT_
   else _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat native ."; fi
 fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # install tomcat-daemon
 if ! ls "${_home}/bin" | grep commons-daemon-native >/dev/null; then _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat daemon ."
@@ -328,7 +328,7 @@ _EOT_
   else _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat daemon ."; fi
 fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
 
 # structure
 _log INFO "building structure ..."
@@ -469,7 +469,7 @@ if [[ ! "${config[manager]}" = '' ]] && [[ -f "${_home}/conf/tomcat-users.xml" ]
 _EOT_
 fi
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then _log ERROR "initialization failure ( structure ) ."; exit $((${result:-1})); fi
+if [[ $(( ${result:-1} )) -ne 0 ]]; then _log ERROR "initialization failure ( structure ) ."; exit $((${result:-1})); fi
 
 [[ -f "/etc/sysconfig/tomcat${_ver}" ]] || cat <<_EOT_> "/etc/sysconfig/tomcat${_ver}"
 # Service-specific configuration file for tomcat. This will be sourced by
@@ -588,7 +588,7 @@ connector.port=${config[connector_port]:-8080}
 connector.port.ajp=${config[connector_port_ajp]:-8009}
 connector.port.ajp.accept.ip=${config[connector_port_ajp_accept_ip]:-127.0.0.1}
 connector.port.ajp.secret=${config[connector_port_ajp_secret]:-}
-connector.port.ajp.secret.required=$(if [[ ! "${config[connector_port_ajp_secret]:-}" = '' ]] && [[ $(("${config[connector_port_ajp_secret_required]:-1}")) -eq 0 ]]; then echo 'true'; else echo 'false'; fi)
+connector.port.ajp.secret.required=$(if [[ ! "${config[connector_port_ajp_secret]:-}" = '' ]] && [[ $(( ${config[connector_port_ajp_secret_required]:-1} )) -eq 0 ]]; then echo 'true'; else echo 'false'; fi)
 connector.port.redirect=${config[connector_port_redirect]:-8443}
 connector.port.ssl=${config[connector_port_ssl]:-8443}
 
@@ -607,7 +607,7 @@ cat <<_EOT_>> ${_home}/conf/server.xml
 _EOT_
 
 
-if [[ $(("${result:-1}")) -ne 0 ]]; then _log FATAL "failed install Tomcat \"${_source}\" ."
+if [[ $(( ${result:-1} )) -ne 0 ]]; then _log FATAL "failed install Tomcat \"${_source}\" ."
 elif ! systemctl daemon-reload >/dev/null 2>&1; then _log ERROR "failed install Tomcat \"${_source}\" ."; result=1
 else
   _log SUCCESS "Tomcat server \"${_source}\" launched ."
