@@ -74,11 +74,11 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [installdir]="${installdir:-}"
   [configuration_file]="${configuration_file:-}"
 
-  [logging]=0
+  [logging]=1
   [log_dir]="${log_dir:-}"
   [log]="${log:-}"
   [log_console]=0
-  [debug]=0
+  [debug]=1
 
   [group]='tomcat'
   [user]='tomcat'
@@ -86,8 +86,8 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [user_id]=53
 
   [url]="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.16/bin/apache-tomcat-10.0.16.tar.gz"
-  [manager]=tomcat
-  [manager_pw]=tomcat
+  [manager]=
+  [manager_pw]=
   [xms]=256M
   [xmx]=2G
 
@@ -290,7 +290,7 @@ cd "${_workdir}/${_tomcat_native_extract}/native"
 --with-java-home=${JAVA_HOME} \
 --with-apr=/usr/bin/apr-1-config \
 --with-ssl=/usr/include/openssl >/dev/null 2>&1 && \
-  make && \
+  make >/dev/null 2>&1 && \
   make install
 _EOT_
         if ! ls /usr/lib64 | grep tcnative >/dev/null; then _log ERROR "Tomcat native install failed ."; result=1; fi
