@@ -218,7 +218,7 @@ if [[ $(("${result:-1}")) -ne 0 ]]; then exit $((${result:-1})); fi
 for _d in "${_basedir}" "${_bindir}" "${_imagedir}" "${_basedir}/${_instance}"; do chown "${_user}:${_group}" "${_d}"; done
 
 # install Minecraft server JAR
-if [[ -f "${_imagedir}/${_source}" ]]; then _log IGNORE "server JAR already exists at \"${_imagedir}${_source}\" ."
+if [[ -f "${_imagedir}/${_source}" ]]; then _log IGNORE "server JAR already exists at \"${_imagedir}/${_source}\" ."
 elif echo "${_url}" | grep -E '^https?' >/dev/null 2>&1; then _log INFO "downloading server JAR from \"${_url}\" ..."; curl -fL "${_url}" -o "${_imagedir}/${_source}"
 elif [[ -f "${_url}" ]]; then _log INFO "copying JDK binary from \"${_url}\" ..."; cp -p "${_url}" "${_imagedir}/${_source}"; fi
 
@@ -277,7 +277,7 @@ screen -UmdS \${instance_name} java -server \\
 -Dfile.encoding=UTF-8 \\
 -Duser.language=ja \\
 -Duser.country=JP \\
--jar "${server_jar_path}" \\
+-jar "\${server_jar_path}" \\
 nogui
 
 _EOT_
