@@ -291,7 +291,7 @@ cd "${_workdir}/${_tomcat_native_extract}/native"
 --with-apr=/usr/bin/apr-1-config \
 --with-ssl=/usr/include/openssl >/dev/null 2>&1 && \
   make >/dev/null 2>&1 && \
-  make install
+  make install >/dev/null 2>&1
 _EOT_
         if ! ls /usr/lib64 | grep tcnative >/dev/null; then _log ERROR "Tomcat native install failed ."; result=1; fi
       fi
