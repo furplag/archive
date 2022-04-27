@@ -3,21 +3,27 @@
 ## TL;DR
 
 ```command.ps1
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
 
 ## Overview
 
 * [Prerequirement](#prerequirement)
+* [Installation](#installation)
+* [Install Chocolatey GUI](#install-chocolatey-gui)
+* [Before to use](#before-to-use)
+
 
 ### Prerequirement
 
 - [ ]  enable to access Internet
-
 - [ ]  Administrators, or executable as an Administrator
 
 > follow the guide below, if you cannot to be an administrable .
 > [Chocolatey Software Docs | Setup / Non administrative Install](https://docs.chocolatey.org/en-us/choco/setup#non-administrative-install)
+
 
 ### Installation
 
@@ -28,18 +34,21 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 2. paste command below into PowerShell window, then execute .
    
    ```install-chocolatey.ps1
-   Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+   Set-ExecutionPolicy Bypass -Scope Process -Force;[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
    ```
 
 3. type `choco -v` after installation successful .
+
 
 ### Install Chocolatey GUI
 
 1. type `choco install chocolateygui` onto PowerShell window, then execute .
 
+
 ### Before to use
 
 read the doc [Chocolatey Software Docs | Chocolatey - Software Management for Windows](https://docs.chocolatey.org/en-us/) .
+
 
 ## Trademark notice
 
