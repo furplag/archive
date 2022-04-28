@@ -21,7 +21,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocola
 - [ ]  enable to access Internet
 - [ ]  Administrators, or executable as an Administrator
 
-> follow the guide below, if you cannot to be an administrable .
+> follow the guide below, if you cannot to be administrable .  
 > [Chocolatey Software Docs | Setup / Non administrative Install](https://docs.chocolatey.org/en-us/choco/setup#non-administrative-install)
 
 
@@ -47,7 +47,8 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocola
 
 ### Before to use
 
-read the doc [Chocolatey Software Docs | Chocolatey - Software Management for Windows](https://docs.chocolatey.org/en-us/) .
+read the documentation below .  
+[Chocolatey Software Docs | Chocolatey - Software Management for Windows](https://docs.chocolatey.org/en-us/) .
 
 
 ## Trademark notice
