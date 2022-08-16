@@ -85,7 +85,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group_id]=53
   [user_id]=53
 
-  [url]="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.16/bin/apache-tomcat-10.0.16.tar.gz"
+  [url]="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.23/bin/apache-tomcat-10.0.23.tar.gz"
   [manager]=
   [manager_pw]=
   [xms]=256M
@@ -176,7 +176,7 @@ done
 
 _log DEBUG "config=(\\n$(for k in ${!config[@]}; do echo "  $k=${config[$k]}"; done)\\n)"
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1}));
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1}));
 else config[initialized]="${0:-${name}}"; fi
 
 declare -r _basedir="$(_path="$(sanitize "${config[basedir]}")"; echo "${_path:-${basedir}}")"
@@ -202,7 +202,7 @@ elif echo "${_source}" | grep -E '\.rpm$' >/dev/null 2>&1; then
   _log ERROR ''
   result=1
 fi
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 declare -r _version="$(echo "${_source}" | sed -e 's/^.*\-//' -e 's/\.tar\.gz$//')"
 declare -r _ver="$(echo "${_version}" | sed -e 's/\..*$//')"
@@ -222,7 +222,7 @@ _log debug "_source=[${_source}]"
 _log debug "_source=[${_version}]"
 _log debug "_home=[${_home}]"
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 if [[ ! -d "${_basedir}" ]]; then _log ERROR "could not create directory \"${_basedir}\" ."; result=1
 elif [[ ! -d "${_imagedir}" ]]; then _log ERROR "could not create directory \"${_imagedir}\" ."; result=1
@@ -244,15 +244,15 @@ else
   elif groupadd -g "${_gid}" "${_group}" 2>/dev/null; then _log INFO "create Tomcat group \"${_group}\" ( $(getent group "${_group}" | awk -F '[::]' '{print $3}') ) ."
   else _log ERROR "could not create group \"${_group}\" ."; fi
 
-  if [[ $(( ${result:-1} )) -ne 0 ]]; then :;
+  if [[ ! "${result:-1}" = '0' ]]; then :;
   elif getent passwd "${_user}" >/dev/null 2>&1; then _log IGNORE "user \"${_user}\" already exists ."
   elif useradd -u "${_uid}" "${_user}" -d ${_basedir} >/dev/null 2>&1; then _log INFO "create user \"${_user}\" ( $(getent passwd "${_user}" | awk -F '[::]' '{print $3}') ) ."
   else _log ERROR "could not create user \"${_user}\" ."; result=1; fi
 
-  if [[ $(( ${result:-1} )) -eq 0 ]]; then usermod -aG tty,${_group} ${_user}; fi
+  if [[ ! "${result:-1}" = '0' ]]; then usermod -aG tty,${_group} ${_user}; fi
 fi
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 # download
 if [[ -f "${_imagedir}/${_source}" ]]; then _log IGNORE "source already exists at \"${_imagedir}/${_source}\" ."
@@ -261,7 +261,7 @@ elif [[ -f "${_url}" ]]; then _log INFO "copying source from \"${_url}\" ..."; c
 
 if [[ ! -f "${_imagedir}/${_source}" ]]; then _log ERROR "could not download source ."; result=1; fi
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 # extract
 _extract=$(tar tf "${_imagedir}/${_source}" | sed -n -e 1p | sed -e 's/\/.*//')
@@ -269,7 +269,7 @@ tar xf "${_imagedir}/${_source}" -C "${_workdir}"
 if [[ ! -d "${_workdir}/${_extract}" ]]; then _log ERROR "could not extract source ."; result=1
 elif ! mv "${_workdir}/${_extract}" "${_home}"; then _log ERROR "could not extract source to \"${_home}\" ."; result=1; fi
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 # install tomcat-native
 if ! ls "${_home}/bin" | grep tomcat-native >/dev/null; then _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat native ."
@@ -299,7 +299,7 @@ _EOT_
   else _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat native ."; fi
 fi
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 # install tomcat-daemon
 if ! ls "${_home}/bin" | grep commons-daemon-native >/dev/null; then _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat daemon ."
@@ -328,7 +328,7 @@ _EOT_
   else _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat daemon ."; fi
 fi
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 # structure
 _log INFO "building structure ..."
@@ -469,7 +469,7 @@ if [[ ! "${config[manager]}" = '' ]] && [[ -f "${_home}/conf/tomcat-users.xml" ]
 _EOT_
 fi
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then _log ERROR "initialization failure ( structure ) ."; exit $((${result:-1})); fi
+if [[ ! "${result:-1}" = '0' ]]; then _log ERROR "initialization failure ( structure ) ."; exit $((${result:-1})); fi
 
 [[ -f "/etc/sysconfig/tomcat${_ver}" ]] || cat <<_EOT_> "/etc/sysconfig/tomcat${_ver}"
 # Service-specific configuration file for tomcat. This will be sourced by
@@ -607,7 +607,7 @@ cat <<_EOT_>> ${_home}/conf/server.xml
 _EOT_
 
 
-if [[ $(( ${result:-1} )) -ne 0 ]]; then _log FATAL "failed install Tomcat \"${_source}\" ."
+if [[ ! "${result:-1}" = '0' ]]; then _log FATAL "failed install Tomcat \"${_source}\" ."
 elif ! systemctl daemon-reload >/dev/null 2>&1; then _log ERROR "failed install Tomcat \"${_source}\" ."; result=1
 else
   _log SUCCESS "Tomcat server \"${_source}\" launched ."
