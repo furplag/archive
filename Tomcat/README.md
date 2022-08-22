@@ -50,7 +50,7 @@ _EOT_
 [connector_port_ajp_secret]=s3cret
 [connector_port_ajp_secret_required]=true
 _EOT_
-[root@el8+ ~]# curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Java/jdk.binary.install.sh | bash
+[root@el8+ ~]# curl -fLsS https://github.com/furplag/archive/raw/master/Tomcat/tomcat.binary.install.sh | bash
 ```
 
 and customize configuration [for your own](./tomcat.binary.install.sh) .
