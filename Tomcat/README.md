@@ -57,7 +57,7 @@ and customize configuration [for your own](./tomcat.binary.install.sh) .
 
 ## Firewalld service
 ```terminal.bash
-cat <<_EOT_> /etc/systemd/system/tomcat{x}.xml
+cat <<_EOT_> /etc/firewalld/services/tomcat{x}.xml
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>Tomcat{x}</short>
