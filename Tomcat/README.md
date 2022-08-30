@@ -37,7 +37,7 @@ _EOT_
 #### custom install: configuration
 ```root.terminal.bash
 [root@el8+ ~]# mkdir -p /opt/java
-[root@el8+ ~]# cat <<_EOT_> /opt/java/.tomcat.binary.install.config
+[root@el8+ ~]# cat <<_EOT_> /opt/tomcat.install/.tomcat.install.config
 [xms]=512M
 [xmx]=4G
 
