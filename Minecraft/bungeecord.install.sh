@@ -65,7 +65,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group]='minecraft'
   [user]='minecraft'
 
-  [url]="https://papermc.io/api/v2/projects/waterfall/versions/1.18/builds/475/downloads/waterfall-1.18-475.jar"
+  [url]="https://api.papermc.io/v2/projects/waterfall/versions/1.19/builds/506/downloads/waterfall-1.19-506.jar"
   [shutdown_delay_seconds]=15
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
@@ -253,18 +253,17 @@ elif [[ ! -f "\${server_jar_path}" ]]; then echo "server JAR not found ( \"\${se
 if [[ \$(("\${result:-1}")) -ne 0 ]]; then exit \$((\${result:-1})); fi
 
 screen -UmdS \${instance_name} java -server \\
--Xms\${server_xms:-512M} \\
--Xmx\${server_xmx:-512M} \\
+-Xms${server_xms:-512M} \\
+-Xmx${server_xmx:-512M} \\
 -XX:+UseG1GC \\
 -XX:G1HeapRegionSize=4M \\
--XX:+UnlockExperimentalVMOptions
+-XX:+UnlockExperimentalVMOptions \\
 -XX:+ParallelRefProcEnabled \\
--XX:+AlwaysPreTouch
+-XX:+AlwaysPreTouch \\
 -Dfile.encoding=UTF-8 \\
 -Duser.language=ja \\
 -Duser.country=JP \\
--jar "${server_jar_path}" \\
-nogui
+-jar "${server_jar_path}"
 
 _EOT_
 fi
