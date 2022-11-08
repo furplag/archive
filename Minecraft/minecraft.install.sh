@@ -65,7 +65,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group]='minecraft'
   [user]='minecraft'
 
-  [url]="https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/175/downloads/paper-1.18.1-175.jar"
+  [url]="https://api.papermc.io/v2/projects/paper/versions/1.19.2/builds/263/downloads/paper-1.19.2-263.jar"
   [jvm_memory]=2G
   [shutdown_delay_seconds]=30
 ); fi
@@ -254,8 +254,8 @@ elif [[ ! -f "\${server_jar_path}" ]]; then echo "server JAR not found ( \"\${se
 if [[ \$(("\${result:-1}")) -ne 0 ]]; then exit \$((\${result:-1})); fi
 
 screen -UmdS \${instance_name} java -server \\
--Xms${server_xms:-4G} \\
--Xmx${server_xmx:-4G} \\
+-Xms${server_xms:-2G} \\
+-Xmx${server_xmx:-2G} \\
 -XX:+UseG1GC \\
 -XX:+ParallelRefProcEnabled \\
 -XX:MaxGCPauseMillis=200 \\
@@ -277,7 +277,9 @@ screen -UmdS \${instance_name} java -server \\
 -Dfile.encoding=UTF-8 \\
 -Duser.language=ja \\
 -Duser.country=JP \\
--jar "\${server_jar_path}" \\
+-Dusing.aikars.flags=https://mcflags.emc.gs \\
+-Daikars.new.flags=true \\
+-jar "${server_jar_path}" \\
 nogui
 
 _EOT_
@@ -314,28 +316,23 @@ After=network.target
 [Service]
 Type=forking
 
-User=${_user}
-Group=${_group}
+User=minecraft
+Group=minecraft
 
-PrivateUsers=true
-ProtectSystem=full
-ProtectHome=true
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-
-WorkingDirectory=${_basedir}/%i
-ExecStart=${_basedir}/%i/startup
-ExecStop=/bin/bash -c "waits=$(_i=${config[shutdown_delay_seconds]}; if [[ $((${_i:-0})) -lt 0 ]]; then echo '0'; else echo "${_i:-0}"; fi); while [[ \$((waits)) -gt 0 ]]; do screen -p 0 -S %i -X eval \"stuff 'say the world freezing, at least in \$waits sec ...'\\015\"; waits=\$((waits - 5)); sleep 5; done"
-ExecStop=/bin/bash -c "screen -p 0 -S %i -X eval 'stuff \"save-all\"\\015'"
+WorkingDirectory=/opt/minecraft/%i
+ExecStartPre=+/bin/chmod 775 /run/screen
+ExecStart=/opt/minecraft/%i/startup
+ExecStop=/bin/bash -c "waits=15; while [[ \$((waits)) -gt 0 ]]; do screen -p 0 -S %i -X eval \\"stuff 'say the world freezing, at least in \$waits sec ...'\\015\\"; waits=\$((waits - 5)); sleep 5; done"
+ExecStop=/bin/bash -c "screen -p 0 -S %i -X eval 'stuff \\"save-all\\"\\015'"
 ExecStop=/bin/sleep 5
-ExecStop=/bin/bash -c "screen -p 0 -S %i -X eval 'stuff \"stop\"\\015'"
+ExecStop=/bin/bash -c "screen -p 0 -S %i -X eval 'stuff \\"stop\\"\\015'"
 
 Restart=no
 KillMode=none
 
 [Install]
 WantedBy=multi-user.target
+
 
 _EOT_
 fi
