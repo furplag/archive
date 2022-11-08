@@ -18,7 +18,7 @@ by defaults, install [Adaptium Open JDK](https://adoptium.net/) into /opt/java/j
 
 #### using standard
 - install [Adoptium JDK 17.0.2+8](https://adoptium.net/)
-- install [Apache Maven 3.8.5](https://maven.apache.org/)
+- install [Apache Maven 3.8.6](https://maven.apache.org/)
 - set alternatives `java`, some commands in "${JAVA_HOME}/bin/" and `mvn{,Debug}`
 - set environments "JAVA_HOME" and "M2_HOME" ( "MAVNE_HOME" )
 ```root.terminal.bash
