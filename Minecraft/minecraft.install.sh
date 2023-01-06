@@ -279,7 +279,7 @@ screen -UmdS \${instance_name} java -server \\
 -Duser.country=JP \\
 -Dusing.aikars.flags=https://mcflags.emc.gs \\
 -Daikars.new.flags=true \\
--jar "${server_jar_path}" \\
+-jar "\${server_jar_path}" \\
 nogui
 
 _EOT_
