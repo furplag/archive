@@ -18,10 +18,10 @@
   - [install MySQL FDW](./PostgreSQL/install.mysql_fdw.md)
 
 - ### [SSL Certificate with Let's Encrypt](./SSL/LetsEncrypt)
-  - [DNS challenge with Cloudflare on mod_md ( external )](https://github.com/furplag/dns-challenge/)
+  - [DNS challenge with Cloudflare ( also Azure DNS ) on mod_md ( external )](https://github.com/furplag/dns-challenge/)
 
 - ### Apache web server
-  - [enable tp HTTP/3 on RHEL7/8 ( RPM ) ( RPM branch )](https://github.com/furplag/archive/tree/rpm/)
+  - [enable tp TLSv1.3 on RHEL7/8 ( RPM ) ( RPM branch )](https://github.com/furplag/archive/tree/rpm/)
 
 ## License
 [![Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
