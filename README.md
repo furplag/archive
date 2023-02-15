@@ -5,7 +5,8 @@
 ### install repository .
 ```add.repo.sh
 # DNF
-[root@gte-el8 ~]# dnf config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el8.repo
+[root@el9 ~]# dnf config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el9.repo
+[root@el8 ~]# dnf config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el8.repo
 
 # YUM
 [root@el7 ~]# yum-config-manager --add-repo https://github.com/furplag/archive/raw/rpm/furplag.github.io.el7.repo
