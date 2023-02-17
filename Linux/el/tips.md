@@ -4,7 +4,8 @@
 
 ### unforcing SELinux
 ```selinux.bash
-[root@anywhere ~]# setenfoce 0 && sed -i -e 's/^SELINUX=.*/#\0\nSELINUX=Permissive/' /etc/selinux/confog
+[root@el9 ~]# setenfoce 0 && sed -i -e 's/^SELINUX=.*/#\0\nSELINUX=permissive/' /etc/selinux/confog
+[root@lte-el8 ~]# setenfoce 0 && sed -i -e 's/^SELINUX=.*/#\0\nSELINUX=Permissive/' /etc/selinux/confog
 ```
 
 ### internationalization /localization
