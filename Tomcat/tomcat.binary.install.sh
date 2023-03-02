@@ -18,7 +18,7 @@ export LC_ALL=C
 # 2. usage
 #    A. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh | bash
 #    B. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh | bash -s -- \
-#       https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
+#       https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
 #    C. cat <<_EOT_| bash
 #       declare -r basedir=/usr/local/src/tomcat
 #       source <(curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh)
@@ -85,7 +85,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group_id]=53
   [user_id]=53
 
-  [url]="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.23/bin/apache-tomcat-10.0.23.tar.gz"
+  [url]="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.6/bin/apache-tomcat-10.1.6.tar.gz"
   [manager]=
   [manager_pw]=
   [xms]=256M
