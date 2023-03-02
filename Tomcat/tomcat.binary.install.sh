@@ -23,7 +23,12 @@ export LC_ALL=C
 #       declare -r basedir=/usr/local/src/tomcat
 #       source <(curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh)
 #       _EOT_
-#    D. tomcat.binary.install.sh # custom configuration for your own .
+#    D. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh && \
+#       chmod +x ./tomcat.binary.install.sh && \
+#       ./tomcat.binary.install.sh # custom configuration for your own .
+#    E. cat <<_EOT_| sudo -E bash -s -- https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.86/bin/apache-tomcat-8.5.86.tar.gz
+#       source <(curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh)
+#       _EOT_
 
 ###
 # utilities
