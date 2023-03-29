@@ -36,6 +36,8 @@ There are 3 programs which provide 'python'.
 
 Enter to keep the current selection[+], or type selection number:
   ```
+  2. if command `alternatives --config python` shows nothing,  
+     configure `python` command with `alternatives --install /usr/bin/python python /usr/bin/python3 309` .
 </details>
 
 <details>
