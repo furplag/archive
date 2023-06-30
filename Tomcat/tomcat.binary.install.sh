@@ -282,7 +282,7 @@ if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 if ls /usr/lib64 | grep tcnative >/dev/null; then _log IGNORE "Tomcat native already installed ."
 else
   _tomcat_native_url="${config[url_tcnative]}"
-  if [[ $((_ver)) > 9 ]] && openssl version | grep -i 'OpenSSL 1.' >/dev/null; then _tomcat_native_url="${config[url_tcnative12]}"; fi
+  if [[ $((_ver)) -ge 10 ]] && openssl version | grep -i 'OpenSSL 1.' >/dev/null; then _tomcat_native_url="${config[url_tcnative12]}"; fi
   _tomcat_native_source=$( echo "${_tomcat_native_url}" | sed -e 's/.*\///' )
   if [[ -f "${_imagedir}/${_tomcat_native_source}" ]]; then _log IGNORE "\"${_tomcat_native_source}\" already exists ."
   else _log INFO "downloading source from \"${_tomcat_native_url}\" ..."; curl -fjkL "${_tomcat_native_url}" -o "${_imagedir}/${_tomcat_native_source}"; fi
