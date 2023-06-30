@@ -90,7 +90,9 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group_id]=53
   [user_id]=53
 
-  [url]="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.6/bin/apache-tomcat-10.1.6.tar.gz"
+  [url]='https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.10/bin/apache-tomcat-10.1.10.tar.gz'
+  [url_tcnative]='https://archive.apache.org/dist/tomcat/tomcat-connectors/native/2.0.4/source/tomcat-native-2.0.4-src.tar.gz'
+  [url_tcnative12]='https://archive.apache.org/dist/tomcat/tomcat-connectors/native/1.2.37/source/tomcat-native-1.2.37-src.tar.gz'
   [manager]=
   [manager_pw]=
   [xms]=256M
@@ -224,7 +226,7 @@ _log debug "_imagedir=[${_imagedir}]"
 _log debug "_workdir=[${_workdir}]"
 _log debug "_url=[${_url}]"
 _log debug "_source=[${_source}]"
-_log debug "_source=[${_version}]"
+_log debug "_version=[${_version}]"
 _log debug "_home=[${_home}]"
 
 if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
@@ -277,12 +279,16 @@ elif ! mv "${_workdir}/${_extract}" "${_home}"; then _log ERROR "could not extra
 if [[ ! "${result:-1}" = '0' ]]; then exit $((${result:-1})); fi
 
 # install tomcat-native
-if ! ls "${_home}/bin" | grep tomcat-native >/dev/null; then _log WARN "\"${_workdir}/${_extract}\" not contains Tomcat native ."
+if ls /usr/lib64 | grep tcnative >/dev/null; then _log IGNORE "Tomcat native already installed ."
 else
-  _tomcat_native_source=$(ls "${_home}/bin" | grep tomcat-native | grep -E '\.tar\.gz$')
-  if [[ -f "${_home}/bin/${_tomcat_native_source}" ]]; then
-    _tomcat_native_extract=$(tar tf "${_home}/bin/${_tomcat_native_source}" | sed -n -e 1p | sed -e 's/\/.*//')
-    tar xf "${_home}/bin/${_tomcat_native_source}" -C "${_workdir}"
+  _tomcat_native_url="${config[url_tcnative]}"
+  if [[ $((_ver)) > 9 ]] && openssl version | grep -i 'OpenSSL 1.' >/dev/null; then _tomcat_native_url="${config[url_tcnative12]}"; fi
+  _tomcat_native_source=$( echo "${_tomcat_native_url}" | sed -e 's/.*\///' )
+  if [[ -f "${_imagedir}/${_tomcat_native_source}" ]]; then _log IGNORE "\"${_tomcat_native_source}\" already exists ."
+  else _log INFO "downloading source from \"${_tomcat_native_url}\" ..."; curl -fjkL "${_tomcat_native_url}" -o "${_imagedir}/${_tomcat_native_source}"; fi
+  if [[ -f "${_imagedir}/${_tomcat_native_source}" ]]; then
+    _tomcat_native_extract=$(tar tf "${_imagedir}/${_tomcat_native_source}" | sed -n -e 1p | sed -e 's/\/.*//')
+    tar xf "${_imagedir}/${_tomcat_native_source}" -C "${_workdir}"
     if [[ ! -d "${_workdir}/${_tomcat_native_extract}" ]]; then _log ERROR "could not extract Tomcat native source ."; result=1
     else
       _log INFO "installing Tomcat native ..."
@@ -399,7 +405,7 @@ CATALINA_PID="${_home}/run/tomcat${_ver}.pid"
 # If you wish to further customize your tomcat environment,
 # put your own definitions here
 # (i.e. LD_LIBRARY_PATH for some jdbc drivers)
-CATALINA_OPTS="-server -Djava.awt.headless=true -Dfile.encoding=utf-8 -Xms${config[xmx]:-256M} -Xmx${config[xmx]:-2G} -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom -Djava.library.path=/usr/lib64"
+CATALINA_OPTS="-server -Djava.awt.headless=true -Dfile.encoding=utf-8 -Xms${config[xms]:-256M} -Xmx${config[xmx]:-2G} -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom -Djava.library.path=/usr/lib64"
 
 _EOT_
 chown -R "${_user}:${_group}" ${_home}/conf/*
