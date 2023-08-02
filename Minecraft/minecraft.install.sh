@@ -65,7 +65,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [group]='minecraft'
   [user]='minecraft'
 
-  [url]="https://api.papermc.io/v2/projects/paper/versions/1.19.2/builds/263/downloads/paper-1.19.2-263.jar"
+  [url]="https://api.papermc.io/v2/projects/paper/versions/1.20.1/builds/100/downloads/paper-1.20.1-100.jar"
   [jvm_memory]=2G
   [shutdown_delay_seconds]=30
 ); fi
