@@ -75,8 +75,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [debug]=1
   [url]="https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.1%2B9/OpenJDK20U-jdk_$(arch | sed -e 's/^x86_/x/')_linux_hotspot_20.0.1_9.tar.gz"
   [maven]=0
-  [maven_url]='https://dlcdn.apache.org/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz'
-
+  [maven_url]='https://archive.apache.org/dist/maven/maven-3/3.9.4/binaries/apache-maven-3.9.4-bin.tar.gz'
   [set_env]=0
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
