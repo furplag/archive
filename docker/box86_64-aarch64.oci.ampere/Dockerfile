@@ -28,6 +28,7 @@ RUN make install;
 
 # cleanup
 RUN rm -rf /opt/box86 /opt/box64;
+RUN apt-get autoremove --purge -y cmake gcc-arm-linux-gnueabihf git make python3;
 
 WORKDIR /
 USER root
