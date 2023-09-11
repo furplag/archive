@@ -30,8 +30,8 @@ RUN mkdir -p ~/Steam && \
   ln -fns /opt/steam/steamcmd/sdk32 ~/Steam/. && \
   ln -fns /opt/steam/steamcmd/sdk64 ~/Steam/.;
 
-COPY steamcmd.env /opt/steam
-RUN mv /opt/steam/steamcmd.env /etc/profile.d/steamcmd.sh && chmod 644  /etc/profile.d/steamcmd.sh;
+COPY https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/.steamcmd.env /opt/steam
+RUN mv /opt/steam/.steamcmd.env /etc/profile.d/steamcmd.sh && chmod 644  /etc/profile.d/steamcmd.sh;
 
 WORKDIR /
 USER root
