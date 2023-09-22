@@ -1,5 +1,5 @@
 ###
-# jdk.binary.install.sh
+# box86_64-oci.ampere-el.aarch64/Dockerfile
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
