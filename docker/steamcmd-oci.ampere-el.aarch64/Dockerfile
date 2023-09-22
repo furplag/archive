@@ -51,15 +51,15 @@ RUN \
 # steamcmd
 WORKDIR ${STEAM_HOME}
 RUN mkdir -p ${STEAMCMD_HOME} && \
-  curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-oci.ampere-el.aarch64/{steamcmd.update} -o ${STEAMCMD_HOME}/#1;
+  curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-oci.ampere-el.aarch64/{steamcmd.update} -o ${STEAM_HOME}/#1;
 
-RUN [ -f "${STEAMCMD_HOME}/steamcmd.update" ] && chmod +x ${STEAMCMD_HOME}/steamcmd.update;
+RUN [ -f "${STEAM_HOME}/steamcmd.update" ] && chmod +x ${STEAM_HOME}/steamcmd.update;
 
 WORKDIR ${STEAMCMD_HOME}
 RUN curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf -;
 
 WORKDIR ${STEAM_HOME}
-RUN cat ${STEAM_HOME}/steamcmd.update | /bin/bash;
+RUN cat ${STEAM_HOME}/steamcmd.update | bash;
 
 # cleanup
 RUN apt-get autoremove --purge -y curl;
