@@ -6,7 +6,7 @@
 #
 # a base Dockerfile that enable to use x86_64 application on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
-FROM debian:bookworm-slim:latest
+FROM debian:bookworm-slim
 
 ###
 # ENV / variable
