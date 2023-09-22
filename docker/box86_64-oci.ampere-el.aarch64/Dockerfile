@@ -6,6 +6,8 @@
 #
 # a base Dockerfile that enable to use x86_64 application on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
+# docker build https://github.com/furplag/archive/raw/master/docker/box86_64-oci.ampere-el.aarch64/Dockerfile -t furplag/box86_64:latest
+#
 FROM debian:bookworm-slim
 
 ###
