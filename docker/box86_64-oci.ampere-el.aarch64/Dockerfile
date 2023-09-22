@@ -1,3 +1,5 @@
+FROM debian:bookworm-slim
+
 ###
 # box86_64-oci.ampere-el.aarch64/Dockerfile
 # https://github.com/furplag/archive/docker
@@ -6,15 +8,19 @@
 #
 # a base Dockerfile that enable to use x86_64 application on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
-# docker build https://github.com/furplag/archive/raw/master/docker/box86_64-oci.ampere-el.aarch64/Dockerfile -t furplag/box86_64:latest
+# Usage
+# A. docker build https://github.com/furplag/archive/raw/master/docker/box86_64-oci.ampere-el.aarch64/Dockerfile -t furplag/box86_64:latest
+# B. docker build https://github.com/furplag/archive/raw/master/docker/box86_64-oci.ampere-el.aarch64/Dockerfile \
+#     --build-arg BOX86_VERSION=v0.3.2 \
+#     --build-arg BOX64_VERSION=v0.2.4 \
+#     -t furplag/box86_64
 #
-FROM debian:bookworm-slim
 
 ###
 # ENV / variable
 ###
-ENV BOX86_VERSION v0.3.2
-ENV BOX64_VERSION v0.2.4
+ARG BOX86_VERSION="v0.3.2"
+ARG BOX64_VERSION="v0.2.4"
 
 ###
 # process
@@ -40,8 +46,7 @@ RUN \
 WORKDIR /opt/box86/build
 RUN \
   cmake .. -DARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
-  make -j$(nproc) && \
-  make install;
+  make -j$(nproc) && make install;
 
 # Box64 ( see https://github.com/ptitSeb/box64 )
 WORKDIR /opt
@@ -50,13 +55,9 @@ RUN git clone https://github.com/ptitSeb/box64 -b ${BOX64_VERSION} && mkdir -p /
 WORKDIR /opt/box64/build
 RUN \
   cmake .. -DARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
-  make -j$(nproc) && \
-  make install;
+  make -j$(nproc) && make install;
 
 # cleanup
 WORKDIR /
 RUN rm -rf /opt/box86 /opt/box64;
 RUN apt-get autoremove --purge -y cmake gcc-arm-linux-gnueabihf git make python3;
-
-ENV BOX86_VERSION ''
-ENV BOX64_VERSION ''
