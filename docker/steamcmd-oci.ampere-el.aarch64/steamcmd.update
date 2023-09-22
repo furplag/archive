@@ -1,20 +1,37 @@
 #!/bin/bash
 set -u -o pipefail
 set LC_ALL=C
+###
+# steamcmd-oci.ampere-el.aarch64/steamcmd.update
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "furplag/steamcmd" .
+#
 
+###
+# variable
+###
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
 
-declare -r tempLdLibPath="${LD_LIBRARY_PATH}";
-export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath};
+declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
+
+###
+# process
+###
+export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath} && \
 
 # no one take care of the result, just there is only to avoid errors caused by anonymous access .
 declare result=`${STEAMCMD_HOME}/steamcmd.sh +quit`;
 [ -d "${STEAM_LIBS_86}" ] && ln -fns "${STEAM_LIBS_86}" "${STEAMCMD_HOME}/sdk32";
 [ -d "${STEAM_LIBS_64}" ] && ln -fns "${STEAM_LIBS_64}" "${STEAMCMD_HOME}/sdk64";
 
+###
+# cleanup
+###
 export LD_LIBRARY_PATH=${tempLdLibPath};
-
