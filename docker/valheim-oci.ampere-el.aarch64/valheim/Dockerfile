@@ -94,8 +94,9 @@ RUN sed -i -E "s/^# (en_US.UTF-8|${LANG})/\1/g" /etc/locale.gen && locale-gen;
 #RUN [ -f ${STEAM_LIBS_64}/steamclient.so ] && cp -pr ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/.;
 
 WORKDIR ${STEAM_HOME}
-COPY valheim_server.aarch64 ${STEAM_HOME}
-COPY valheim_server.update ${STEAM_HOME}
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/{valheim_server.aarch64} -o ${STEAM_HOME}/#1;
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/{valheim_server.update} -o ${STEAM_HOME}/#1;
+
 RUN chmod +x ${STEAM_HOME}/valheim_server.aarch64;
 RUN chmod +x ${STEAM_HOME}/valheim_server.update;
 
