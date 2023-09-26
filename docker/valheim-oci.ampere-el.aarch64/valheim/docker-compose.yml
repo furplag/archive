@@ -1,0 +1,20 @@
+# valheim-oci.ampere-el.aarch64.docker-compose.yml
+version: '3'
+
+services:
+  server:
+    build: .
+    env_file: ./.env
+    ports:
+      - "0.0.0.0:2456-2459:2456-2459/tcp"
+      - "0.0.0.0:2456-2459:2456-2459/udp"
+    volumes:
+      - type: volume
+        source: valheim_server_data
+        target: /opt/steam
+    tty: true
+
+# must be add permissions to VALHEIM_USER to handles data .
+volumes:
+  valheim_server_data:
+    name: valheim_server_data
