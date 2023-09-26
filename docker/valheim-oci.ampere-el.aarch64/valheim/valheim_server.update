@@ -24,7 +24,7 @@ if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID='
 declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 
 ###
-# vprocess
+# process
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
 ${STEAMCMD_HOME}/steamcmd.sh +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit || echo '' >/dev/null 2>&1
