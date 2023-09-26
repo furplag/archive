@@ -1,6 +1,18 @@
 #!/bin/bash
 set -u -o pipefail
 set LC_ALL=C
+###
+# valheim-oci.ampere-el.aarch64/valheim/valheim_server.aarch64
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "valheim-oci.ampere-el.aarch64/valheim" .
+#
+
+###
+# variable
+###
 
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/valheim; fi
