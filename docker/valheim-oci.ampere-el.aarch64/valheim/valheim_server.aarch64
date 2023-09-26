@@ -1,0 +1,67 @@
+#!/bin/bash
+set -o pipefail
+set LC_ALL=C
+
+###
+# ENV / variable
+###
+if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
+
+# ENV / variable: steamcmd
+if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/valheim; fi
+if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
+if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
+if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
+if ! declare -p VALHEIM_HOME >/dev/null 2>&1; then declare -r VALHEIM_HOME=${STEAM_HOME}/valheim; fi
+if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID='896660'; fi
+if ! declare -p VALHEIM_STEAMAPP_ID >/dev/null 2>&1; then declare -r VALHEIM_STEAMAPP_ID='892970'; fi
+
+# ENV / variable: valheim
+if ! declare -p VALHEIM_NAME >/dev/null 2>&1; then declare -r VALHEIM_NAME='Valheim'; fi
+if ! declare -p VALHEIM_WORLD >/dev/null 2>&1; then declare -r VALHEIM_WORLD='Dedicated'; fi
+if ! declare -p VALHEIM_PORT >/dev/null 2>&1; then declare -r VALHEIM_PORT='2456'; fi
+if ! declare -p VALHEIM_PASSWORD >/dev/null 2>&1; then declare -r VALHEIM_PASSWORD='s3CRet'; fi
+if ! declare -p VALHEIM_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SAVE_DIR=${VALHEIM_HOME}/_saves; fi
+if ! declare -p VALHEIM_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_LOG_DIR=${VALHEIM_HOME}/_logs; fi
+if ! declare -p VALHEIM_IS_PUBLIC >/dev/null 2>&1; then declare -r VALHEIM_IS_PUBLIC='FALSE'; fi
+if ! declare -p VALHEIM_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_CROSSPLAY_ENABLED='FALSE'; fi
+if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
+
+###
+# process
+###
+[ -d "${VALHEIM_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SAVE_DIR}"
+
+# update, if allowed .
+if [[  "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then 
+  declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
+  ${STEAM_HOME}/valheim_server.update
+  export LD_LIBRARY_PATH=${tempLdLibPath}
+fi
+
+# start Valheim Server .
+export LD_LIBRARY_PATH=${STEAM_LIBS_64}:${VALHEIM_HOME}/linux64:${tempLdLibPath}
+export SteamAppId=${VALHEIM_STEAMAPP_ID}
+
+/usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 -nohraphics -batchmode \
+  -name "${VALHEIM_NAME}" \
+  -world "${VALHEIM_WORLD}" \
+  -password "${VALHEIM_PASSWORD}" \
+  -port "${VALHEIM_PORT}" \
+  -public "$(if [[ "${VALHEIM_IS_PUBLIC^^}" = 'TRUE' ]]; then echo '1'; else echo '0'; fi)" \
+  "$(if [[ "${VALHEIM_CROSSPLAY_ENABLED^^}" = 'TRUE' ]]; then echo '-crossplay'; else echo ''; fi)" \
+  -savedir "${VALHEIM_SAVE_DIR}" \
+  -saveinterval 3600 \
+  -backups 4 \
+  -backupshort 7200 \
+  -backuplong 43200 \
+  -logFile "${VALHEIM_LOG_DIR}/${VALHEIM_NAME}-${VALHEIM_WORLD}.log" \
+  -instanceid '1' \
+;
+
+trap "kill -SIGINT $!;" SIGTERM
+
+# Wait for server to exit
+while wait $!; [ $? != 0 ]; do true; done
+
+export LD_LIBRARY_PATH=${tempLdLibPath}
