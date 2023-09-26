@@ -13,7 +13,6 @@ set LC_ALL=C
 ###
 # variable
 ###
-
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/valheim; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
@@ -24,6 +23,9 @@ if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID='
 
 declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 
+###
+# vprocess
+###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
 ${STEAMCMD_HOME}/steamcmd.sh +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit || echo '' >/dev/null 2>&1
 
