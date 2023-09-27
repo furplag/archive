@@ -274,7 +274,7 @@ declare -ir _version="$(_v="$(
 _log debug "_version=[${_version}]"
 
 # alternatives for java
-declare -r _alternatives_bin=$(if `which alternatives >/dev/null 2>&1`; then echo 'alternatives'; else echo 'update-alternatives')
+declare -r _alternatives_bin=$(if `which alternatives >/dev/null 2>&1`; then echo 'alternatives'; else echo 'update-alternatives'; fi)
 declare _alternatives=''
 for child in `ls "${_basedir}/${_java_home}/bin" | grep -vE "^java$"`; do
   [[ "${_alternatives:-}" = '' ]] && _alternatives="${_alternatives_bin} --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
