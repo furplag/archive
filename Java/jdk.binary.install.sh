@@ -274,14 +274,15 @@ declare -ir _version="$(_v="$(
 _log debug "_version=[${_version}]"
 
 # alternatives for java
+declare -r _alternatives_bin=$(if `which alternatives >/dev/null 2>&1`; then echo 'alternatives'; else echo 'update-alternatives')
 declare _alternatives=''
 for child in `ls "${_basedir}/${_java_home}/bin" | grep -vE "^java$"`; do
-  [[ "${_alternatives:-}" = '' ]] && _alternatives="alternatives --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
+  [[ "${_alternatives:-}" = '' ]] && _alternatives="${_alternatives_bin} --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
   _alternatives="${_alternatives} --slave /usr/bin/${child} ${child} ${_basedir}/${_java_home}/bin/${child}"
 done
 if [[ $(( ${config[maven]:-1} )) -eq 0 ]] && [[ -f "${_basedir}/maven/${_maven_home}" ]] && [[ -f "${_basedir}/maven/${_maven_home}" ]]; then
   for child in `ls "${_basedir}/${_java_home}/bin" | grep -vE "^java$"`; do
-    [[ "${_alternatives:-}" = '' ]] && _alternatives="alternatives --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
+    [[ "${_alternatives:-}" = '' ]] && _alternatives="${_alternatives_bin} --install /usr/bin/java java ${_basedir}/${_java_home}/bin/java ${_version}"
     _alternatives="${_alternatives} --slave /usr/bin/${child} ${child} ${_basedir}/${_java_home}/bin/${child}"
   done
 fi
@@ -292,7 +293,7 @@ if [[ -n "${_alternatives}" ]]; then
     done
   fi
   bash -c "${_alternatives}"
-  if alternatives --display java | grep "${_basedir}/${_java_home}/bin/java" >/dev/null; then _log INFO "alternatives \"java\" successfully installed as \"${_version}\" ."; fi
+  if $_alternatives_bin --display java | grep "${_basedir}/${_java_home}/bin/java" >/dev/null; then _log INFO "alternatives \"java\" successfully installed as \"${_version}\" ."; fi
 fi
 
 # environment
@@ -313,14 +314,14 @@ export M2_HOME=\${MAVEN_HOME}
 
 _EOT_
   fi
-  $(if `which alternatives >/dev/null 2>&1`; then echo 'alternatives'; else echo 'update-alternatives'; fi) --set java "${_basedir}/${_java_home}/bin/java" && source /etc/profile.d/java.sh
-else alternatives --set java "${_basedir}/${_java_home}/bin/java"; fi
+  ${_alternatives_bin} --set java "${_basedir}/${_java_home}/bin/java" && source /etc/profile.d/java.sh
+else ${_alternatives_bin} --set java "${_basedir}/${_java_home}/bin/java"; fi
 
 if [[ "${_basedir}/${_java_home}" = "${JAVA_HOME}" ]]; then
   _log SUCCESS "java \"${_basedir}/${_java_home}\" successfully installed ."
   _log SUCCESS "execute command below to change JDK,"
   _log SUCCESS ''
-  _log SUCCESS "alternatives --set java "${_basedir}/${_java_home}/bin/java" && source /etc/profile"
+  _log SUCCESS "${_alternatives_bin} --set java "${_basedir}/${_java_home}/bin/java" && source /etc/profile"
   _log SUCCESS ''
 else _log ERROR "failed install \"${_basedir}/${java_home}\" ."; result=1; fi
 
