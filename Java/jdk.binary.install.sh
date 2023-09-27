@@ -321,7 +321,7 @@ if [[ "${_basedir}/${_java_home}" = "${JAVA_HOME}" ]]; then
   _log SUCCESS "java \"${_basedir}/${_java_home}\" successfully installed ."
   _log SUCCESS "execute command below to change JDK,"
   _log SUCCESS ''
-  _log SUCCESS "${_alternatives_bin} --set java "${_basedir}/${_java_home}/bin/java" && source /etc/profile"
+  _log SUCCESS "${_alternatives_bin} --set java \"${_basedir}/${_java_home}/bin/java\" && source /etc/profile"
   _log SUCCESS ''
 else _log ERROR "failed install \"${_basedir}/${java_home}\" ."; result=1; fi
 
