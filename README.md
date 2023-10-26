@@ -1,4 +1,4 @@
-# RHEL, CentOS
+# RHEL, Rocky, Alma, Oracle Linux, CentOS (Amazon Linux)
 
 ## Using RPM repository
 
