@@ -41,7 +41,7 @@ DO NOT continue before next step .
 [[ -d '~/.authenticator/.well-known/acme-challenge' ]] || mkdir -p '~/.authenticator/.well-known/acme-challenge'
 echo '{validation-token-key}.{validation-token}' >~/.authenticator/.well-known/acme-challenge/{validation-token-key} && \
 cat <<_EOT_|bash
-cd "$(pwd)/.authenticator" && python -m http.server 80
+cd "$(pwd)/.authenticator" && python3 -m http.server 80
 ```
 
 ### Step 3. continue processing of certificate request
