@@ -265,7 +265,7 @@ fi
 declare -ir _version="$(_v="$(
   __v="$(echo "${_java_home}" | sed -e 's/^jdk\-\?//i' -e 's/^1\.//'  -e 's/^.*\([0-9]\+\)u/\1u/i' -e 's/^\([0-9]\+\)u\([0-9]\+\)$/\1.\2_00/' -e 's/u/./' -e 's/[\+\-]b\?/_/' -e 's/^\([0-9]\+\)_\([0-9]\+\)$/\1.00_\2/' -e 's/\.\([0-9]\+\)\.\([0-9]\+\)_/.\1\2_/' -e 's/\-.*$//' -e 's/\_\D$/_00/')";
   _major_version="${__v//.*}"
-  _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//'; else echo '00'; fi)"
+  _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//' -e 's/^0\([0-9]\)$/\1/'; else echo '00'; fi)"
   _minor_version="$(if [[ $(( ${_minor_version} )) -gt 99 ]]; then echo '99'; else echo "$(( ${_minor_version##0} ))"; fi)"
   _build_version="$(if echo "${__v}" | grep _ >/dev/null 2>&1; then echo "${__v//*_}" | sed -e 's/[^0-9]/0/gi'; else echo '00'; fi)"
   _build_version="$(if [[ $(( ${_build_version} )) -gt 99 ]]; then echo '99'; else echo "$(( ${_build_version##0} ))"; fi)"
