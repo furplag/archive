@@ -251,7 +251,7 @@ if [[ $(( ${config[debug]:-1} )) -eq 0 ]]; then
 
   _major_version="${__v//.*}"
   _log debug "major version: [$_major_version]"
-  _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//'; else echo '00'; fi)"
+  _minor_version="$(if echo "${__v}" | grep -E '\.' >/dev/null 2>&1; then echo "${__v//*.}" | sed -e 's/_.*$//' -e 's/^0\([0-9]\)$/\1/'; else echo '00'; fi)"
   _log debug "minor version: [$_minor_version]"
   _build_version="$(if echo "${__v}" | grep _ >/dev/null 2>&1; then echo "${__v//*_}" | sed -e 's/[^0-9]/0/gi'; else echo '00'; fi)"
   _log debug "build version: [$_build_version]"
