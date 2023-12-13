@@ -9,7 +9,22 @@ FROM furplag/box86_64:latest
 # [ ] a base image "furplag/box86_64:latest" should be build before this image .
 # [ ] a Docker Volume to persists game data ( recommends to use docker compose ) .
 #
+# NOTE:
+# auto update is currently unsupported yet, following step to migrate data .
+# 1. start container once .
+# 2. stop container and overwrite data from previous version to current version at "Volume" in docker host .
+#    * ${BEDROCK_SERVER_ROOT}/worlds ( directory )
+#    * ${BEDROCK_SERVER_ROOT}/allowlist.json
+#    * ${BEDROCK_SERVER_ROOT}/permissions.json
+#    * ${BEDROCK_SERVER_ROOT}/server.properties
+# 3. regenerate ( docker compose ) container with newer environment, or modify container environment
+#    in file: /var/lib/docker/containers/{container_id}/config.v2.json
+#    "Env":[ environment ... ]
+#
 
+###
+# ENV / variable
+###
 ARG LANG="en_US.UTF-8"
 ARG TZ="UTC"
 
