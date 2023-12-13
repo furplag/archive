@@ -1,0 +1,26 @@
+# cloudbeaver-oci.ampere-el.aarch64.docker-compose.yml
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+      args:
+        LANG: ${LANG}
+        TZ: ${TZ}
+        HOST_ENDPOINT: ${HOST_ENDPOINT}
+        DOCKER_LOCALHOST_IP: ${DOCKER_LOCALHOST_IP}
+    ports:
+      - "${HOST_ENDPOINT}:8978/tcp"
+    extra_hosts:
+      - "host.docker.internal:${DOCKER_LOCALHOST_IP}"
+    volumes:
+      - type: volume
+        source: cloudbeaver_data
+        target: /opt/cloudbeaver
+    tty: true
+
+volumes:
+  cloudbeaver_data:
+    name: cloudbeaver_data
+    external: true
