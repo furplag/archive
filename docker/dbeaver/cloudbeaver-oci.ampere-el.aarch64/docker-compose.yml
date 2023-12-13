@@ -1,4 +1,4 @@
-# cloudbeaver-oci.ampere-el.aarch64.docker-compose.yml
+# dbeaver/cloudbeaver-oci.ampere-el.aarch64.docker-compose.yml
 version: '3'
 
 services:
@@ -9,11 +9,18 @@ services:
         LANG: ${LANG}
         TZ: ${TZ}
         HOST_ENDPOINT: ${HOST_ENDPOINT}
-        DOCKER_LOCALHOST_IP: ${DOCKER_LOCALHOST_IP}
+        CLOUDBEAVER_PORT: ${CLOUDBEAVER_PORT}
+# add the following parameter if you need to access the database server on the host machine .
+# with following command:
+# echo "DOCKER_LOCALHOST_IP=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)" >./.env
+#
+#       DOCKER_LOCALHOST_IP: ${DOCKER_LOCALHOST_IP}
     ports:
-      - "${HOST_ENDPOINT}:8978/tcp"
-    extra_hosts:
-      - "host.docker.internal:${DOCKER_LOCALHOST_IP}"
+      - "${HOST_ENDPOINT}:${CLOUDBEAVER_PORT}/tcp"
+# add the following parameter if you need to access the database server on the host machine .
+# 
+#   extra_hosts:
+#     - "host.docker.internal:${DOCKER_LOCALHOST_IP}"
     volumes:
       - type: volume
         source: cloudbeaver_data
@@ -24,4 +31,4 @@ services:
 volumes:
   cloudbeaver_data:
     name: cloudbeaver_data
-    external: true
+#   external: true
