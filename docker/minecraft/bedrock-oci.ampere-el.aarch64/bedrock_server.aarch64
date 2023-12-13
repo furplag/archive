@@ -1,0 +1,33 @@
+#!/bin/bash
+set -ue -o pipefail
+set LC_ALL=C
+
+###
+# ENV / variable
+###
+
+if ! declare -p MINECRAFT_HOME >/dev/null 2>&1; then declare -r MINECRAFT_HOME=/opt/minecraft; fi
+if ! declare -p BEDROCK_VERSION >/dev/null 2>&1; then declare -r BEDROCK_VERSION='1.20.50.03'; fi
+if ! declare -p BEDROCK_SERVER_ROOT >/dev/null 2>&1; then declare -r BEDROCK_SERVER_ROOT="${MINECRAFT_HOME}/bedrock-server-${BEDROCK_VERSION}"; fi
+if ! declare -p BEDROCK_SERVER_LOG_DIR >/dev/null 2>&1; then declare -r BEDROCK_SERVER_LOG_DIR="${MINECRAFT_HOME}/_logs/bedrock-server-${BEDROCK_VERSION}"; fi
+if ! declare -p basedir >/dev/null 2>&1; then declare -r basedir=$(cd $(dirname $0); pwd); fi
+if ! declare -p basedir >/dev/null 2>&1; then declare -r basedir=$(cd $(dirname $0); pwd); fi
+
+###
+# process
+###
+
+# start Minecraft Bedrock Server .
+if [ -d "${BEDROCK_SERVER_ROOT}" ]; then
+  [ -d "${BEDROCK_SERVER_LOG_DIR}" ] || mkdir -p "${BEDROCK_SERVER_LOG_DIR}"
+  cat <<_EOT_|bash
+cd ${BEDROCK_SERVER_ROOT}
+LD_LIBRARY_PATH=.
+/usr/local/bin/box64 ${BEDROCK_SERVER_ROOT}/bedrock_server | tee "${BEDROCK_SERVER_LOG_DIR}/bedrock_server.$(date +%Y%m%d).log";
+_EOT_
+fi;
+
+trap "kill -SIGINT $!;" SIGTERM
+
+# Wait for server to exit
+while wait $!; [ $? != 0 ]; do true; done
