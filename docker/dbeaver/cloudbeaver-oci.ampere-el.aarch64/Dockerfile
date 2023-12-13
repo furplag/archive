@@ -1,5 +1,4 @@
 FROM debian:bookworm-slim
-
 ###
 # dbeaver/cloudbeaver-oci.ampere-el.aarch64/Dockerfile
 # https://github.com/furplag/archive/docker
