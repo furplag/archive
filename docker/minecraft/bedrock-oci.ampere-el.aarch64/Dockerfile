@@ -1,4 +1,14 @@
 FROM furplag/box86_64:latest
+###
+# minecraft/bedrock-oci.ampere-el.aarch64/Dockerfile
+# https://github.com/furplag/archive/docker
+#
+# running Valheim dedicated server on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
+#
+# Requirement
+# [ ] a base image "furplag/box86_64:latest" should be build before this image .
+# [ ] a Docker Volume to persists game data ( recommends to use docker compose ) .
+#
 
 ARG LANG="en_US.UTF-8"
 ARG TZ="UTC"
