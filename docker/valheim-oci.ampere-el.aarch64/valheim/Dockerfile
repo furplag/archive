@@ -1,7 +1,6 @@
 FROM furplag/steamcmd:latest
-
 ###
-# steamcmd-oci.ampere-el.aarch64/Dockerfile
+# valheim-oci.ampere-el.aarch64/Dockerfile
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
