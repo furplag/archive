@@ -20,6 +20,7 @@ services:
         target: /opt/cloudbeaver
     tty: true
 
+# must be add permissions to CLOUDBEAVER_USER ( CLOUDBEAVER_GROUP ) to handles data .
 volumes:
   cloudbeaver_data:
     name: cloudbeaver_data
