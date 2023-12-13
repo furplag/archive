@@ -13,7 +13,7 @@ FROM debian:bookworm-slim
 #
 # Usage
 # A. docker compose up -d --name {container} \
-#    -p ${MAPPING_PORT:-8978}:${EXPOSE_PORT:-8978}/tcp \
+#    -p ${LISTEN_PORT:-8978}:${CLOUDBEAVER_PORT:-8978}/tcp \
 #    server
 #
 
