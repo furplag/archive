@@ -1,0 +1,26 @@
+# minecraft/bedrock-oci.ampere-el.aarch64.docker-compose.yml
+version: '3'
+
+services:
+  bedrock-server:
+    build:
+      context: .
+      args:
+        LANG: ${LANG}
+        TZ: ${TZ}
+        MINECRAFT_USER: ${MINECRAFT_USER}
+        MINECRAFT_USER_ID: ${MINECRAFT_USER_ID}
+        BEDROCK_VERSION: ${BEDROCK_VERSION}
+        BEDROCK_SRC: ${BEDROCK_SRC}
+        BEDROCK_PORT: ${BEDROCK_PORT}
+    ports:
+      - "0.0.0.0:${BEDROCK_PORT}:${BEDROCK_PORT}/udp"
+    volumes:
+      - type: volume
+        source: bedrock_server_data
+        target: /opt/minecraft
+    tty: true
+
+volumes:
+  bedrock_server_data:
+    name: bedrock_server_data
