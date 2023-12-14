@@ -42,6 +42,8 @@ DO NOT continue before next step .
 echo '{validation-token-key}.{validation-token}' >~/.authenticator/.well-known/acme-challenge/{validation-token-key} && \
 cat <<_EOT_|bash
 cd "$(pwd)/.authenticator" && python3 -m http.server 80
+_EOT_
+
 ```
 
 ### Step 3. continue processing of certificate request
