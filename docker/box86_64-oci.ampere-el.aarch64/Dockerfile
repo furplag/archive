@@ -11,16 +11,16 @@ FROM debian:bookworm-slim
 # Usage
 # A. docker build https://github.com/furplag/archive/raw/master/docker/box86_64-oci.ampere-el.aarch64/Dockerfile -t furplag/box86_64:latest
 # B. docker build https://github.com/furplag/archive/raw/master/docker/box86_64-oci.ampere-el.aarch64/Dockerfile \
-#     --build-arg BOX86_VERSION=v0.3.2 \
-#     --build-arg BOX64_VERSION=v0.2.4 \
+#     --build-arg BOX86_VERSION=v0.3.4 \
+#     --build-arg BOX64_VERSION=v0.2.6 \
 #     -t furplag/box86_64
 #
 
 ###
 # ENV / variable
 ###
-ARG BOX86_VERSION="v0.3.2"
-ARG BOX64_VERSION="v0.2.4"
+ARG BOX86_VERSION="v0.3.4"
+ARG BOX64_VERSION="v0.2.6"
 
 ###
 # process
