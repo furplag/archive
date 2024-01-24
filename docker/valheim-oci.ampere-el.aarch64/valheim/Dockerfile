@@ -93,8 +93,8 @@ RUN sed -i -E "s/^# (en_US.UTF-8|${LANG})/\1/g" /etc/locale.gen && locale-gen;
 #RUN [ -f ${STEAM_LIBS_64}/steamclient.so ] && cp -pr ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/.;
 
 WORKDIR ${STEAM_HOME}
-RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/{valheim_server.aarch64} -o ${STEAM_HOME}/#1;
-RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/{valheim_server.update} -o ${STEAM_HOME}/#1;
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/valheim_server.aarch64 -o ${STEAM_HOME}/valheim_server.aarch64;
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/valheim_server.update -o ${STEAM_HOME}/valheim_server.update;
 
 RUN chmod +x ${STEAM_HOME}/valheim_server.aarch64;
 RUN chmod +x ${STEAM_HOME}/valheim_server.update;
@@ -115,17 +115,17 @@ VOLUME [ "${STEAM_HOME}" ]
 
 # user / group
 RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && \
-  useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -s /bin/bash ${STEAM_USER} && \
+  useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -d ${STEAM_HOME} -s /bin/bash ${STEAM_USER} && \
   chown -R ${STEAM_USER}:${STEAM_USER} ${STEAM_HOME};
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 RUN ${STEAM_HOME}/steamcmd.update;
-RUN mkdir -p ~/Steam ~/.steam && \
-  ln -fns "${STEAMCMD_HOME}/sdk32" ~/.steam/. && \
-  ln -fns "${STEAMCMD_HOME}/sdk64" ~/.steam/. && \
-  ln -fns "${STEAMCMD_HOME}/sdk32" ~/Steam/. && \
-  ln -fns "${STEAMCMD_HOME}/sdk64" ~/Steam/.;
+RUN mkdir -p ${STEAM_HOME}/Steam ${STEAM_HOME}/.steam && \
+  ln -fns "${STEAMCMD_HOME}/sdk32" ${STEAM_HOME}/.steam/. && \
+  ln -fns "${STEAMCMD_HOME}/sdk64" ${STEAM_HOME}/.steam/. && \
+  ln -fns "${STEAMCMD_HOME}/sdk32" ${STEAM_HOME}/Steam/. && \
+  ln -fns "${STEAMCMD_HOME}/sdk64" ${STEAM_HOME}/Steam/.;
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
