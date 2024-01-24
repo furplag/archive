@@ -1,20 +1,23 @@
 # valheim-oci.ampere-el.aarch64.docker-compose.yml
-version: '3'
+version: '3.4'
 
 services:
   server:
     build: .
+    container_name: ${VALHEIM_NAME}
     env_file: ./.env
     ports:
-      - "0.0.0.0:2456-2459:2456-2459/tcp"
-      - "0.0.0.0:2456-2459:2456-2459/udp"
+      - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/tcp"
+      - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp"
     volumes:
       - type: volume
         source: valheim_server_data
         target: /opt/steam
+    stdin_open: true
     tty: true
 
 # must be add permissions to VALHEIM_USER to handles data .
 volumes:
   valheim_server_data:
     name: valheim_server_data
+    external: true
