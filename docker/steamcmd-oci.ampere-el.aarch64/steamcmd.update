@@ -24,7 +24,7 @@ declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 ###
 # process
 ###
-export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath} && \
+export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath};
 
 # no one take care of the result, just there is only to avoid errors caused by anonymous access .
 declare result=`${STEAMCMD_HOME}/steamcmd.sh +quit`;
