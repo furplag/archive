@@ -22,7 +22,6 @@ FROM furplag/steamcmd:latest
 # ENV / variable
 ###
 
-ARG LANG="en_US.UTF-8"
 ARG TZ="UTC"
 
 ARG STEAM_HOME='/opt/steam'
@@ -47,7 +46,6 @@ ARG VALHEIM_IS_PUBLIC='FALSE'
 ARG VALHEIM_CROSSPLAY_ENABLED='FALSE'
 ARG VALHEIM_SERVER_UPDATE_ENABLED='TRUE'
 
-ENV LANG ${LANG}
 ENV TZ ${TZ}
 
 ENV STEAM_HOME ${STEAM_HOME}
@@ -70,39 +68,24 @@ ENV VALHEIM_SERVER_UPDATE_ENABLED ${VALHEIM_SERVER_UPDATE_ENABLED}
 
 # packages
 WORKDIR /
-RUN apt-get update && apt-get upgrade && apt-get dist-upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive && apt-get install -y \
-  curl locales \
-  libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0 \
-  libatomic1:armhf libglib2.0-0:armhf libpulse0:armhf libpulse-dev:armhf libpulse-mainloop-glib0:armhf;
-
-# localization
-RUN sed -i -E "s/^# (en_US.UTF-8|${LANG})/\1/g" /etc/locale.gen && locale-gen;
-
-###
-# libs to run server ( WiP, uncomment if necesary ) .
-###
-#RUN mkdir -p "${VALHEIM_HOME}/.tmp/extracted" && \
-# curl -fL http://ftp.de.debian.org/debian/pool/main/g/gcc-12/{libatomic1_12.2.0-14_amd64.deb} -o "${VALHEIM_HOME}/.tmp/#1" && \
-# curl -fL http://ftp.de.debian.org/debian/pool/main/p/pulseaudio/{libpulse0_16.1+dfsg1-2+b1_amd64.deb} -o "${VALHEIM_HOME}/.tmp/#1" && \
-# curl -fL http://ftp.de.debian.org/debian/pool/main/libs/libsdl2/{libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb} -o "${VALHEIM_HOME}/.tmp/#1";
-# curl -fL http://ftp.de.debian.org/debian/pool/main/g/glib-d/{libglibd-2.0-0_2.3.0-3_amd64.deb} -o "${VALHEIM_HOME}/.tmp/#1" && \
-# curl -fL http://ftp.de.debian.org/debian/pool/main/p/pulseaudio/{libpulse-mainloop-glib0_16.1+dfsg1-2+b1_amd64.deb} -o "${VALHEIM_HOME}/.tmp/#1";
-#RUN for _deb in `ls ${VALHEIM_HOME}/.tmp/*.deb`; do dpkg -x "${_deb}" ${VALHEIM_HOME}/.tmp/extracted; done;
-#RUN cp -pr ${VALHEIM_HOME}/.tmp/extracted/usr/lib/x86_64-linux-gnu/* ${VALHEIM_HOME}/.;
-#RUN [ -f ${STEAM_LIBS_64}/steamclient.so ] && cp -pr ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/.;
+RUN DEBIAN_FRONTEND=noninteractive; dpkg --add-architecture amd64;
+RUN DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get upgrade && apt-get dist-upgrade -y;
+RUN apt-get install -y \
+  curl \
+# libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0 \
+  libasyncns0:amd64 libatomic1:amd64 libc6:amd64 libglib2.0-0:amd64 libpulse0:amd64 libpulse-dev:amd64 libpulse-mainloop-glib0:amd64 libsdl2-2.0-0:amd64;
 
 WORKDIR ${STEAM_HOME}
 RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/valheim_server.aarch64 -o ${STEAM_HOME}/valheim_server.aarch64;
 RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-oci.ampere-el.aarch64/valheim/valheim_server.update -o ${STEAM_HOME}/valheim_server.update;
-
+#COPY valheim_server.aarch64 ${STEAM_HOME}
+#COPY valheim_server.update ${STEAM_HOME}
 RUN chmod +x ${STEAM_HOME}/valheim_server.aarch64;
 RUN chmod +x ${STEAM_HOME}/valheim_server.update;
 
 # cleanup image
 WORKDIR /
 USER root
-RUN rm -rf ${VALHEIM_HOME}/.tmp;
 RUN apt-get autoremove --purge -y curl;
 RUN rm -rf /var/lib/apt/lists/*;
 
