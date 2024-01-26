@@ -31,13 +31,13 @@ declare result=`${STEAMCMD_HOME}/steamcmd.sh +quit`;
 mkdir -p ${STEAM_HOME}/.steam ${STEAM_HOME}/Steam;
 if [[ -d "${STEAM_LIBS_86}" ]]; then
   ln -fns ${STEAM_LIBS_86} ${STEAMCMD_HOME}/sdk32;
-  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/.steam/sdk32";
-  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/Steam/sdk32";
+  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/.steam/sdk32;
+  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/Steam/sdk32;
 fi
 if [[ -d "${STEAM_LIBS_64}" ]]; then
   ln -fns ${STEAM_LIBS_64} ${STEAMCMD_HOME}/sdk64;
-  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/.steam/sdk64";
-  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/Steam/sdk64";
+  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/.steam/sdk64;
+  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/Steam/sdk64;
 fi
 
 ###
