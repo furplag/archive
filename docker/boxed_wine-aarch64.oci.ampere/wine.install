@@ -88,7 +88,7 @@ apt-get install -y curl
 apt-get install -y --no-install-recommends --no-install-suggests $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf
 
 # install wine x64 dependencies
-apt-get install -y --no-install-recommends --no-install-suggests "${_dependencies[@]}"
+apt-get install -y --no-install-recommends --no-install-suggests "${_dependencies[@]}" winbind
 
 # install winetricks dependencies
 apt-get install -y cabextract xvfb
