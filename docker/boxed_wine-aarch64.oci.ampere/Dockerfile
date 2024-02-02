@@ -21,7 +21,7 @@ FROM furplag/box86_64:latest
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG WINE_BRANCH="staging"
-ARG WINE_VERSION="9.1"
+ARG WINE_VERSION="7.15"
 ARG WINE_RELEASE="1"
 
 RUN dpkg --add-architecture armhf;
