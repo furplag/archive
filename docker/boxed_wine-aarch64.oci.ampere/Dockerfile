@@ -23,10 +23,20 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG WINE_BRANCH="staging"
 ARG WINE_VERSION="7.15"
 ARG WINE_RELEASE="1"
+ARG WINEDLLOVERRIDES="mscoree=d;mshtml=d"
+ARG W_OPT_UNATTENDED="1"
 
+ENV WINEDLLOVERRIDES=${WINEDLLOVERRIDES}
+ENV W_OPT_UNATTENDED=${W_OPT_UNATTENDED}
+
+###
+# process
+###
+# packages
 RUN dpkg --add-architecture armhf;
 RUN apt-get update && apt-get upgrade && apt-get dist-upgrade -y;
 RUN apt-get install -y curl;
+# wine
 RUN curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/wine.install \
   | WINE_BRANCH="${WINE_BRANCH}" WINE_VERSION="${WINE_VERSION}" WINE_RELEASE="${WINE_RELEASE}" bash;
 
