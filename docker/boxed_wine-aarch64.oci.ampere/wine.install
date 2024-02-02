@@ -1,0 +1,136 @@
+#!/bin/bash
+set -o pipefail
+set LC_ALL=C
+###
+# boxed_wine-aarch64.oci.ampere/wine.install
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "boxed_wine-aarch64.oci.ampere" .
+#
+# Usage
+# A. WINE_BRANCH="${WINE_BRANCH}" WINE_VERSION="${WINE_VERSION}" WINE_RELEASE="${WINE_RELEASE}" \
+#    curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/wine.install | bash;
+
+###
+# ENV / variable
+###
+if ! declare -p WINE_BRANCH >/dev/null 2>&1; then declare WINE_BRANCH=staging; fi
+if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=9.1; fi
+if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=; fi
+declare -r _os_version=`cat /etc/os-release | grep CODENAME= | sed -e 's/^.*=//'`
+declare -r _release="$(if [ "${WINE_RELEASE:-}" = '' ]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
+declare -r _repoUrlBase="https:///dl.winehq.org/wine-builds/$(cat /etc/os-release | grep -E ^ID= | sed -e 's/^.*=//')/dists/${_os_version}/main"
+declare -ar _sources=(
+  "${_repoUrlBase}/binary-amd64/wine-${WINE_BRANCH}-amd64_${WINE_VERSION}~${_os_version}${_release}_amd64.deb"
+  "${_repoUrlBase}/binary-amd64/wine-${WINE_BRANCH}_${WINE_VERSION}~${_os_version}${_release}_amd64.deb"
+  "${_repoUrlBase}/binary-i386/wine-${WINE_BRANCH}-i386_${WINE_VERSION}~${_os_version}${_release}_i386.deb"
+)
+declare -ar _dependencies=(
+  "libasound2-plugins"
+  "libasound2"
+  "libc6"
+  "libcairo2"
+  "libcups2"
+  "libdbus-1-3"
+  "libfontconfig1"
+  "libfreetype6"
+  "libglib2.0-0"
+  "libglu1-mesa"
+  "libgnutls30"
+  "libgphoto2-6"
+  "libgphoto2-port12"
+  "libgssapi-krb5-2"
+  "libgstreamer-plugins-base1.0-0"
+  "libgstreamer1.0-0"
+  "libgtk-3-0"
+  "libkrb5-3"
+  "libncurses6"
+  "libodbc2"
+  "libosmesa6"
+  "libpcap0.8"
+  "libpcsclite1"
+  "libpulse0"
+  "libsane1"
+  "libsdl2-2.0-0"
+  "libudev1"
+  "libunwind8"
+  "libusb-1.0-0"
+  "libv4l-0"
+  "libva-drm2"
+  "libva-x11-2"
+  "libva2"
+  "libwayland-client0"
+  "libx11-6"
+  "libxcomposite1"
+  "libxcursor1"
+  "libxext6"
+  "libxfixes3"
+  "libxi6"
+  "libxinerama1"
+  "libxkbcommon0"
+  "libxkbregistry0"
+  "libxrandr2"
+  "libxrender1"
+  "libxxf86vm1"
+  "ocl-icd-libopencl1"
+)
+
+###
+# process
+###
+dpkg --add-architecture armhf;
+apt-get update && apt-get upgrade && apt-get dist-upgrade -y;
+apt-get install -y curl;
+
+# install wine dependencies
+apt-get install -y --no-install-recommends --no-install-suggests $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf;
+
+# install wine x64 dependencies
+apt-get install -y --no-install-recommends --no-install-suggests "${_dependencies[@]}";
+
+# install winetricks dependencies
+apt-get install -y cabextract xvfb;
+
+mkdir -p /opt/wine/.tmp/extracted;
+
+cat <<_EOT_ | bash
+cd /opt/wine/.tmp;
+for _source in "${_sources[@]}"; do curl -fLO _source; done;
+for _deb in `ls ./*.deb`; do dpkg-deb -vx $_deb ./extracted; done;
+mv /opt/wine/.tmp/extracted/opt/wine*/* /opt/wine;
+
+curl -fLO http://ftp.us.debian.org/debian/pool/main/f/faudio/libfaudio0_21.02-1~bpo10+1_i386.deb;
+dpkg-deb -vx ./libfaudio0_21.02-1~bpo10+1_i386.deb libfaudio;
+cp -TRv libfaudio/usr /usr;
+_EOT_
+
+# winetricks
+curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+  -o /usr/bin/winetricks && chmod +x /usr/bin/winetricks;
+
+cat <<_EOT_> /usr/bin/wine
+#!/bin/sh
+WINEPREFIX=~/.wine WINEARCH=win32 BOX86_NOBANNER=1 box86 ~/wine/bin/wine \$@
+_EOT_
+chmod +x /usr/bin/wine;
+
+cat <<_EOT_> /usr/bin/wine64
+#!/bin/sh
+WINEPREFIX=~/.wine64 WINEARCH=win64 box64 /opt/wine/bin/wine64 \$@
+_EOT_
+chmod +x /usr/bin/wine64;
+
+cat <<_EOT_> /usr/bin/wineserver
+#!/bin/sh
+WINEPREFIX=~/.wine64 WINEARCH=win64 box64 /opt/wine/bin/wineserver \$@
+_EOT_
+chmod +x /usr/bin/wineserver;
+
+ln -fns /opt/wine/bin/wineboot /usr/bin/wineboot
+ln -fns /opt/wine/bin/winecfg /usr/bin/winecfg
+
+# cleanup
+apt-get autoremove --purge -y;
+apt-get clean autoclean && rm -rf /opt/wine/.tmp;
