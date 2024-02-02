@@ -1,5 +1,5 @@
 #!/bin/bash
-set -o pipefail
+set -ue -o pipefail
 set LC_ALL=C
 ###
 # boxed_wine-aarch64.oci.ampere/wine.install
