@@ -93,10 +93,12 @@ apt-get install -y --no-install-recommends --no-install-suggests "${_dependencie
 # install winetricks dependencies
 apt-get install -y cabextract xvfb
 
+# download Wine, then install .
 [ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
-for _source in "${_sources[@]}"; do _deb="$(echo "${_source}" | sed -e 's/^.*\///')"; curl -fL ${_source} -o /opt/wine/.tmp && dpkg-deb -vx /opt/wine/.tmp/${_deb} /opt/wine/.tmp/extracted; done;
+for _source in "${_sources[@]}"; do _deb="$(echo "${_source}" | sed -e 's/^.*\///')"; curl -fL ${_source} -o /opt/wine/.tmp/${_source} && dpkg-deb -vx /opt/wine/.tmp/${_deb} /opt/wine/.tmp/extracted; done;
 mv /opt/wine/.tmp/extracted/opt/wine*/* /opt/wine;
 
+# download libfaudio, then install .
 curl -fL http://ftp.us.debian.org/debian/pool/main/f/faudio/libfaudio0_21.02-1~bpo10+1_i386.deb -o /opt/wine/.tmp/libfaudio.deb;
 dpkg-deb -vx /opt/wine/.tmp/libfaudio.deb /opt/wine/.tmp/extracted/libfaudio;
 cp -TRv libfaudio/usr /usr;
@@ -105,6 +107,7 @@ cp -TRv libfaudio/usr /usr;
 curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
   -o /usr/bin/winetricks && chmod +x /usr/bin/winetricks;
 
+# setting up commands .
 cat <<_EOT_> /usr/bin/wine
 #!/bin/sh
 WINEPREFIX=~/.wine WINEARCH=win32 BOX86_NOBANNER=1 box86 ~/wine/bin/wine \$@
