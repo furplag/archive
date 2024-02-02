@@ -12,7 +12,7 @@ FROM furplag/box86_64:latest
 # A. docker build https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/Dockerfile -t furplag/boxed_wine:latest
 # B. docker build https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/Dockerfile \
 #     --build-arg WINE_BRANCH=staging \
-#     --build-arg WINE_VERSION=9.1 \
+#     --build-arg WINE_VERSION=7.15 \
 #     -t furplag/boxed_wine
 #
 
