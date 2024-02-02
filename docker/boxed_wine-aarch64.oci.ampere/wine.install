@@ -130,5 +130,5 @@ ln -fns /opt/wine/bin/wineboot /usr/bin/wineboot
 ln -fns /opt/wine/bin/winecfg /usr/bin/winecfg
 
 # cleanup
-apt-get autoremove --purge -y;
-apt-get clean autoclean && rm -rf /opt/wine/.tmp;
+apt-get autoremove --purge -y
+apt-get clean autoclean && rm -rf /opt/wine/.tmp
