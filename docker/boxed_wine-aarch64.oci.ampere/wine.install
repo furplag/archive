@@ -10,8 +10,8 @@ set LC_ALL=C
 # a part of Docker container "boxed_wine-aarch64.oci.ampere" .
 #
 # Usage
-# A. WINE_BRANCH="${WINE_BRANCH}" WINE_VERSION="${WINE_VERSION}" WINE_RELEASE="${WINE_RELEASE}" \
-#    curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/wine.install | bash;
+# A. curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/wine.install | \
+#    WINE_BRANCH="devel" WINE_VERSION="7.21" bash;
 
 ###
 # ENV / variable
@@ -95,7 +95,7 @@ apt-get install -y cabextract xvfb
 
 # download Wine, then install .
 [ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
-for _source in "${_sources[@]}"; do _deb="$(echo "${_source}" | sed -e 's/^.*\///')"; curl -fL ${_source} -o /opt/wine/.tmp/${_source} && dpkg-deb -vx /opt/wine/.tmp/${_deb} /opt/wine/.tmp/extracted; done;
+for _source in "${_sources[@]}"; do _deb="$(echo "${_source}" | sed -e 's/^.*\///')"; curl -fL ${_source} -o /opt/wine/.tmp/${_deb} && dpkg-deb -vx /opt/wine/.tmp/${_deb} /opt/wine/.tmp/extracted; done;
 mv /opt/wine/.tmp/extracted/opt/wine*/* /opt/wine;
 
 # download libfaudio, then install .
@@ -110,7 +110,7 @@ curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/wine
 # setting up commands .
 cat <<_EOT_> /usr/bin/wine
 #!/bin/sh
-WINEPREFIX=~/.wine WINEARCH=win32 BOX86_NOBANNER=1 box86 ~/wine/bin/wine \$@
+WINEPREFIX=~/.wine WINEARCH=win32 BOX86_NOBANNER=1 box86 /opt/wine/bin/wine \$@
 _EOT_
 chmod +x /usr/bin/wine;
 
