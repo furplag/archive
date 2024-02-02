@@ -63,7 +63,7 @@ RUN apt-get install -y --install-recommends \
 
 # cleanup
 WORKDIR /
-RUN apt-get autoremove --purge -y;
+RUN apt-get autoremove --purge -y curl;
 RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 
 WORKDIR /root
