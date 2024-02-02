@@ -18,7 +18,7 @@ set LC_ALL=C
 ###
 if ! declare -p WINE_BRANCH >/dev/null 2>&1; then declare WINE_BRANCH=staging; fi
 if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=9.1; fi
-if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=; fi
+if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=1; fi
 declare -r _os_version=`cat /etc/os-release | grep CODENAME= | sed -e 's/^.*=//'`
 declare -r _release="$(if [ "${WINE_RELEASE:-}" = '' ]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
 declare -r _repoUrlBase="https:///dl.winehq.org/wine-builds/$(cat /etc/os-release | grep -E ^ID= | sed -e 's/^.*=//')/dists/${_os_version}/main"
