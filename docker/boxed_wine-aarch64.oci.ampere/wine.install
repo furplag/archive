@@ -21,7 +21,7 @@ if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=9.1; 
 if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=1; fi
 declare -r _os_version=`cat /etc/os-release | grep CODENAME= | sed -e 's/^.*=//'`
 declare -r _release="$(if [ "${WINE_RELEASE:-}" = '' ]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
-declare -r _repoUrlBase="https:///dl.winehq.org/wine-builds/$(cat /etc/os-release | grep -E ^ID= | sed -e 's/^.*=//')/dists/${_os_version}/main"
+declare -r _repoUrlBase="https://dl.winehq.org/wine-builds/$(cat /etc/os-release | grep -E ^ID= | sed -e 's/^.*=//')/dists/${_os_version}/main"
 declare -ar _sources=(
   "${_repoUrlBase}/binary-amd64/wine-${WINE_BRANCH}-amd64_${WINE_VERSION}~${_os_version}${_release}_amd64.deb"
   "${_repoUrlBase}/binary-amd64/wine-${WINE_BRANCH}_${WINE_VERSION}~${_os_version}${_release}_amd64.deb"
@@ -80,31 +80,26 @@ declare -ar _dependencies=(
 ###
 # process
 ###
-dpkg --add-architecture armhf;
-apt-get update && apt-get upgrade && apt-get dist-upgrade -y;
-apt-get install -y curl;
+dpkg --add-architecture armhf
+apt-get update && apt-get upgrade && apt-get dist-upgrade -y
+apt-get install -y curl
 
 # install wine dependencies
-apt-get install -y --no-install-recommends --no-install-suggests $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf;
+apt-get install -y --no-install-recommends --no-install-suggests $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf
 
 # install wine x64 dependencies
-apt-get install -y --no-install-recommends --no-install-suggests "${_dependencies[@]}";
+apt-get install -y --no-install-recommends --no-install-suggests "${_dependencies[@]}"
 
 # install winetricks dependencies
-apt-get install -y cabextract xvfb;
+apt-get install -y cabextract xvfb
 
-mkdir -p /opt/wine/.tmp/extracted;
-
-cat <<_EOT_ | bash
-cd /opt/wine/.tmp;
-for _source in "${_sources[@]}"; do curl -fLO _source; done;
-for _deb in `ls ./*.deb`; do dpkg-deb -vx $_deb ./extracted; done;
+[ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
+for _source in "${_sources[@]}"; do _deb="$(echo "${_source}" | sed -e 's/^.*\///')"; curl -fL ${_source} -o /opt/wine/.tmp && dpkg-deb -vx /opt/wine/.tmp/${_deb} /opt/wine/.tmp/extracted; done;
 mv /opt/wine/.tmp/extracted/opt/wine*/* /opt/wine;
 
-curl -fLO http://ftp.us.debian.org/debian/pool/main/f/faudio/libfaudio0_21.02-1~bpo10+1_i386.deb;
-dpkg-deb -vx ./libfaudio0_21.02-1~bpo10+1_i386.deb libfaudio;
+curl -fL http://ftp.us.debian.org/debian/pool/main/f/faudio/libfaudio0_21.02-1~bpo10+1_i386.deb -o /opt/wine/.tmp/libfaudio.deb;
+dpkg-deb -vx /opt/wine/.tmp/libfaudio.deb /opt/wine/.tmp/extracted/libfaudio;
 cp -TRv libfaudio/usr /usr;
-_EOT_
 
 # winetricks
 curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
