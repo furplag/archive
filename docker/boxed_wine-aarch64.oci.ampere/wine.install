@@ -101,7 +101,7 @@ mv /opt/wine/.tmp/extracted/opt/wine*/* /opt/wine;
 # download libfaudio, then install .
 curl -fL http://ftp.us.debian.org/debian/pool/main/f/faudio/libfaudio0_21.02-1~bpo10+1_i386.deb -o /opt/wine/.tmp/libfaudio.deb;
 dpkg-deb -vx /opt/wine/.tmp/libfaudio.deb /opt/wine/.tmp/extracted/libfaudio;
-cp -TRv libfaudio/usr /usr;
+cp -TRv /opt/wine/.tmp/extracted/libfaudio/usr /usr;
 
 # winetricks
 curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
