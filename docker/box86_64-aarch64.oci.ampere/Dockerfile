@@ -35,7 +35,7 @@ RUN apt-get install --no-install-recommends --no-install-suggests -y \
 # Box86 ( see https://github.com/ptitSeb/box86 )
 WORKDIR /opt
 USER root
-RUN git clone https://github.com/ptitSeb/box86$(if [ "${BOX86_VERSION:-}" = '' ];  then echo '' else echo "-b ${BOX86_VERSION}"; fi) && \
+RUN git clone https://github.com/ptitSeb/box86$(if [[ "${BOX86_VERSION:-}" = '' ]];  then echo '' else echo "-b ${BOX86_VERSION}"; fi) && \
   mkdir -p /opt/box86/build;
 
 WORKDIR /opt/box86/build
@@ -45,7 +45,7 @@ RUN \
 
 # Box64 ( see https://github.com/ptitSeb/box64 )
 WORKDIR /opt
-RUN git clone https://github.com/ptitSeb/box64$(if [ "${BOX64_VERSION:-}" = '' ];  then echo '' else echo " -b ${BOX64_VERSION}"; fi) && \
+RUN git clone https://github.com/ptitSeb/box64$(if [[ "${BOX64_VERSION:-}" = '' ]];  then echo '' else echo " -b ${BOX64_VERSION}"; fi) && \
   mkdir -p /opt/box64/build;
 
 WORKDIR /opt/box64/build
