@@ -20,10 +20,10 @@ FROM furplag/box86_64:latest
 # ENV / variable
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG WINE_BRANCH="staging"
-ARG WINE_VERSION="7.15"
+ARG WINE_BRANCH="stable"
+ARG WINE_VERSION="7.0.2"
 ARG WINE_RELEASE="1"
-ARG WINEDLLOVERRIDES="mscoree=d"
+ARG WINEDLLOVERRIDES="mscoree=d;mshtml=d"
 ARG WINEDEBUG="fixme-all"
 ARG W_OPT_UNATTENDED="1"
 
@@ -49,7 +49,6 @@ RUN curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed_wine-a
 
 # cleanup
 WORKDIR /
-RUN apt-get autoremove --purge -y curl;
 RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 
 WORKDIR /root
