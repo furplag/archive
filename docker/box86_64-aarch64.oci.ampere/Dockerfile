@@ -20,8 +20,8 @@ FROM debian:bookworm-slim as boxes
 # ENV / variable
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
-#ARG BOX86_VERSION="v0.3.4"
-#ARG BOX64_VERSION="v0.2.6"
+ARG BOX86_VERSION=
+ARG BOX64_VERSION=
 
 ###
 # process
