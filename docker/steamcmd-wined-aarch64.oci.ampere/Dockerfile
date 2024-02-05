@@ -47,7 +47,7 @@ ENV DEBUGGER ${DEBUGGER}
 ###
 # packages
 RUN apt-get update && apt-get upgrade && apt-get dist-upgrade -y;
-RUN apt-get install -y curl sudo;
+RUN apt-get install -y curl sudo unzip;
 
 # user / group
 RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -d ${STEAM_HOME} -s /bin/bash ${STEAM_USER} && usermod -aG sudo ${STEAM_USER};
@@ -70,7 +70,7 @@ RUN cat ${STEAM_HOME}/steamcmd.update | bash;
 # cleanup
 WORKDIR /
 USER root
-RUN apt-get autoremove --purge -y curl;
+RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
