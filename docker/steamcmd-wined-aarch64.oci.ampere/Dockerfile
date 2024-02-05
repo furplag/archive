@@ -60,7 +60,7 @@ USER ${STEAM_USER}
 RUN wine64 wineboot && wine64 winecfg -v win10;
 RUN wine wineboot && wine winecfg -v win10;
 RUN xvfb-run -a sh -c "winetricks sound=disabled";
-RUN xvfb-run -a sh -c "winetricks -q vcrun2022"
+RUN xvfb-run -a sh -c "winetricks -q --force vcrun2022"
 
 # steamcmd
 WORKDIR ${STEAM_HOME}
