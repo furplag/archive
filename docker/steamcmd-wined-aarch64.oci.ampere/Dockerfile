@@ -38,6 +38,7 @@ ARG STEAM_GROUP_ID='1201'
 
 ENV STEAM_HOME ${STEAM_HOME}
 ENV STEAMCMD_HOME ${STEAM_HOME}/steamcmd
+ENV STEAMCMDW_HOME ${STEAM_HOME}/steamcmd-wined
 ENV STEAM_LIBS_86 ${STEAMCMD_HOME}/linux32
 ENV STEAM_LIBS_64 ${STEAMCMD_HOME}/linux64
 ENV DEBUGGER ${DEBUGGER}
@@ -57,15 +58,22 @@ RUN echo '%sudo ALL=NOPASSWD:ALL' >/etc/sudoers.d/999_steam;
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 RUN curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/{steamcmd.update} -o ${STEAM_HOME}/#1;
-RUN mkdir -p ${STEAMCMD_HOME};
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/{steamcmdw.update} -o ${STEAM_HOME}/#1;
+RUN mkdir -p ${STEAMCMD_HOME} ${STEAMCMDW_HOME};
 
 WORKDIR ${STEAMCMD_HOME}
 USER ${STEAM_USER}
 RUN curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf -;
 
+WORKDIR ${STEAMCMDW_HOME}
+USER ${STEAM_USER}
+RUN curl -fLO https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip steamcmd.zip && rm -rf steamcmd.zip;
+
+
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 RUN cat ${STEAM_HOME}/steamcmd.update | bash;
+RUN cat ${STEAM_HOME}/steamcmdw.update | bash;
 
 # cleanup
 WORKDIR /
