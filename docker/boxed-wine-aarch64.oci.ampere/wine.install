@@ -2,7 +2,7 @@
 set -ue -o pipefail
 set LC_ALL=C
 ###
-# boxed_wine-aarch64.oci.ampere/wine.install
+# boxed-wine-aarch64.oci.ampere/wine.install
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
@@ -10,8 +10,8 @@ set LC_ALL=C
 # a part of Docker container "boxed_wine-aarch64.oci.ampere" .
 #
 # Usage
-# A. curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed_wine-aarch64.oci.ampere/wine.install | \
-#    WINE_BRANCH="devel" WINE_VERSION="7.21" bash;
+# A. curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed-wine-aarch64.oci.ampere/wine.install | \
+#    WINE_BRANCH="stable" WINE_VERSION="7.0.2" bash;
 
 ###
 # ENV / variable
@@ -20,7 +20,7 @@ if ! declare -p WINE_BRANCH >/dev/null 2>&1; then declare WINE_BRANCH=stable; fi
 if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=7.0.2; fi
 if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=1; fi
 declare -r _os_version=`cat /etc/os-release | grep CODENAME= | sed -e 's/^.*=//'`
-declare -r _release="$(if [ "${WINE_RELEASE:-}" = '' ]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
+declare -r _release="$(if [[ "${WINE_RELEASE:-}" = '' ]]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
 declare -r _repoUrlBase="https://dl.winehq.org/wine-builds/$(cat /etc/os-release | grep -E ^ID= | sed -e 's/^.*=//')/dists/${_os_version}/main"
 declare -ar _sources=(
   "${_repoUrlBase}/binary-amd64/wine-${WINE_BRANCH}-amd64_${WINE_VERSION}~${_os_version}${_release}_amd64.deb"
