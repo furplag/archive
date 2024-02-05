@@ -28,10 +28,10 @@ declare -ar _sources=(
   "${_repoUrlBase}/binary-i386/wine-${WINE_BRANCH}-i386_${WINE_VERSION}~${_os_version}${_release}_i386.deb"
 )
 declare -ar _dependencies=(
-  "libasound2-plugins"
   "libasound2"
+  "libasound2-plugins"
   "libc6"
-  "libcairo2"
+  "libcapi20-3"
   "libcups2"
   "libdbus-1-3"
   "libfontconfig1"
@@ -41,27 +41,25 @@ declare -ar _dependencies=(
   "libgnutls30"
   "libgphoto2-6"
   "libgphoto2-port12"
+  "libgsm1"
   "libgssapi-krb5-2"
   "libgstreamer-plugins-base1.0-0"
   "libgstreamer1.0-0"
-  "libgtk-3-0"
+  "libjpeg62-turbo"
   "libkrb5-3"
-  "libncurses5"
-  "libodbc2"
+  "libncurses6"
+  "libodbc1"
   "libosmesa6"
   "libpcap0.8"
-  "libpcsclite1"
+  "libpng16-16"
   "libpulse0"
   "libsane1"
   "libsdl2-2.0-0"
+  "libtiff6"
   "libudev1"
   "libunwind8"
   "libusb-1.0-0"
   "libv4l-0"
-  "libva-drm2"
-  "libva-x11-2"
-  "libva2"
-  "libwayland-client0"
   "libx11-6"
   "libxcomposite1"
   "libxcursor1"
@@ -69,11 +67,11 @@ declare -ar _dependencies=(
   "libxfixes3"
   "libxi6"
   "libxinerama1"
-  "libxkbcommon0"
-  "libxkbregistry0"
   "libxrandr2"
   "libxrender1"
+  "libxslt1.1"
   "libxxf86vm1"
+  "mesa-utils"
   "ocl-icd-libopencl1"
 )
 
@@ -85,10 +83,10 @@ apt-get update && apt-get upgrade && apt-get dist-upgrade -y
 apt-get install -y curl
 
 # install wine dependencies
-apt-get install -y --no-install-recommends --no-install-suggests $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf
+apt-get install -y $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf
 
 # install wine x64 dependencies
-apt-get install -y --no-install-recommends --no-install-suggests "${_dependencies[@]}" winbind
+apt-get install -y "${_dependencies[@]}" winbind
 
 # install winetricks dependencies
 apt-get install -y cabextract winbind xvfb
