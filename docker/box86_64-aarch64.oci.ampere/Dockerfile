@@ -20,8 +20,8 @@ FROM debian:bookworm-slim as boxes
 # ENV / variable
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG BOX86_VERSION="v0.3.4"
-ARG BOX64_VERSION="v0.2.6"
+#ARG BOX86_VERSION="v0.3.4"
+#ARG BOX64_VERSION="v0.2.6"
 
 ###
 # process
@@ -45,12 +45,12 @@ RUN \
 
 # Box64 ( see https://github.com/ptitSeb/box64 )
 WORKDIR /opt
-RUN git clone https://github.com/ptitSeb/box64$(if [ "${BOX86_VERSION:-}" = '' ];  then echo '' else echo " -b ${BOX86_VERSION}"; fi) && \
+RUN git clone https://github.com/ptitSeb/box64$(if [ "${BOX64_VERSION:-}" = '' ];  then echo '' else echo " -b ${BOX64_VERSION}"; fi) && \
   mkdir -p /opt/box64/build;
 
 WORKDIR /opt/box64/build
 RUN \
-  cmake .. -DARM64=1 -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
+  cmake .. -DRPI4ARM64=1 -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
   make -j$(nproc) && make install DESTDIR=/opt/box;
 
 FROM debian:bookworm-slim
@@ -59,7 +59,7 @@ COPY --from=boxes /opt/box /
 # packages
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
 RUN apt-get install -y --install-recommends \
-  ca-certificates curl libc6:armhf libncurses6:armhf libstdc++6:armhf;
+  ca-certificates curl libc6:armhf libncurses5:armhf libstdc++6:armhf;
 
 # cleanup
 WORKDIR /
