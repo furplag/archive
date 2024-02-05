@@ -16,8 +16,8 @@ set LC_ALL=C
 ###
 # ENV / variable
 ###
-if ! declare -p WINE_BRANCH >/dev/null 2>&1; then declare WINE_BRANCH=staging; fi
-if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=9.1; fi
+if ! declare -p WINE_BRANCH >/dev/null 2>&1; then declare WINE_BRANCH=stable; fi
+if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=7.0.2; fi
 if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=1; fi
 declare -r _os_version=`cat /etc/os-release | grep CODENAME= | sed -e 's/^.*=//'`
 declare -r _release="$(if [ "${WINE_RELEASE:-}" = '' ]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
@@ -89,7 +89,7 @@ apt-get install -y $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf
 apt-get install -y "${_dependencies[@]}" winbind
 
 # install winetricks dependencies
-apt-get install -y cabextract winbind xvfb
+apt-get install -y cabextract wget winbind xvfb
 
 # download Wine, then install .
 [ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
@@ -128,5 +128,4 @@ ln -fns /opt/wine/bin/wineboot /usr/bin/wineboot
 ln -fns /opt/wine/bin/winecfg /usr/bin/winecfg
 
 # cleanup
-apt-get autoremove --purge -y
 apt-get clean autoclean && rm -rf /opt/wine/.tmp
