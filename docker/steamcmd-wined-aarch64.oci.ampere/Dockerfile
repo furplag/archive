@@ -54,6 +54,14 @@ RUN apt-get install -y curl sudo unzip;
 RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -d ${STEAM_HOME} -s /bin/bash ${STEAM_USER} && usermod -aG sudo ${STEAM_USER};
 RUN echo '%sudo ALL=NOPASSWD:ALL' >/etc/sudoers.d/999_steam;
 
+# wine
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
+RUN wine64 wineboot && wine64 winecfg -v win10;
+RUN wine wineboot && wine winecfg -v win10;
+RUN xvfb-run -a sh -c "winetricks sound=disabled";
+RUN xvfb-run -a sh -c "winetricks -q vcrun2022"
+
 # steamcmd
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
@@ -68,7 +76,6 @@ RUN curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.
 WORKDIR ${STEAMCMDW_HOME}
 USER ${STEAM_USER}
 RUN curl -fLO https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip steamcmd.zip && rm -rf steamcmd.zip;
-
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
