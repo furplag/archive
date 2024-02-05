@@ -60,6 +60,7 @@ RUN cat ${STEAM_HOME}/steamcmd.update | bash;
 
 # cleanup
 RUN apt-get autoremove --purge -y curl;
+RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 RUN rm -rf ~/Steam;
 
 WORKDIR ${STEAM_HOME}
