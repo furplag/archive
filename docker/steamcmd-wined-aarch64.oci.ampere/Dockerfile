@@ -57,10 +57,9 @@ RUN echo '%sudo ALL=NOPASSWD:ALL' >/etc/sudoers.d/999_steam;
 # wine
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
-RUN wine64 wineboot && wine64 winecfg -v win10;
-RUN wine wineboot && wine winecfg -v win10;
+RUN wine wineboot && wine64 wineboot;
 RUN xvfb-run -a sh -c "winetricks sound=disabled";
-RUN xvfb-run -a sh -c "winetricks -q --force vcrun2022"
+RUN xvfb-run -a sh -c "winetricks -q --force vcrun2019"
 
 # steamcmd
 WORKDIR ${STEAM_HOME}
@@ -79,13 +78,14 @@ RUN curl -fLO https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && u
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
+RUN chmod +x ${STEAM_HOME}/steamcmd*.update;
 RUN cat ${STEAM_HOME}/steamcmd.update | bash;
 RUN cat ${STEAM_HOME}/steamcmdw.update | bash;
 
 # cleanup
 WORKDIR /
 USER root
-RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
+RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists ${STEAM_HOME}/.cache;
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
