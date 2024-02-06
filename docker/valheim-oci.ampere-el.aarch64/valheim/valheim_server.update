@@ -2,7 +2,7 @@
 set -u -o pipefail
 set LC_ALL=C
 ###
-# valheim-oci.ampere-el.aarch64/valheim/valheim_server.aarch64
+# valheim-aarch64.oci.ampere/valheim_server.aarch64
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
@@ -29,8 +29,11 @@ declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
 ${STEAMCMD_HOME}/steamcmd.sh +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit || echo '' >/dev/null 2>&1
 
-if [ -f ${VALHEIM_HOME}/steamclient.so ]; then cp -pr ${VALHEIM_HOME}/steamclient.so ${VALHEIM_HOME}/linux64/.;
-elif [ -f ${VALHEIM_HOME}/docker/steamclient.so ]; then cp -pr ${VALHEIM_HOME}/docker/steamclient.so ${VALHEIM_HOME}/linux64/.;
-elif [ -f ${STEAM_LIBS_64}/steamclient.so ]; then cp -pr ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/.; fi
+if [ -f ${STEAM_LIBS_64}/steamclient.so ]; then cp -pr ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/.; fi
+
+if [[ -f ${VALHEIM_HOME}/valheim_server_Data/Plugins/libparty.so ]]; then
+  [ -d ${VALHEIM_HOME}/valheim_server_Data/MonoBleedingEdge/x86_64 ] && \
+    ln -fns ${VALHEIM_HOME}/valheim_server_Data/Plugins/libparty.so ${VALHEIM_HOME}/valheim_server_Data/MonoBleedingEdge/x86_64/libparty.so;
+fi
 
 export LD_LIBRARY_PATH=${tempLdLibPath}
