@@ -2,12 +2,12 @@
 set -o pipefail
 set LC_ALL=C
 ###
-# valheim-oci.ampere-el.aarch64/valheim/valheim_server.aarch64
+# valheim-aarch64.oci.ampere/valheim_server.aarch64
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
 #
-# a part of Docker container "valheim-oci.ampere-el.aarch64/valheim" .
+# a part of Docker container "valheim-aarch64.oci.ampere" .
 #
 
 ###
@@ -45,10 +45,11 @@ if [[  "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then
   declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
   ${STEAM_HOME}/valheim_server.update
   export LD_LIBRARY_PATH=${tempLdLibPath}
+  [ "${VALHEIM_CROSSPLAY_ENABLED^^}" = 'TRUE' ] || rm -rf ${VALHEIM_HOME}/valheim_server_Data/{Plugins,MonoBleedingEdge/x86_64}/libparty.so;
 fi
 
 # start Valheim Server .
-export LD_LIBRARY_PATH=${STEAM_LIBS_64}:${VALHEIM_HOME}/linux64:${tempLdLibPath}
+export LD_LIBRARY_PATH=${VALHEIM_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
 export SteamAppId=${VALHEIM_STEAMAPP_ID}
 
 /usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 -nohraphics -batchmode \
