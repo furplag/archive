@@ -8,7 +8,7 @@ FROM furplag/steamcmd:latest
 # running Valheim dedicated server on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
 # Requirement
-# [ ] a base image "furplag/steamcmd-wined:latest" should be build before this image .
+# [ ] a base image "furplag/steamcmd:latest" should be build before this image .
 # [ ] a Docker Volume to persists game data ( recommends to use docker compose ) .
 #
 # Usage
