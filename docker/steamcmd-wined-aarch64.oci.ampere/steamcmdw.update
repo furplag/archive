@@ -20,10 +20,7 @@ if ! declare -p STEAMCMDW_HOME >/dev/null 2>&1; then declare -r STEAMCMDW_HOME=$
 # process
 ###
 # no one take care of the result, just there is only to avoid errors caused by anonymous access .
-cat <<_EOT_| bash
-cd ${STEAMCMDW_HOME};
-declare result=`wine steamcmd.exe +quit`;
-_EOT_
+declare _result=`wine ${STEAMCMDW_HOME}/steamcmd.exe +quit`;
 
 ###
 # cleanup
