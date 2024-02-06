@@ -4,8 +4,8 @@ version: '3.4'
 services:
   server:
     build: .
+    env_file: ./.valheim.env
     container_name: ${VALHEIM_NAME}
-    env_file: ./.env
     ports:
       - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/tcp"
       - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp"
