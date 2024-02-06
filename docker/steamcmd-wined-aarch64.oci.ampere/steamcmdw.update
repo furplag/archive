@@ -15,13 +15,15 @@ set LC_ALL=C
 ###
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
 if ! declare -p STEAMCMDW_HOME >/dev/null 2>&1; then declare -r STEAMCMDW_HOME=${STEAM_HOME}/steamcmd-wined; fi
+declare _pwd="`pwd`"
 
 ###
 # process
 ###
 # no one take care of the result, just there is only to avoid errors caused by anonymous access .
-declare _result=`wine ${STEAMCMDW_HOME}/steamcmd.exe +quit`;
+cd ${STEAMCMDW_HOME} && /usr/bin/wine steamcmd.exe +quit;
 
 ###
 # cleanup
 ###
+cd $_pwd;
