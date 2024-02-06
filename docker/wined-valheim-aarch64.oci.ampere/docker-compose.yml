@@ -1,0 +1,23 @@
+# wined-valheim-aarch64.oci.ampere/docker-compose.yml
+version: '3.4'
+
+services:
+  server:
+    build: .
+    env_file: ./.valheim.env
+    container_name: ${VALHEIM_NAME}
+    ports:
+      - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/tcp"
+      - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp"
+    volumes:
+      - type: volume
+        source: wined_valheim_server_data
+        target: /opt/steam
+    stdin_open: true
+    tty: true
+
+# must be add permissions to VALHEIM_USER to handles data .
+volumes:
+  wined_valheim_server_data:
+    name: wined_valheim_server_data
+    external: true
