@@ -48,7 +48,7 @@ RUN \
 # steamcmd
 WORKDIR ${STEAM_HOME}
 RUN mkdir -p ${STEAMCMD_HOME} && \
-  curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-oci.ampere-el.aarch64/{steamcmd.update} -o ${STEAM_HOME}/#1;
+  curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/{steamcmd.update} -o ${STEAM_HOME}/#1;
 
 RUN [ -f "${STEAM_HOME}/steamcmd.update" ] && chmod +x ${STEAM_HOME}/steamcmd.update;
 
