@@ -64,10 +64,6 @@ WORKDIR ${STEAMCMD_HOME}
 USER ${STEAM_USER}
 RUN curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf -;
 
-WORKDIR ${STEAMCMDW_HOME}
-USER ${STEAM_USER}
-RUN curl -fLO https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip steamcmd.zip && rm -rf steamcmd.zip;
-
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 RUN chmod +x ${STEAM_HOME}/steamcmd*.update;
