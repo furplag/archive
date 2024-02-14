@@ -40,7 +40,7 @@ RUN git clone https://github.com/ptitSeb/box86$(if [[ "${BOX86_VERSION:-}" = '' 
 
 WORKDIR /opt/box86/build
 RUN \
-  cmake .. -DRPI4ARM64=1 -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
+  cmake .. -DARM64=1 -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
   make -j$(nproc) && make install DESTDIR=/opt/box;
 
 # Box64 ( see https://github.com/ptitSeb/box64 )
@@ -50,7 +50,7 @@ RUN git clone https://github.com/ptitSeb/box64$(if [[ "${BOX64_VERSION:-}" = '' 
 
 WORKDIR /opt/box64/build
 RUN \
-  cmake .. -DRPI4ARM64=1 -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
+  cmake .. -DARM64=1 -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
   make -j$(nproc) && make install DESTDIR=/opt/box;
 
 FROM debian:bookworm-slim
