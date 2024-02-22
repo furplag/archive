@@ -117,7 +117,6 @@ ln -fns /opt/wine/bin/wineboot /usr/local/bin/wineboot
 ln -fns /opt/wine/bin/winecfg /usr/local/bin/winecfg
 
 # winetricks
-[ -d /opt/wine/winetricks ] || mkdir -p /opt/wine/winetricks
 curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
   -o /opt/wine/winetricks && chmod +x /opt/wine/winetricks;
 ln -fns /opt/wine/winetricks /usr/local/bin/winetricks;
