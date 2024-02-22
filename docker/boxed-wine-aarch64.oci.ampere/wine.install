@@ -89,17 +89,10 @@ dpkg --add-architecture armhf && apt-get update && apt-get upgrade && apt-get di
 apt-get install -y $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf \
 "${_dependencies[@]}" cabextract wget xvfb;
 
-# install winetricks dependencies
-apt-get install -y cabextract wget winbind xvfb
-
 # download Wine, then install .
 [ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
 for _source in "${_sources[@]}"; do _deb="$(echo "${_source}" | sed -e 's/^.*\///')"; curl -fL ${_source} -o /opt/wine/.tmp/${_deb} && dpkg-deb -vx /opt/wine/.tmp/${_deb} /opt/wine/.tmp/extracted; done;
 mv /opt/wine/.tmp/extracted/opt/wine*/* /opt/wine;
-
-# winetricks
-curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
-  -o /usr/bin/winetricks && chmod +x /usr/bin/winetricks;
 
 # setting up commands .
 cat <<_EOT_> /usr/local/bin/wine
@@ -122,6 +115,12 @@ chmod +x /usr/local/bin/wineserver;
 
 ln -fns /opt/wine/bin/wineboot /usr/local/bin/wineboot
 ln -fns /opt/wine/bin/winecfg /usr/local/bin/winecfg
+
+# winetricks
+[ -d /opt/wine/winetricks ] || mkdir -p /opt/wine/winetricks
+curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+  -o /opt/wine/winetricks && chmod +x /opt/wine/winetricks;
+ln -fns /opt/wine/winetricks /usr/local/bin/winetricks;
 
 # cleanup
 apt-get clean autoclean && rm -rf /opt/wine/.tmp
