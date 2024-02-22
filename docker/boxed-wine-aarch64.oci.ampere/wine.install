@@ -87,7 +87,7 @@ dpkg --add-architecture armhf && apt-get update && apt-get upgrade && apt-get di
 
 # install wine, wine64 and winetricks dependencies
 apt-get install -y $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf \
-"${_dependencies[@]}" cabextract wget winbind xvfb zenity;
+"${_dependencies[@]}" cabextract wget xvfb;
 
 # install winetricks dependencies
 apt-get install -y cabextract wget winbind xvfb
