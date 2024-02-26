@@ -1,14 +1,14 @@
-FROM furplag/steamcmd-wined:latest
+FROM furplag/steamcmd_wined:latest
 ###
 # wined-valheim-aarch64.oci.ampere/Dockerfile
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
 #
-# running Valheim dedicated server on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
+# running Valheim dedicated server ( Windows platform ) on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
 # Requirement
-# [ ] a base image "furplag/steamcmd-wined:latest" should be build before this image .
+# [ ] a base image "furplag/steamcmd_wined:latest" should be build before this image .
 # [ ] a Docker Volume to persists game data ( recommends to use docker compose ) .
 #
 # Usage
@@ -39,7 +39,7 @@ ARG VALHEIM_STEAMAPP_ID='892970'
 ARG VALHEIM_NAME='Valheim'
 ARG VALHEIM_WORLD='Dedicated'
 ARG VALHEIM_PORT='2456'
-ARG VALHEIM_PORT_ASIDE='2457'
+ARG VALHEIM_PORT_ASIDE='2458'
 ARG VALHEIM_PASSWORD='s3CRet'
 ARG VALHEIM_SAVE_DIR="${VALHEIM_HOME}/_saves"
 ARG VALHEIM_LOG_DIR="${VALHEIM_HOME}/_logs"
@@ -70,11 +70,11 @@ ENV VALHEIM_SERVER_UPDATE_ENABLED ${VALHEIM_SERVER_UPDATE_ENABLED}
 # packages
 WORKDIR /
 USER root
-#RUN dpkg --add-architecture amd64;
+RUN dpkg --add-architecture armhf;
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get install -y curl sudo wget;
-# libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0 \
-# libasyncns0:amd64 libatomic1:amd64 libc6:amd64 libglib2.0-0:amd64 libpulse0:amd64 libpulse-dev:amd64 libpulse-mainloop-glib0:amd64 libsdl2-2.0-0:amd64;
+RUN apt-get install -y curl sudo wget \
+  libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0 \
+  libasyncns0:armhf libatomic1:armhf libglib2.0-0:armhf libpulse0:armhf libpulse-dev:armhf libpulse-mainloop-glib0:armhf libsdl2-2.0-0:armhf;
 
 WORKDIR ${STEAM_HOME}
 USER root
@@ -93,7 +93,6 @@ USER root
 RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists ${STEAM_HOME}/.cache;
 
 # ports
-EXPOSE ${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/tcp
 EXPOSE ${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp
 
 WORKDIR ${STEAM_HOME}
