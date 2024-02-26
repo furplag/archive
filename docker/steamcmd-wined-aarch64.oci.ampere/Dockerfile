@@ -1,7 +1,7 @@
 FROM furplag/boxed_wine:latest
 
 ###
-# steamcmd-wined-oci.ampere.aarch64/Dockerfile
+# steamcmd_wined-oci.ampere.aarch64/Dockerfile
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
@@ -9,18 +9,18 @@ FROM furplag/boxed_wine:latest
 # a base Dockerfile that enable to use steamcmd on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
 # Requirement
-# a base image "furplag/boxed_wine:latest" should be build before this image () .
+# a base image "furplag/boxed_wine:latest" should be build before this image (https://github.com/furplag/archive/raw/master/docker/boxed-wine-aarch64.oci.ampere/Dockerfile) .
 # 
 # Usage
-# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd-wined:latest
+# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd_wined:latest
 # B. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile \
 #     --build-arg STEAM_HOME='~/steam' \
 #     ...
-#     -t furplag/steamcmd-wined:latest
-# C. docker build https://github.com/furplag/archive/raw/master/docker/boxed-wine-aarch64.oci.ampere/Dockerfile -t furplag/boxed-wine:latest && \
-#     docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd-wined:latest
+#     -t furplag/steamcmd_wined:latest
+# C. docker build https://github.com/furplag/archive/raw/master/docker/boxed-wine-aarch64.oci.ampere/Dockerfile -t furplag/boxed_wine:latest && \
+#     docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd_wined:latest
 # D. curl -fLsS https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile \
-#     | sed -e 's/^FROM.*$/FROM {a base image that Box86/Box64 executable}/' | docker build -t furplag/steamcmd-wined:latest -
+#     | sed -e 's/^FROM.*$/FROM {a base image that Box86/Box64 executable}/' | docker build -t furplag/steamcmd_wined:latest -
 #    ( should set system-wide Environment "DEBUGGER" has path to Box86 . )
 #
 
