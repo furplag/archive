@@ -19,6 +19,12 @@ set LC_ALL=C
 if ! declare -p WINE_BRANCH >/dev/null 2>&1; then declare WINE_BRANCH=stable; fi
 if ! declare -p WINE_VERSION >/dev/null 2>&1; then declare -r WINE_VERSION=7.0.2; fi
 if ! declare -p WINE_RELEASE >/dev/null 2>&1; then declare -r WINE_RELEASE=1; fi
+if ! declare -p WINEDLLOVERRIDES >/dev/null 2>&1; then declare -r WINEDLLOVERRIDES="mscoree,mshtml="; fi
+if ! declare -p WINEDEBUG >/dev/null 2>&1; then declare -r WINEDEBUG="-all"; fi
+if ! declare -p W_OPT_UNATTENDED >/dev/null 2>&1; then declare -r W_OPT_UNATTENDED="1"; fi
+if ! declare -p BOX86_NOBANNER >/dev/null 2>&1; then declare -r BOX86_NOBANNER="1"; fi
+if ! declare -p BOX64_NOBANNER >/dev/null 2>&1; then declare -r BOX64_NOBANNER="1"; fi
+
 declare -r _os_version=`cat /etc/os-release | grep CODENAME= | sed -e 's/^.*=//'`
 declare -r _release="$(if [[ "${WINE_RELEASE:-}" = '' ]]; then echo ''; else echo '-'; fi)${WINE_RELEASE}"
 declare -r _repoUrlBase="https://dl.winehq.org/wine-builds/$(cat /etc/os-release | grep -E ^ID= | sed -e 's/^.*=//')/dists/${_os_version}/main"
@@ -115,6 +121,16 @@ chmod +x /usr/local/bin/wineserver;
 
 ln -fns /opt/wine/bin/wineboot /usr/local/bin/wineboot
 ln -fns /opt/wine/bin/winecfg /usr/local/bin/winecfg
+
+# environment
+cat <<_EOT_> /etc/profile.d/wine.sh
+\# /etc/profile.d/wine.sh
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES}"
+export WINEDEBUG="${WINEDEBUG}"
+export W_OPT_UNATTENDED="${W_OPT_UNATTENDED}"
+export BOX86_NOBANNER="${BOX86_NOBANNER}"
+export BOX64_NOBANNER="${BOX64_NOBANNER}"
+_EOT_
 
 # winetricks
 curl -fL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
