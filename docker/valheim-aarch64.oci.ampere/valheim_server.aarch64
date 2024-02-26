@@ -45,7 +45,6 @@ if [[  "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then
   declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
   ${STEAM_HOME}/valheim_server.update
   export LD_LIBRARY_PATH=${tempLdLibPath}
-  [ "${VALHEIM_CROSSPLAY_ENABLED^^}" = 'TRUE' ] || rm -rf ${VALHEIM_HOME}/valheim_server_Data/{Plugins,MonoBleedingEdge/x86_64}/libparty.so;
 fi
 
 # start Valheim Server .
