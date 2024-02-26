@@ -1,4 +1,4 @@
-FROM furplag/boxed-wine:latest
+FROM furplag/boxed_wine:latest
 
 ###
 # steamcmd-wined-oci.ampere.aarch64/Dockerfile
@@ -9,7 +9,7 @@ FROM furplag/boxed-wine:latest
 # a base Dockerfile that enable to use steamcmd on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
 #
 # Requirement
-# a base image "furplag/boxed-wine:latest" should be build before this image .
+# a base image "furplag/boxed_wine:latest" should be build before this image () .
 # 
 # Usage
 # A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd-wined:latest
@@ -38,7 +38,6 @@ ARG STEAM_GROUP_ID='1201'
 
 ENV STEAM_HOME ${STEAM_HOME}
 ENV STEAMCMD_HOME ${STEAM_HOME}/steamcmd
-ENV STEAMCMDW_HOME ${STEAM_HOME}/steamcmd-wined
 ENV STEAM_LIBS_86 ${STEAMCMD_HOME}/linux32
 ENV STEAM_LIBS_64 ${STEAMCMD_HOME}/linux64
 ENV DEBUGGER ${DEBUGGER}
@@ -54,33 +53,35 @@ RUN apt-get install -y curl sudo unzip;
 RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -d ${STEAM_HOME} -s /bin/bash ${STEAM_USER} && usermod -aG sudo ${STEAM_USER};
 RUN echo '%sudo ALL=NOPASSWD:ALL' >/etc/sudoers.d/999_steam;
 
+# environment
+RUN echo '# /etc/profile.d/steamcmd.sh' >/etc/profile.d/steamcmd.sh;
+RUN echo "export DEBUGGER=${DEBUGGER}" >>/etc/profile.d/steamcmd.sh;
+RUN echo "export STEAMCMD_HOME=${STEAMCMD_HOME}" >>/etc/profile.d/steamcmd.sh;
+RUN echo "export STEAM_LIBS_86=${STEAM_LIBS_86}" >>/etc/profile.d/steamcmd.sh;
+RUN echo "export STEAM_LIBS_64=${STEAM_LIBS_64}" >>/etc/profile.d/steamcmd.sh;
+
 # wine
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
-RUN wine wineboot && wine64 wineboot;
-RUN xvfb-run -a sh -c "winetricks sound=disabled";
-RUN xvfb-run -a sh -c "winetricks -q --force vcrun2019"
+RUN wine wineboot && wineserver -w;
+RUN wine64 wineboot;
+RUN xvfb-run -a sh -c "winetricks -q sound=disabled";
+RUN xvfb-run -a sh -c "winetricks -q --force vcrun2022"
 
 # steamcmd
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 RUN curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/{steamcmd.update} -o ${STEAM_HOME}/#1;
-RUN curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-wined-aarch64.oci.ampere/{steamcmdw.update} -o ${STEAM_HOME}/#1;
 RUN mkdir -p ${STEAMCMD_HOME} ${STEAMCMDW_HOME};
 
 WORKDIR ${STEAMCMD_HOME}
 USER ${STEAM_USER}
 RUN curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf -;
-
-WORKDIR ${STEAMCMDW_HOME}
-USER ${STEAM_USER}
-RUN curl -fLO https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip steamcmd.zip && rm -rf steamcmd.zip;
+RUN if [[ -f ${STEAMCMD_HOME}/steamcmd.sh ]]; then chmod +x ${STEAMCMD_HOME}/steamcmd.sh; fi;
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
-RUN chmod +x ${STEAM_HOME}/steamcmd*.update;
 RUN cat ${STEAM_HOME}/steamcmd.update | bash;
-RUN cat ${STEAM_HOME}/steamcmdw.update | bash;
 
 # cleanup
 WORKDIR /
