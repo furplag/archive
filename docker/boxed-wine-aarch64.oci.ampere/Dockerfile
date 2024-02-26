@@ -54,7 +54,7 @@ RUN curl -fLsS https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor 
 # install Box86 / 64 with dependencies
 RUN apt-get update && apt-get install --install-recommends -y \
   ca-certificates gcc-arm-linux-gnueabihf libc6-dev-armhf-cross libc6:armhf libncurses6:armhf libstdc++6:armhf \
-  box86-rpi4arm64 box64-rpi4arm64;
+  box86-generic-arm box64-rpi4arm64;
 
 # install Wine
 RUN curl -fLsS https://github.com/furplag/archive/raw/master/docker/boxed-wine-aarch64.oci.ampere/wine.install \
