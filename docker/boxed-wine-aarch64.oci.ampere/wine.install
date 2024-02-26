@@ -124,7 +124,7 @@ ln -fns /opt/wine/bin/winecfg /usr/local/bin/winecfg
 
 # environment
 cat <<_EOT_> /etc/profile.d/wine.sh
-\# /etc/profile.d/wine.sh
+# /etc/profile.d/wine.sh
 export WINEDLLOVERRIDES="${WINEDLLOVERRIDES}"
 export WINEDEBUG="${WINEDEBUG}"
 export W_OPT_UNATTENDED="${W_OPT_UNATTENDED}"
