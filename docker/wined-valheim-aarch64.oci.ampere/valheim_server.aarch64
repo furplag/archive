@@ -70,7 +70,7 @@ _options="${_options} -backupshort 7200"
 _options="${_options} -backuplong 43200"
 _options="${_options} -instanceid 1"
 
-xvfb-run -a sh -c "/usr/bin/wine64 ${VALHEIM_HOME}/valheim_server.exe ${_options}"
+xvfb-run wine64 ${VALHEIM_HOME}/valheim_server.exe ${_options}
 
 trap "kill -SIGINT $!;" SIGTERM
 
