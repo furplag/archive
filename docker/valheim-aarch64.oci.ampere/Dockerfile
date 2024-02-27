@@ -45,6 +45,11 @@ ARG VALHEIM_SAVE_DIR="${VALHEIM_HOME}/_saves"
 ARG VALHEIM_LOG_DIR="${VALHEIM_HOME}/_logs"
 ARG VALHEIM_IS_PUBLIC='FALSE'
 ARG VALHEIM_CROSSPLAY_ENABLED='FALSE'
+ARG VALHEIM_SAVE_INTERVAL='1800'
+ARG VALHEIM_BACKUPS='4'
+ARG VALHEIM_BACKUP_SHORT='7200'
+ARG VALHEIM_BACKUP_LONG='43200'
+
 ARG VALHEIM_SERVER_UPDATE_ENABLED='TRUE'
 
 ENV TZ ${TZ}
@@ -65,36 +70,44 @@ ENV VALHEIM_SAVE_DIR ${VALHEIM_SAVE_DIR}
 ENV VALHEIM_LOG_DIR ${VALHEIM_LOG_DIR}
 ENV VALHEIM_IS_PUBLIC ${VALHEIM_IS_PUBLIC}
 ENV VALHEIM_CROSSPLAY_ENABLED ${VALHEIM_CROSSPLAY_ENABLED}
+ENV VALHEIM_SAVE_INTERVAL ${VALHEIM_SAVE_INTERVAL}
+ENV VALHEIM_BACKUPS ${VALHEIM_BACKUPS}
+ENV VALHEIM_BACKUP_SHORT ${VALHEIM_BACKUP_SHORT}
+ENV VALHEIM_BACKUP_LONG ${VALHEIM_BACKUP_LONG}
 ENV VALHEIM_SERVER_UPDATE_ENABLED ${VALHEIM_SERVER_UPDATE_ENABLED}
 
 # packages
 WORKDIR /
 USER root
-RUN dpkg --add-architecture amd64;
+RUN dpkg --add-architecture armhf;
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get install -y curl sudo wget \
-  libasyncns0:amd64 libatomic1:amd64 libc6:amd64 libglib2.0-0:amd64 libpulse0:amd64 libpulse-dev:amd64 libpulse-mainloop-glib0:amd64 libsdl2-2.0-0:amd64;
-# libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0 \
+RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
+RUN apt-get install -y curl sudo \
+  libasyncns0:armhf libatomic1:armhf libglib2.0-0:armhf libpulse0:armhf libpulse-dev:armhf libpulse-mainloop-glib0:armhf libsdl2-2.0-0:armhf;
 
-WORKDIR ${STEAM_HOME}
-USER root
-RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-aarch64.oci.ampere/valheim_server.aarch64 -o ${STEAM_HOME}/valheim_server.aarch64;
-RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-aarch64.oci.ampere/valheim_server.update -o ${STEAM_HOME}/valheim_server.update;
-RUN chmod +x ${STEAM_HOME}/valheim_server.aarch64;
-RUN chmod +x ${STEAM_HOME}/valheim_server.update;
-RUN chown -R ${STEAM_USER}:${STEAM_USER} ${STEAM_HOME};
-
+# scripts
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
-RUN chmod +x ${STEAM_HOME}/valheim_server.update;
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-aarch64.oci.ampere/{valheim_server.aarch64} -o ${STEAM_HOME}/#1;
+RUN curl -fL https://github.com/furplag/archive/raw/master/docker/valheim-aarch64.oci.ampere/{valheim_server.update} -o ${STEAM_HOME}/#1;
+RUN chmod +x ${STEAM_HOME}/valheim_server.*;
+
+# box64 environment
+RUN echo '' > ~/.box64rc;
+RUN echo '[valheim_server.x86_64]' >> ~/.box64rc;
+RUN echo 'BOX64_DYNAREC_BIGBLOCK=2' >> ~/.box64rc;
+RUN echo 'BOX64_DYNAREC_BLEEDING_EDGE=0' >> ~/.box64rc;
+RUN echo 'BOX64_DYNAREC_STRONGMEM=4' >> ~/.box64rc;
+RUN echo 'BOX64_EMULATED_LIBS=libSDL2-2.0.so.0' >> ~/.box64rc;
+RUN echo '' >> ~/.box64rc;
 
 # cleanup image
 WORKDIR /
 USER root
-RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists ${STEAM_HOME}/.cache;
+RUN apt-get autoremove --purge -y;
+RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 
 # ports
-EXPOSE ${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/tcp
 EXPOSE ${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp
 
 WORKDIR ${STEAM_HOME}
