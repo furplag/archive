@@ -81,7 +81,6 @@ WORKDIR /
 USER root
 RUN dpkg --add-architecture armhf;
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
 RUN apt-get install -y curl sudo \
   libasyncns0:armhf libatomic1:armhf libglib2.0-0:armhf libpulse0:armhf libpulse-dev:armhf libpulse-mainloop-glib0:armhf libsdl2-2.0-0:armhf;
 
