@@ -33,6 +33,10 @@ if ! declare -p VALHEIM_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SAVE_D
 if ! declare -p VALHEIM_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_LOG_DIR=${VALHEIM_HOME}/_logs; fi
 if ! declare -p VALHEIM_IS_PUBLIC >/dev/null 2>&1; then declare -r VALHEIM_IS_PUBLIC='FALSE'; fi
 if ! declare -p VALHEIM_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_CROSSPLAY_ENABLED='FALSE'; fi
+if ! declare -p VALHEIM_SAVE_INTERVAL >/dev/null 2>&1; then declare -r VALHEIM_SAVE_INTERVAL='1800'; fi
+if ! declare -p VALHEIM_BACKUPS >/dev/null 2>&1; then declare -r VALHEIM_BACKUPS='4'; fi
+if ! declare -p VALHEIM_BACKUP_SHORT >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_SHORT='7200'; fi
+if ! declare -p VALHEIM_BACKUP_LONG >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_LONG='43200'; fi
 if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
 
 ###
@@ -59,10 +63,10 @@ export SteamAppId=${VALHEIM_STEAMAPP_ID}
   -public "$(if [[ "${VALHEIM_IS_PUBLIC^^}" = 'TRUE' ]]; then echo '1'; else echo '0'; fi)" \
   "$(if [[ "${VALHEIM_CROSSPLAY_ENABLED^^}" = 'TRUE' ]]; then echo '-crossplay'; else echo ''; fi)" \
   -savedir "${VALHEIM_SAVE_DIR}" \
-  -saveinterval 3600 \
-  -backups 4 \
-  -backupshort 7200 \
-  -backuplong 43200 \
+  -saveinterval ${VALHEIM_SAVE_INTERVAL} \
+  -backups ${VALHEIM_BACKUPS} \
+  -backupshort ${VALHEIM_BACKUP_SHORT} \
+  -backuplong ${VALHEIM_BACKUP_LONG} \
   -logFile "${VALHEIM_LOG_DIR}/${VALHEIM_NAME}-${VALHEIM_WORLD}.log" \
   -instanceid '1' \
 ;
