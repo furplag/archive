@@ -16,63 +16,99 @@ set LC_ALL=C
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 
 # ENV / variable: steamcmd
+# SteamCMD directory .
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/valheim; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
+# Steam App ID ( Valheim dedicated server, may NOT be modify ) .
+if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID=896660; fi
+# Steam App ID ( Valheim, may NOT be modify ) .
+if ! declare -p VALHEIM_STEAMAPP_ID >/dev/null 2>&1; then declare -r VALHEIM_STEAMAPP_ID=892970; fi
+# a toggle to update automatically or not if available .
+if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
+# Valheim server directory .
 if ! declare -p VALHEIM_HOME >/dev/null 2>&1; then declare -r VALHEIM_HOME=${STEAM_HOME}/valheim; fi
-if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID='896660'; fi
-if ! declare -p VALHEIM_STEAMAPP_ID >/dev/null 2>&1; then declare -r VALHEIM_STEAMAPP_ID='892970'; fi
 
 # ENV / variable: valheim
-if ! declare -p VALHEIM_NAME >/dev/null 2>&1; then declare -r VALHEIM_NAME='Valheim'; fi
-if ! declare -p VALHEIM_WORLD >/dev/null 2>&1; then declare -r VALHEIM_WORLD='Dedicated'; fi
-if ! declare -p VALHEIM_PORT >/dev/null 2>&1; then declare -r VALHEIM_PORT='2456'; fi
-if ! declare -p VALHEIM_PASSWORD >/dev/null 2>&1; then declare -r VALHEIM_PASSWORD='s3CRet'; fi
-if ! declare -p VALHEIM_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SAVE_DIR=${VALHEIM_HOME}/_saves; fi
-if ! declare -p VALHEIM_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_LOG_DIR=${VALHEIM_HOME}/_logs; fi
-if ! declare -p VALHEIM_IS_PUBLIC >/dev/null 2>&1; then declare -r VALHEIM_IS_PUBLIC='FALSE'; fi
-if ! declare -p VALHEIM_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_CROSSPLAY_ENABLED='FALSE'; fi
-if ! declare -p VALHEIM_SAVE_INTERVAL >/dev/null 2>&1; then declare -r VALHEIM_SAVE_INTERVAL='1800'; fi
-if ! declare -p VALHEIM_BACKUPS >/dev/null 2>&1; then declare -r VALHEIM_BACKUPS='4'; fi
-if ! declare -p VALHEIM_BACKUP_SHORT >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_SHORT='7200'; fi
-if ! declare -p VALHEIM_BACKUP_LONG >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_LONG='43200'; fi
-if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
+# Server name to be display on server list .
+if ! declare -p VALHEIM_NAME >/dev/null 2>&1; then declare -r VALHEIM_NAME=Valheim; fi
+# world name to be display on server list .
+if ! declare -p VALHEIM_WORLD >/dev/null 2>&1; then declare -r VALHEIM_WORLD=Dedicated; fi
+# password to connecting server ( should be set the password your own ) .
+if ! declare -p VALHEIM_SERVER_PASSWORD >/dev/null 2>&1; then declare -r VALHEIM_SERVER_PASSWORD=s3CRet; fi
+# port to connecting server .
+if ! declare -p VALHEIM_SERVER_PORT >/dev/null 2>&1; then declare -r VALHEIM_SERVER_PORT=2456; fi
+# a toggle to appear or hide in server list .
+if ! declare -p VALHEIM_SERVER_IS_PUBLIC >/dev/null 2>&1; then declare -r VALHEIM_SERVER_IS_PUBLIC='FALSE'; fi
+# a toggle enable to play with XBox user .
+if ! declare -p VALHEIM_SERVER_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_CROSSPLAY_ENABLED='FALSE'; fi
+# unique ID to running multiple servers . 
+if ! declare -p VALHEIM_SERVER_INSTANCEID >/dev/null 2>&1; then declare -r VALHEIM_SERVER_INSTANCEID=1; fi
 
-declare -ar _modifier_combat_values=(veryeasy easy hard veryhard)
+# savedata directory .
+if ! declare -p VALHEIM_SERVER_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SERVER_SAVE_DIR="${VALHEIM_HOME}/_saves"; fi
+# how often the world will save in seconds .
+if ! declare -p VALHEIM_SERVER_SAVE_INTERVAL >/dev/null 2>&1; then declare -r VALHEIM_SERVER_SAVE_INTERVAL=1800; fi
+# how many automatic backups will be kept .
+if ! declare -p VALHEIM_SERVER_BACKUPS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_BACKUPS=4; fi
+# an interval between the first automatic backups in seconds .
+if ! declare -p VALHEIM_SERVER_BACKUP_SHORT >/dev/null 2>&1; then declare -r VALHEIM_SERVER_BACKUP_SHORT=7200; fi
+# an interval between the subsequent automatic backups in seconds .
+if ! declare -p VALHEIM_SERVER_BACKUP_LONG >/dev/null 2>&1; then declare -r VALHEIM_SERVER_BACKUP_LONG=43200; fi
+
+# log directory .
+if ! declare -p VALHEIM_SERVER_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_SERVER_LOG_DIR="${VALHEIM_HOME}/_logs"; fi
+
+# world modifier
 if ! declare -p VALHEIM_SERVER_MODIFIER_COMBAT >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_COMBAT=; fi
-declare -r _modifier_combat="$(if [[ " ${_modifier_combat_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_COMBAT:-easy} " ]]; then echo "${VALHEIM_SERVER_MODIFIER_COMBAT:-easy}"; else echo 'easy'; fi)"
-
-declare -ar _modifier_deathpenalty_values=(casual veryeasy easy hard hardcore)
 if ! declare -p VALHEIM_SERVER_MODIFIER_DEATHPENALTY >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_DEATHPENALTY=; fi
-declare -r _modifier_deathpenalty="$(if [[ " ${_modifier_deathpenalty_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_DEATHPENALTY:-casual} " ]]; then echo "${VALHEIM_SERVER_MODIFIER_DEATHPENALTY:-casual}"; else echo 'casual'; fi)"
-
-declare -ar _modifier_portals_values=(casual hard veryhard)
 if ! declare -p VALHEIM_SERVER_MODIFIER_PORTALS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_PORTALS=; fi
-declare -r _modifier_portals="$(if [[ " ${_modifier_portals_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_PORTALS:-hard} " ]]; then echo "${VALHEIM_SERVER_MODIFIER_PORTALS:-hard}"; else echo 'hard'; fi)"
-
-declare -ar _modifier_raids_values=(none muchless less more muchmore)
 if ! declare -p VALHEIM_SERVER_MODIFIER_RAIDS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_RAIDS=; fi
-declare -r _modifier_raids="$(if [[ " ${_modifier_raids_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_RAIDS:-less} " ]]; then echo "${VALHEIM_SERVER_MODIFIER_RAIDS:-less}"; else echo 'less'; fi)"
-
-declare -ar _modifier_resources_values=(muchless less more muchmore most)
 if ! declare -p VALHEIM_SERVER_MODIFIER_RESOURCES >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_RESOURCES=; fi
-declare -r _modifier_resources="$(if [[ " ${_modifier_resources_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_RESOURCES:-more} " ]]; then echo "${VALHEIM_SERVER_MODIFIER_RESOURCES:-more}"; else echo 'more'; fi)"
 
-declare -a _keys=;
+# world modifier ( toggles )
 if ! declare -p VALHEIM_SERVER_MODIFIER_NOBUILDCOST >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_NOBUILDCOST='FALSE'; fi
 if ! declare -p VALHEIM_SERVER_MODIFIER_PLAYEREVENTS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_PLAYEREVENTS='FALSE'; fi
 if ! declare -p VALHEIM_SERVER_MODIFIER_PASSIVEMOBS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_PASSIVEMOBS='FALSE'; fi
 if ! declare -p VALHEIM_SERVER_MODIFIER_NOMAP >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_NOMAP='FALSE'; fi
-if [[ "${VALHEIM_SERVER_MODIFIER_NOBUILDCOST^^}" = 'TRUE' ]]; then _keys+='-setkey nobuildcost'; fi
-if [[ "${VALHEIM_SERVER_MODIFIER_PLAYEREVENTS^^}" = 'TRUE' ]]; then _keys+='-setkey playerevents'; fi
-if [[ "${VALHEIM_SERVER_MODIFIER_PASSIVEMOBS^^}" = 'TRUE' ]]; then _keys+='-setkey passivemobs'; fi
-if [[ "${VALHEIM_SERVER_MODIFIER_NOMAP^^}" = 'TRUE' ]]; then _keys+='-setkey nomap'; fi
+
+declare -a _options=(
+  -nographic
+  -batchmode
+  -name "${VALHEIM_NAME}"
+  -world "${VALHEIM_WORLD}"
+  -password "${VALHEIM_SERVER_PASSWORD}"
+  -port "${VALHEIM_SERVER_PORT}"
+  -public "$(if [[ "${VALHEIM_SERVER_IS_PUBLIC^^}" = 'TRUE' ]]; then echo '1'; else echo '0'; fi)"
+  -savedir "${VALHEIM_SERVER_SAVE_DIR}"
+  -saveinterval "${VALHEIM_SERVER_SAVE_INTERVAL}"
+  -backups "${VALHEIM_SERVER_BACKUPS}"
+  -backupshort "${VALHEIM_SERVER_BACKUP_SHORT}"
+  -backuplong "${VALHEIM_SERVER_BACKUP_LONG}"
+  -logFile "${VALHEIM_SERVER_LOG_DIR}/${VALHEIM_NAME}-${VALHEIM_WORLD}.log"
+  -instanceid "${VALHEIM_SERVER_INSTANCEID}"
+);
+[[ "${VALHEIM_SERVER_CROSSPLAY_ENABLED^^}" = 'TRUE' ]] && _options+=(-crossplay)
+declare -ar _modifier_combat_values=(veryeasy easy hard veryhard)
+[[ " ${_modifier_combat_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_COMBAT:-_nope_} " ]] && _options+=('-modifier' 'combat' "${VALHEIM_SERVER_MODIFIER_COMBAT}")
+declare -ar _modifier_deathpenalty_values=(casual veryeasy easy hard hardcore)
+[[ " ${_modifier_deathpenalty_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_DEATHPENALTY:-_nope_} " ]] && _options+=('-modifier' 'deathpenalty' "${VALHEIM_SERVER_MODIFIER_DEATHPENALTY}")
+declare -ar _modifier_portals_values=(casual hard veryhard)
+[[ " ${_modifier_portals_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_PORTALS:-_nope_} " ]] && _options+=('-modifier' 'portals' "${VALHEIM_SERVER_MODIFIER_PORTALS}")
+declare -ar _modifier_raids_values=(none muchless less more muchmore)
+[[ " ${_modifier_raids_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_RAIDS:-_nope_} " ]] && _options+=('-modifier' 'raids' "${VALHEIM_SERVER_MODIFIER_RAIDS}")
+declare -ar _modifier_resources_values=(muchless less more muchmore most)
+[[ " ${_modifier_resources_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_RESOURCES:-_nope_} " ]] && _options+=('-modifier' 'resources' "${VALHEIM_SERVER_MODIFIER_RESOURCES}")
+[[ "${VALHEIM_SERVER_MODIFIER_NOBUILDCOST^^}" = 'TRUE' ]] && _options+=(-setkey nobuildcost)
+[[ "${VALHEIM_SERVER_MODIFIER_PLAYEREVENTS^^}" = 'TRUE' ]] && _options+=(-setkey playerevents)
+[[ "${VALHEIM_SERVER_MODIFIER_PASSIVEMOBS^^}" = 'TRUE' ]] && _options+=(-setkey passivemobs)
+[[ "${VALHEIM_SERVER_MODIFIER_NOMAP^^}" = 'TRUE' ]] && _options+=(-setkey nomap)
 
 ###
 # process
 ###
-[ -d "${VALHEIM_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SAVE_DIR}"
+[ -d "${VALHEIM_SERVER_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SERVER_SAVE_DIR}"
 
 # update, if allowed .
 if [[  "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then 
@@ -85,26 +121,7 @@ fi
 export LD_LIBRARY_PATH=${VALHEIM_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
 export SteamAppId=${VALHEIM_STEAMAPP_ID}
 
-/usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 -nographics -batchmode \
-  -name "${VALHEIM_NAME}" \
-  -world "${VALHEIM_WORLD}" \
-  -password "${VALHEIM_PASSWORD}" \
-  -port "${VALHEIM_PORT}" \
-  -public "$(if [[ "${VALHEIM_IS_PUBLIC^^}" = 'TRUE' ]]; then echo '1'; else echo '0'; fi)" \
-  "$(if [[ "${VALHEIM_CROSSPLAY_ENABLED^^}" = 'TRUE' ]]; then echo '-crossplay'; else echo ''; fi)" \
-  -savedir "${VALHEIM_SAVE_DIR}" \
-  -saveinterval ${VALHEIM_SAVE_INTERVAL} \
-  -backups ${VALHEIM_BACKUPS} \
-  -backupshort ${VALHEIM_BACKUP_SHORT} \
-  -backuplong ${VALHEIM_BACKUP_LONG} \
-  -logFile "${VALHEIM_LOG_DIR}/${VALHEIM_NAME}-${VALHEIM_WORLD}.log" \
-  -modifier combat ${_modifer_combat,,} \
-  -modifier deathpenalty ${_modifer_deathpenalty,,} \
-  -modifier portals ${_modifer_portals,,} \
-  -modifier raids ${_modifer_raids,,} \
-  -modifier reources ${_modifer_resources,,} \
-  "$(if [[ "${_keys[@]}" = '' ]]; then echo ''; else echo "${_keys[@]} "; fi)"-instanceid '1' \
-;
+/usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 "${_options[@]}";
 
 trap "kill -SIGINT $!;" SIGTERM
 
