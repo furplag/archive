@@ -4,10 +4,9 @@ version: '3.4'
 services:
   server:
     build: .
-    env_file: ./.valheim.env
+    env_file: ./.env
     container_name: ${VALHEIM_NAME}
     ports:
-      - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/tcp"
       - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp"
     volumes:
       - type: volume
@@ -16,7 +15,7 @@ services:
     stdin_open: true
     tty: true
 
-# must be add permissions to VALHEIM_USER to handles data .
+# must be add permissions to STEAM_USER to handles data .
 volumes:
   valheim_server_data:
     name: valheim_server_data
