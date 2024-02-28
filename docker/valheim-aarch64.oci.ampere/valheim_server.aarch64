@@ -85,7 +85,7 @@ fi
 export LD_LIBRARY_PATH=${VALHEIM_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
 export SteamAppId=${VALHEIM_STEAMAPP_ID}
 
-/usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 -nohraphics -batchmode \
+/usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 -nographics -batchmode \
   -name "${VALHEIM_NAME}" \
   -world "${VALHEIM_WORLD}" \
   -password "${VALHEIM_PASSWORD}" \
