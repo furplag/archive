@@ -120,7 +120,6 @@ RUN echo '[valheim_server.x86_64]' >> ~/.box64rc;
 RUN echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}" >> ~/.box64rc;
 RUN echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE}' >> ~/.box64rc;
 RUN echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM}" >> ~/.box64rc;
-RUN echo 'BOX64_EMULATED_LIBS=libSDL2-2.0.so.0' >> ~/.box64rc;
 RUN echo '' >> ~/.box64rc;
 
 # cleanup image
