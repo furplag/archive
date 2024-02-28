@@ -36,79 +36,79 @@ if ! declare -p VALHEIM_NAME >/dev/null 2>&1; then declare -r VALHEIM_NAME=Valhe
 # world name to be display on server list .
 if ! declare -p VALHEIM_WORLD >/dev/null 2>&1; then declare -r VALHEIM_WORLD=Dedicated; fi
 # password to connecting server ( should be set the password your own ) .
-if ! declare -p VALHEIM_SERVER_PASSWORD >/dev/null 2>&1; then declare -r VALHEIM_SERVER_PASSWORD=s3CRet; fi
+if ! declare -p VALHEIM_PASSWORD >/dev/null 2>&1; then declare -r VALHEIM_PASSWORD=s3CRet; fi
 # port to connecting server .
-if ! declare -p VALHEIM_SERVER_PORT >/dev/null 2>&1; then declare -r VALHEIM_SERVER_PORT=2456; fi
+if ! declare -p VALHEIM_PORT >/dev/null 2>&1; then declare -r VALHEIM_PORT=2456; fi
 # a toggle to appear or hide in server list .
-if ! declare -p VALHEIM_SERVER_IS_PUBLIC >/dev/null 2>&1; then declare -r VALHEIM_SERVER_IS_PUBLIC='FALSE'; fi
+if ! declare -p VALHEIM_IS_PUBLIC >/dev/null 2>&1; then declare -r VALHEIM_IS_PUBLIC='FALSE'; fi
 # a toggle enable to play with XBox user .
-if ! declare -p VALHEIM_SERVER_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_CROSSPLAY_ENABLED='FALSE'; fi
+if ! declare -p VALHEIM_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_CROSSPLAY_ENABLED='FALSE'; fi
 # unique ID to running multiple servers . 
-if ! declare -p VALHEIM_SERVER_INSTANCEID >/dev/null 2>&1; then declare -r VALHEIM_SERVER_INSTANCEID=1; fi
+if ! declare -p VALHEIM_INSTANCEID >/dev/null 2>&1; then declare -r VALHEIM_INSTANCEID=1; fi
 
 # savedata directory .
-if ! declare -p VALHEIM_SERVER_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SERVER_SAVE_DIR="${VALHEIM_HOME}/_saves"; fi
+if ! declare -p VALHEIM_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SAVE_DIR="${VALHEIM_HOME}/_saves"; fi
 # how often the world will save in seconds .
-if ! declare -p VALHEIM_SERVER_SAVE_INTERVAL >/dev/null 2>&1; then declare -r VALHEIM_SERVER_SAVE_INTERVAL=1800; fi
+if ! declare -p VALHEIM_SAVE_INTERVAL >/dev/null 2>&1; then declare -r VALHEIM_SAVE_INTERVAL=1800; fi
 # how many automatic backups will be kept .
-if ! declare -p VALHEIM_SERVER_BACKUPS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_BACKUPS=4; fi
+if ! declare -p VALHEIM_BACKUPS >/dev/null 2>&1; then declare -r VALHEIM_BACKUPS=4; fi
 # an interval between the first automatic backups in seconds .
-if ! declare -p VALHEIM_SERVER_BACKUP_SHORT >/dev/null 2>&1; then declare -r VALHEIM_SERVER_BACKUP_SHORT=7200; fi
+if ! declare -p VALHEIM_BACKUP_SHORT >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_SHORT=7200; fi
 # an interval between the subsequent automatic backups in seconds .
-if ! declare -p VALHEIM_SERVER_BACKUP_LONG >/dev/null 2>&1; then declare -r VALHEIM_SERVER_BACKUP_LONG=43200; fi
+if ! declare -p VALHEIM_BACKUP_LONG >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_LONG=43200; fi
 
 # log directory .
-if ! declare -p VALHEIM_SERVER_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_SERVER_LOG_DIR="${VALHEIM_HOME}/_logs"; fi
+if ! declare -p VALHEIM_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_LOG_DIR="${VALHEIM_HOME}/_logs"; fi
 
 # world modifier
-if ! declare -p VALHEIM_SERVER_MODIFIER_COMBAT >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_COMBAT=; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_DEATHPENALTY >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_DEATHPENALTY=; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_PORTALS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_PORTALS=; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_RAIDS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_RAIDS=; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_RESOURCES >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_RESOURCES=; fi
+if ! declare -p VALHEIM_MODIFIER_COMBAT >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_COMBAT=; fi
+if ! declare -p VALHEIM_MODIFIER_DEATHPENALTY >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_DEATHPENALTY=; fi
+if ! declare -p VALHEIM_MODIFIER_PORTALS >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_PORTALS=; fi
+if ! declare -p VALHEIM_MODIFIER_RAIDS >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_RAIDS=; fi
+if ! declare -p VALHEIM_MODIFIER_RESOURCES >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_RESOURCES=; fi
 
 # world modifier ( toggles )
-if ! declare -p VALHEIM_SERVER_MODIFIER_NOBUILDCOST >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_NOBUILDCOST='FALSE'; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_PLAYEREVENTS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_PLAYEREVENTS='FALSE'; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_PASSIVEMOBS >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_PASSIVEMOBS='FALSE'; fi
-if ! declare -p VALHEIM_SERVER_MODIFIER_NOMAP >/dev/null 2>&1; then declare -r VALHEIM_SERVER_MODIFIER_NOMAP='FALSE'; fi
+if ! declare -p VALHEIM_MODIFIER_NOBUILDCOST >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_NOBUILDCOST='FALSE'; fi
+if ! declare -p VALHEIM_MODIFIER_PLAYEREVENTS >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_PLAYEREVENTS='FALSE'; fi
+if ! declare -p VALHEIM_MODIFIER_PASSIVEMOBS >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_PASSIVEMOBS='FALSE'; fi
+if ! declare -p VALHEIM_MODIFIER_NOMAP >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_NOMAP='FALSE'; fi
 
 declare -a _options=(
   -nographic
   -batchmode
   -name "${VALHEIM_NAME}"
   -world "${VALHEIM_WORLD}"
-  -password "${VALHEIM_SERVER_PASSWORD}"
-  -port "${VALHEIM_SERVER_PORT}"
-  -public "$(if [[ "${VALHEIM_SERVER_IS_PUBLIC^^}" = 'TRUE' ]]; then echo '1'; else echo '0'; fi)"
-  -savedir "${VALHEIM_SERVER_SAVE_DIR}"
-  -saveinterval "${VALHEIM_SERVER_SAVE_INTERVAL}"
-  -backups "${VALHEIM_SERVER_BACKUPS}"
-  -backupshort "${VALHEIM_SERVER_BACKUP_SHORT}"
-  -backuplong "${VALHEIM_SERVER_BACKUP_LONG}"
-  -logFile "${VALHEIM_SERVER_LOG_DIR}/${VALHEIM_NAME}-${VALHEIM_WORLD}.log"
-  -instanceid "${VALHEIM_SERVER_INSTANCEID}"
+  -password "${VALHEIM_PASSWORD}"
+  -port "${VALHEIM_PORT}"
+  -public "$(if [[ "${VALHEIM_IS_PUBLIC^^}" = 'TRUE' ]]; then echo '1'; else echo '0'; fi)"
+  -savedir "${VALHEIM_SAVE_DIR}"
+  -saveinterval "${VALHEIM_SAVE_INTERVAL}"
+  -backups "${VALHEIM_BACKUPS}"
+  -backupshort "${VALHEIM_BACKUP_SHORT}"
+  -backuplong "${VALHEIM_BACKUP_LONG}"
+  -logFile "${VALHEIM_LOG_DIR}/${VALHEIM_NAME}-${VALHEIM_WORLD}.log"
+  -instanceid "${VALHEIM_INSTANCEID}"
 );
-[[ "${VALHEIM_SERVER_CROSSPLAY_ENABLED^^}" = 'TRUE' ]] && _options+=(-crossplay)
+[[ "${VALHEIM_CROSSPLAY_ENABLED^^}" = 'TRUE' ]] && _options+=(-crossplay)
 declare -ar _modifier_combat_values=(veryeasy easy hard veryhard)
-[[ " ${_modifier_combat_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_COMBAT:-_nope_} " ]] && _options+=('-modifier' 'combat' "${VALHEIM_SERVER_MODIFIER_COMBAT}")
+[[ " ${_modifier_combat_values[*]} " =~ " ${VALHEIM_MODIFIER_COMBAT:-_nope_} " ]] && _options+=('-modifier' 'combat' "${VALHEIM_MODIFIER_COMBAT}")
 declare -ar _modifier_deathpenalty_values=(casual veryeasy easy hard hardcore)
-[[ " ${_modifier_deathpenalty_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_DEATHPENALTY:-_nope_} " ]] && _options+=('-modifier' 'deathpenalty' "${VALHEIM_SERVER_MODIFIER_DEATHPENALTY}")
+[[ " ${_modifier_deathpenalty_values[*]} " =~ " ${VALHEIM_MODIFIER_DEATHPENALTY:-_nope_} " ]] && _options+=('-modifier' 'deathpenalty' "${VALHEIM_MODIFIER_DEATHPENALTY}")
 declare -ar _modifier_portals_values=(casual hard veryhard)
-[[ " ${_modifier_portals_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_PORTALS:-_nope_} " ]] && _options+=('-modifier' 'portals' "${VALHEIM_SERVER_MODIFIER_PORTALS}")
+[[ " ${_modifier_portals_values[*]} " =~ " ${VALHEIM_MODIFIER_PORTALS:-_nope_} " ]] && _options+=('-modifier' 'portals' "${VALHEIM_MODIFIER_PORTALS}")
 declare -ar _modifier_raids_values=(none muchless less more muchmore)
-[[ " ${_modifier_raids_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_RAIDS:-_nope_} " ]] && _options+=('-modifier' 'raids' "${VALHEIM_SERVER_MODIFIER_RAIDS}")
+[[ " ${_modifier_raids_values[*]} " =~ " ${VALHEIM_MODIFIER_RAIDS:-_nope_} " ]] && _options+=('-modifier' 'raids' "${VALHEIM_MODIFIER_RAIDS}")
 declare -ar _modifier_resources_values=(muchless less more muchmore most)
-[[ " ${_modifier_resources_values[*]} " =~ " ${VALHEIM_SERVER_MODIFIER_RESOURCES:-_nope_} " ]] && _options+=('-modifier' 'resources' "${VALHEIM_SERVER_MODIFIER_RESOURCES}")
-[[ "${VALHEIM_SERVER_MODIFIER_NOBUILDCOST^^}" = 'TRUE' ]] && _options+=(-setkey nobuildcost)
-[[ "${VALHEIM_SERVER_MODIFIER_PLAYEREVENTS^^}" = 'TRUE' ]] && _options+=(-setkey playerevents)
-[[ "${VALHEIM_SERVER_MODIFIER_PASSIVEMOBS^^}" = 'TRUE' ]] && _options+=(-setkey passivemobs)
-[[ "${VALHEIM_SERVER_MODIFIER_NOMAP^^}" = 'TRUE' ]] && _options+=(-setkey nomap)
+[[ " ${_modifier_resources_values[*]} " =~ " ${VALHEIM_MODIFIER_RESOURCES:-_nope_} " ]] && _options+=('-modifier' 'resources' "${VALHEIM_MODIFIER_RESOURCES}")
+[[ "${VALHEIM_MODIFIER_NOBUILDCOST^^}" = 'TRUE' ]] && _options+=(-setkey nobuildcost)
+[[ "${VALHEIM_MODIFIER_PLAYEREVENTS^^}" = 'TRUE' ]] && _options+=(-setkey playerevents)
+[[ "${VALHEIM_MODIFIER_PASSIVEMOBS^^}" = 'TRUE' ]] && _options+=(-setkey passivemobs)
+[[ "${VALHEIM_MODIFIER_NOMAP^^}" = 'TRUE' ]] && _options+=(-setkey nomap)
 
 ###
 # process
 ###
-[ -d "${VALHEIM_SERVER_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SERVER_SAVE_DIR}"
+[ -d "${VALHEIM_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SAVE_DIR}"
 
 # update, if allowed .
 if [[  "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then 
