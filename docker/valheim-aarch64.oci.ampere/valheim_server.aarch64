@@ -103,7 +103,7 @@ export SteamAppId=${VALHEIM_STEAMAPP_ID}
   -modifier portals ${_modifer_portals,,} \
   -modifier raids ${_modifer_raids,,} \
   -modifier reources ${_modifer_resources,,} \
-  "$(if [[ "${_keys[@]}" = '' ]]; then echo ''; else echo "${_keys[@]}"; fi)"-instanceid '1' \
+  "$(if [[ "${_keys[@]}" = '' ]]; then echo ''; else echo "${_keys[@]} "; fi)"-instanceid '1' \
 ;
 
 trap "kill -SIGINT $!;" SIGTERM
