@@ -56,7 +56,7 @@ declare -ar _dependencies=(
   'libkrb5-3'
   'libldap-2.5-0'
   'libncurses6'
-  'libodbc1'
+  "$(if [[ "${_os_version}" = 'bookworm' ]]; then echo 'libodbc2'; else echo 'libodbc1'; fi)"
   'libopenal1'
   'libosmesa6'
   'libpcap0.8'
