@@ -87,11 +87,12 @@ declare -ar _dependencies=(
 ###
 # process
 ###
-dpkg --add-architecture armhf && apt-get update && apt-get upgrade && apt-get dist-upgrade -y
+dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
+apt-get install -y curl unzip wget zip;
 
-# install wine, wine64 and winetricks dependencies
+# install dependencies of wine, wine64 and winetricks
 apt-get install -y $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf;
-apt-get install -y "${_dependencies[@]}" cabextract wget winbind xvfb zenity;
+apt-get install -y "${_dependencies[@]}" cabextract winbind xvfb zenity;
 
 # download Wine, then install .
 [ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
