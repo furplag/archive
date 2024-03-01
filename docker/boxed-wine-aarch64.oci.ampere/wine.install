@@ -82,8 +82,6 @@ declare -ar _dependencies=(
   'libxrender1'
   'libxxf86vm1'
   'ocl-icd-libopencl1'
-  'winbind'
-  'zenity'
 )
 
 ###
@@ -93,7 +91,7 @@ dpkg --add-architecture armhf && apt-get update && apt-get upgrade && apt-get di
 
 # install wine, wine64 and winetricks dependencies
 apt-get install -y $(echo "${_dependencies[@]}" | sed -e 's/ /:armhf /g'):armhf;
-apt-get install -y "${_dependencies[@]}" cabextract wget xvfb;
+apt-get install -y "${_dependencies[@]}" cabextract wget winbind xvfb zenity;
 
 # download Wine, then install .
 [ -d /opt/wine/.tmp/extracted ] || mkdir -p /opt/wine/.tmp/extracted
