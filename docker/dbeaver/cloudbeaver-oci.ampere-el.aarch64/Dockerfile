@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 ###
-# dbeaver/cloudbeaver-oci.ampere-el.aarch64/Dockerfile
+# dbeaver/cloudbeaver-aarch64.oci.ampere/Dockerfile
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
