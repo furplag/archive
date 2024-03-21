@@ -1,4 +1,4 @@
-# dbeaver/cloudbeaver-oci.ampere-el.aarch64.docker-compose.yml
+# dbeaver/cloudbeaver-aarch64.oci.ampere/docker-compose.yml
 version: '3'
 
 services:
