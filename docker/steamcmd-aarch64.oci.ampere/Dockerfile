@@ -27,6 +27,8 @@ ARG DEBUGGER="/usr/local/bin/box86"
 ARG STEAM_USER='steam'
 ARG STEAM_USER_ID='1201'
 ARG STEAM_GROUP_ID='1201'
+ARG BOX86_PACKAGE='box86-generic-arm'
+ARG BOX64_PACKAGE='box64-rpi5arm64'
 
 ENV STEAM_HOME ${STEAM_HOME}
 ENV STEAMCMD_HOME ${STEAM_HOME}/steamcmd
@@ -51,7 +53,7 @@ RUN curl -fLsS https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor 
 # install Box86 / 64 with dependencies
 RUN apt-get update && apt-get install --install-recommends -y \
   ca-certificates gcc-arm-linux-gnueabihf libc6-dev-armhf-cross libc6:armhf libncurses6:armhf libstdc++6:armhf \
-  box86-generic-arm box64-arm64;
+  ${BOX86_PACKAGE} ${BOX64_PACKAGE};
 
 # user / group
 RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -d ${STEAM_HOME} -s /bin/bash ${STEAM_USER} && usermod -aG sudo ${STEAM_USER};
