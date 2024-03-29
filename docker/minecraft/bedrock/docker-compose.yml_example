@@ -1,0 +1,38 @@
+services:
+  bedrock-server:
+    container_name: bedrock-server
+    restart: always
+    image: itzg/minecraft-bedrock-server:latest
+    env_file: ./.env
+    ports:
+      - "0.0.0.0:${SERVER_PORT}:${SERVER_PORT}/udp"
+      - "0.0.0.0:${SERVER_PORTV6}:${SERVER_PORTV6}/udp"
+    volumes:
+      - type: volume
+        source: bedrock_server_data
+        target: /data
+    stdin_open: true
+    tty: true
+  backup:
+    container_name: bedrock-server-backup
+    restart: always
+    image: kaiede/minecraft-bedrock-backup:latest
+    env_file: ./.bedrock-server-backup.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.data/_data:/server
+      - type: volume
+        source: bedrock_server_backups
+        target: /backups
+    depends_on:
+      - "bedrock-server"
+    stdin_open: true
+    tty: true
+
+volumes:
+  bedrock_server_data:
+    name: bedrock_server_data
+    external: true
+  bedrock_server_backups:
+    name: bedrock_server_backups
+    external: true
