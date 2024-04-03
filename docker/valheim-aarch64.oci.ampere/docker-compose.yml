@@ -1,6 +1,4 @@
 # valheim-aarch64.oci.ampere/docker-compose.yml
-version: '3.4'
-
 services:
   server:
     build: .
