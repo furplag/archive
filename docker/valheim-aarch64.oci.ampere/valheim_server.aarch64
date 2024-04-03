@@ -74,7 +74,7 @@ if ! declare -p VALHEIM_MODIFIER_PASSIVEMOBS >/dev/null 2>&1; then declare -r VA
 if ! declare -p VALHEIM_MODIFIER_NOMAP >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_NOMAP='FALSE'; fi
 
 declare -a _options=(
-  -nographic
+  -nographics
   -batchmode
   -name "${VALHEIM_NAME}"
   -world "${VALHEIM_WORLD}"
