@@ -14,7 +14,7 @@ export LC_ALL=C
 # 1. Requirement
 #    1. all commands need you are "root" or you listed in "wheel"
 #    2. environment named "JAVA_HOME" as a path to JDK
-#    3. dependency packages to build Tomcat native: apr-devel, automake, gcc, openssl-devel
+#    3. dependency packages to build Tomcat native: apr-devel, automake, gcc, openssl-devel, redhat-rpm-config
 # 2. usage
 #    A. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh | bash
 #    B. curl -fLsS https://raw.githubusercontent.com/furplag/archive/master/Tomcat/tomcat.binary.install.sh | bash -s -- \
