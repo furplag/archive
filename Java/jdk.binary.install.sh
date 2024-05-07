@@ -137,6 +137,7 @@ function _log(){
 # read configuration
 if [[ " ${config[@]} " =~ ' initialized ' ]]; then :;
 elif ! curl --version >/dev/null 2>&1; then _log FATAL "enable to command \"curl\" first"; result=1
+elif ! tar --version >/dev/null 2>&1; then _log FATAL "enable to command \"tar\" first"; result=1
 elif ! tee --version >/dev/null 2>&1; then _log FATAL "enable to command \"tee\" first"; result=1
 elif [[ ! -f "${config[configuration_file]}" ]]; then _log IGNORE "configuration_file ( \"${config[configuration_file]}\" ) not found"
 else
