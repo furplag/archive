@@ -14,7 +14,7 @@ set LC_ALL=C
 # variable
 ###
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
-if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/valheim; fi
+if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
@@ -29,6 +29,23 @@ declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
 ${STEAMCMD_HOME}/steamcmd.sh +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit || echo '' >/dev/null 2>&1
 
-if [ -f ${STEAM_LIBS_64}/steamclient.so ]; then cp -pr ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/.; fi
+###
+# post process ( steam libs )
+###
+if [[ -d "${STEAM_LIBS_86}" ]]; then
+  ln -fns ${STEAM_LIBS_86} ${STEAMCMD_HOME}/sdk32;
+  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/.steam/sdk32;
+  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/Steam/sdk32;
+  [ -f "${STEAM_LIBS_86}/steamclient.so" ] && ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
+fi
+if [[ -d "${STEAM_LIBS_64}" ]]; then
+  ln -fns ${STEAM_LIBS_64} ${STEAMCMD_HOME}/sdk64;
+  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/.steam/sdk64;
+  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/Steam/sdk64;
+  [ -f "${STEAM_LIBS_64}/steamclient.so" ] && ln -fns ${STEAM_LIBS_64}/steamclient.so ${STEAM_LIBS_64}/steamservice.so
+fi
 
+###
+# cleanup
+###
 export LD_LIBRARY_PATH=${tempLdLibPath}
