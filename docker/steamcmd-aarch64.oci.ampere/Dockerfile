@@ -20,7 +20,7 @@ FROM debian:trixie-slim
 # ENV / variable
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG TZ="Etc/UTC"
+ARG TZ=
 ARG LANG="en_US.UTF-8"
 ARG LANGUAGE="en_US:en"
 ARG LC_ALL="C.UTF-8"
