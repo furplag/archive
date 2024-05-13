@@ -53,11 +53,11 @@ ENV LC_ALL ${LC_ALL}
 ###
 # process
 ###
-# packages
+# packa
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
 RUN apt-get install -y curl gnupg locales sudo tzdata;
 RUN locale-gen ${LANG} && dpkg-reconfigure locales;
-RUN if [[ -f "/usr/share/zoneinfo/${TZ}" ]]; then ln -fns /usr/share/zoneinfo/${TZ} /etc/localtime; fi;
+RUN if [[ -f "/usr/share/zoneinfo/${TZ}" ]]; then ln -fns /usr/share/zoneinfo/${TZ} /etc/localtime; dpkg-reconfigure --frontend noninteractive tzdata; fi;
 
 # add Box86 / 64 repositories
 RUN curl -fL https://ryanfortner.github.io/box64-debs/{box64.list} -o /etc/apt/sources.list.d/#1;
