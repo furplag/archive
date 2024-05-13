@@ -20,15 +20,18 @@ FROM debian:trixie-slim
 # ENV / variable
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
+ARG TZ="Etc/UTC"
+ARG LANG="en_US.UTF-8"
+ARG LANGUAGE="en_US:en"
 
 ARG STEAM_HOME="/opt/steam"
-ARG STEAM_USER='steam'
-ARG STEAM_USER_ID='12001'
-ARG STEAM_GROUP_ID='12001'
+ARG STEAM_USER="steam"
+ARG STEAM_USER_ID="12001"
+ARG STEAM_GROUP_ID="12001"
 
 ARG DEBUGGER="/usr/local/bin/box86"
-ARG BOX86_PACKAGE='box86-generic-arm'
-ARG BOX64_PACKAGE='box64-rpi5arm64'
+ARG BOX86_PACKAGE="box86-generic-arm"
+ARG BOX64_PACKAGE="box64-rpi4arm64"
 ARG BOX86_NOBANNER="1"
 ARG BOX64_NOBANNER="1"
 
@@ -42,12 +45,17 @@ ENV DEBUGGER ${DEBUGGER}
 ENV BOX86_NOBANNER ${BOX86_NOBANNER}
 ENV BOX64_NOBANNER ${BOX64_NOBANNER}
 
+ENV LANG ${LANG}
+ENV LANGUAGE ${LANGUAGE}
+ENV LC_ALL ${LC_ALL}
+
 ###
 # process
 ###
 # packages
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get install -y curl gnupg sudo;
+RUN apt-get install -y curl gnupg locales sudo tzdata;
+RUN locale-gen ${LANG} && dpkg-reconfigure locales;
 
 # add Box86 / 64 repositories
 RUN curl -fL https://ryanfortner.github.io/box64-debs/{box64.list} -o /etc/apt/sources.list.d/#1;
