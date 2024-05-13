@@ -23,6 +23,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG TZ="Etc/UTC"
 ARG LANG="en_US.UTF-8"
 ARG LANGUAGE="en_US:en"
+ARG LC_ALL="C.UTF-8"
 
 ARG STEAM_HOME="/opt/steam"
 ARG STEAM_USER="steam"
@@ -56,6 +57,7 @@ ENV LC_ALL ${LC_ALL}
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
 RUN apt-get install -y curl gnupg locales sudo tzdata;
 RUN locale-gen ${LANG} && dpkg-reconfigure locales;
+RUN if [[ -f "/usr/share/zoneinfo/${TZ}" ]]; then ln -fns /usr/share/zoneinfo/${TZ} /etc/localtime; fi;
 
 # add Box86 / 64 repositories
 RUN curl -fL https://ryanfortner.github.io/box64-debs/{box64.list} -o /etc/apt/sources.list.d/#1;
