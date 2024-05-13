@@ -20,7 +20,7 @@ FROM debian:trixie-slim
 # ENV / variable
 ###
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG TZ=
+ARG TZ=Etc/UTC
 ARG LANG="en_US.UTF-8"
 ARG LANGUAGE="en_US:en"
 ARG LC_ALL="C.UTF-8"
@@ -55,7 +55,7 @@ ENV LC_ALL ${LC_ALL}
 ###
 # packa
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get install -y curl gnupg locales sudo tzdata;
+RUN DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y curl gnupg locales sudo tzdata;
 RUN locale-gen ${LANG} && dpkg-reconfigure locales;
 RUN if [ -f "/usr/share/zoneinfo/${TZ}" ]; then ln -fns /usr/share/zoneinfo/${TZ} /etc/localtime; dpkg-reconfigure --frontend noninteractive tzdata; fi;
 
