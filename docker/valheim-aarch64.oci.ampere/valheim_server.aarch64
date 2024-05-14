@@ -17,7 +17,7 @@ if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; 
 
 # ENV / variable: steamcmd
 # SteamCMD directory .
-if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/valheim; fi
+if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
