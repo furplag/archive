@@ -23,7 +23,7 @@ FROM furplag/steamcmd:latest
 ###
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG TZ="Etc/UTC"
+ARG TZ='Etc/UTC'
 
 ARG STEAM_HOME='/opt/steam'
 ARG DEBUGGER='/usr/local/bin/box86'
