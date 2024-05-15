@@ -32,11 +32,16 @@ ${STEAMCMD_HOME}/steamcmd.sh +force_install_dir ${VALHEIM_HOME} +login anonymous
 ###
 # post process ( steam libs )
 ###
+mkdir -p ${STEAM_HOME}/.steam ${STEAM_HOME}/Steam;
 if [[ -d "${STEAM_LIBS_86}" ]]; then
   ln -fns ${STEAM_LIBS_86} ${STEAMCMD_HOME}/sdk32;
   ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/.steam/sdk32;
   ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/Steam/sdk32;
-  [ -f "${STEAM_LIBS_86}/steamclient.so" ] && ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
+  if [[ -f "${STEAM_LIBS_86}/steamclient.so" ]]; then
+    ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
+    rm -rf ${VALHEIM_HOME}/steamclient.so && ln -fns ${STEAM_LIBS_86}/steamclient.so ${VALHEIM_HOME}/steamclient.so
+    ln -fns ${STEAM_LIBS_86}/steamclient.so ${VALHEIM_HOME}/steamservice.so
+  fi
 fi
 if [[ -d "${STEAM_LIBS_64}" ]]; then
   ln -fns ${STEAM_LIBS_64} ${STEAMCMD_HOME}/sdk64;
@@ -46,7 +51,7 @@ if [[ -d "${STEAM_LIBS_64}" ]]; then
     ln -fns ${STEAM_LIBS_64}/steamclient.so ${STEAM_LIBS_64}/steamservice.so
     if [[ -d "${VALHEIM_HOME}/linux64" ]]; then
       rm -rf ${VALHEIM_HOME}/linux64/steamclient.so && ln -fns ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/steamclient.so
-      rm -rf ${VALHEIM_HOME}/linux64/steamservice.so && ln -fns ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/steamservice.so
+      ln -fns ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/steamservice.so
     fi
   fi
 fi
