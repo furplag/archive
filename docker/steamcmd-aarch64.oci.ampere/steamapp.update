@@ -31,7 +31,7 @@ declare -r platformType="$(if [ -n "${PLATFORM_TYPE:-}" ] && [[ ',linux,macos,wi
 # process
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
-declare result=$(${STEAMCMD_HOME}/steamcmd.sh$(if [ -n "${PLATFORM_TYPE}" ]; then echo " +@sSteamCmdForcePlatformType ${PLATFORM_TYPE,,}"; else echo ''; fi) +force_install_dir ${STEAMAPP_HOME} +login anonymous +app_update ${STEAMAPP_ID} validate +quit);
+${STEAMCMD_HOME}/steamcmd.sh$(if [ -n "${PLATFORM_TYPE}" ]; then echo " +@sSteamCmdForcePlatformType ${PLATFORM_TYPE,,}"; else echo ''; fi) +force_install_dir ${STEAMAPP_HOME} +login anonymous +app_update ${STEAMAPP_ID} validate +quit;
 
 ###
 # post process ( steam libs )
