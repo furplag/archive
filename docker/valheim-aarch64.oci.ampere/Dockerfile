@@ -120,7 +120,7 @@ WORKDIR /
 USER root
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
 RUN apt-get install -y curl sudo \
-  libasyncns0 libatomic1 libglib2.0-0t64 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0;
+  libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0;
 
 # scripts
 WORKDIR ${STEAM_HOME}
