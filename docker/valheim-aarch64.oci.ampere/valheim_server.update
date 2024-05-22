@@ -15,10 +15,12 @@ set LC_ALL=C
 ###
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
+if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
 if ! declare -p VALHEIM_HOME >/dev/null 2>&1; then declare -r VALHEIM_HOME=${STEAM_HOME}/valheim; fi
+if ! declare -p PLATFORM_TYPE >/dev/null 2>&1; then declare -r PLATFORM_TYPE=linux; fi
 if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID='896660'; fi
 
 declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
@@ -27,34 +29,16 @@ declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 # process
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
-${STEAMCMD_HOME}/steamcmd.sh +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit || echo '' >/dev/null 2>&1
+declare result=$(${STEAMCMD_HOME}/steamcmd.sh$(if [[ ',macos,windows,' =~ "${PLATFORM_TYPE,,}" ]]; then [ -n "${PLATFORM_TYPE}" ] && echo " +@sSteamCmdForcePlatformType ${PLATFORM_TYPE,,}"; else echo ''; fi) +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit);
 
 ###
 # post process ( steam libs )
 ###
-mkdir -p ${STEAM_HOME}/.steam ${STEAM_HOME}/Steam;
-if [[ -d "${STEAM_LIBS_86}" ]]; then
-  ln -fns ${STEAM_LIBS_86} ${STEAMCMD_HOME}/sdk32;
-  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/.steam/sdk32;
-  ln -fns ${STEAM_LIBS_86} ${STEAM_HOME}/Steam/sdk32;
-  if [[ -f "${STEAM_LIBS_86}/steamclient.so" ]]; then
-    ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
-    rm -rf ${VALHEIM_HOME}/steamclient.so && ln -fns ${STEAM_LIBS_86}/steamclient.so ${VALHEIM_HOME}/steamclient.so
-    ln -fns ${STEAM_LIBS_86}/steamclient.so ${VALHEIM_HOME}/steamservice.so
-  fi
-fi
-if [[ -d "${STEAM_LIBS_64}" ]]; then
-  ln -fns ${STEAM_LIBS_64} ${STEAMCMD_HOME}/sdk64;
-  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/.steam/sdk64;
-  ln -fns ${STEAM_LIBS_64} ${STEAM_HOME}/Steam/sdk64;
-  if [[ -f "${STEAM_LIBS_64}/steamclient.so" ]]; then
-    ln -fns ${STEAM_LIBS_64}/steamclient.so ${STEAM_LIBS_64}/steamservice.so
-    if [[ -d "${VALHEIM_HOME}/linux64" ]]; then
-      rm -rf ${VALHEIM_HOME}/linux64/steamclient.so && ln -fns ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/steamclient.so
-      ln -fns ${STEAM_LIBS_64}/steamclient.so ${VALHEIM_HOME}/linux64/steamservice.so
-    fi
-  fi
-fi
+[ -f "${STEAM_LIBS_86}/steamclient.so" ] && ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
+[ -f "${STEAM_LIBS_64}/steamclient.so" ] && ln -fns ${STEAM_LIBS_64}/steamclient.so ${STEAM_LIBS_64}/steamservice.so
+mkdir -p ${HOME}/.steam/sdk{32,64} ${HOME}/Steam;
+[ -d "${STEAM_LIBS_86}" ] && ln -fns ${STEAM_LIBS_86}/* ${HOME}/.steam/sdk32/.;
+[ -d "${STEAM_LIBS_64}" ] && ln -fns ${STEAM_LIBS_64}/* ${HOME}/.steam/sdk64/.;
 
 ###
 # cleanup
