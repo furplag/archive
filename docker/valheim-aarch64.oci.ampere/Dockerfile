@@ -128,7 +128,6 @@ USER ${STEAM_USER}
 RUN for _script in 'valheim_server.aarch64' 'valheim_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/valheim-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
 
 # box64 environment
-COPY <<_EOT_ ${HOME}/.box64rc
 RUN echo '[valheim_server.x86_64]' >${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
