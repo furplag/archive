@@ -17,18 +17,23 @@ if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; 
 
 # ENV / variable: steamcmd
 # SteamCMD directory .
+if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
+if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
-# Steam App ID ( Valheim dedicated server, may NOT be modify ) .
-if ! declare -p VALHEIM_APP_ID >/dev/null 2>&1; then declare -r VALHEIM_APP_ID=896660; fi
-# Steam App ID ( Valheim, may NOT be modify ) .
-if ! declare -p VALHEIM_STEAMAPP_ID >/dev/null 2>&1; then declare -r VALHEIM_STEAMAPP_ID=892970; fi
+
+# valheim SteamApp directory
+if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=valheim; fi
+if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
+
+# SteamApp ID ( Valheim dedicated server, may NOT be modify ) .
+if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=896660; fi
+# SteamApp ID ( Valheim, may NOT be modify ) .
+if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=892970; fi
 # a toggle to update automatically or not if available .
 if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
-# Valheim server directory .
-if ! declare -p VALHEIM_HOME >/dev/null 2>&1; then declare -r VALHEIM_HOME=${STEAM_HOME}/valheim; fi
 
 # ENV / variable: valheim
 # Server name to be display on server list .
@@ -47,7 +52,7 @@ if ! declare -p VALHEIM_CROSSPLAY_ENABLED >/dev/null 2>&1; then declare -r VALHE
 if ! declare -p VALHEIM_INSTANCEID >/dev/null 2>&1; then declare -r VALHEIM_INSTANCEID=1; fi
 
 # savedata directory .
-if ! declare -p VALHEIM_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SAVE_DIR="${VALHEIM_HOME}/_saves"; fi
+if ! declare -p VALHEIM_SAVE_DIR >/dev/null 2>&1; then declare -r VALHEIM_SAVE_DIR="${STEAMAPP_HOME}/_saves"; fi
 # how often the world will save in seconds .
 if ! declare -p VALHEIM_SAVE_INTERVAL >/dev/null 2>&1; then declare -r VALHEIM_SAVE_INTERVAL=1800; fi
 # how many automatic backups will be kept .
@@ -58,7 +63,7 @@ if ! declare -p VALHEIM_BACKUP_SHORT >/dev/null 2>&1; then declare -r VALHEIM_BA
 if ! declare -p VALHEIM_BACKUP_LONG >/dev/null 2>&1; then declare -r VALHEIM_BACKUP_LONG=43200; fi
 
 # log directory .
-if ! declare -p VALHEIM_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_LOG_DIR="${VALHEIM_HOME}/_logs"; fi
+if ! declare -p VALHEIM_LOG_DIR >/dev/null 2>&1; then declare -r VALHEIM_LOG_DIR="${STEAMAPP_HOME}/_logs"; fi
 
 # world modifier
 if ! declare -p VALHEIM_MODIFIER_COMBAT >/dev/null 2>&1; then declare -r VALHEIM_MODIFIER_COMBAT=; fi
@@ -111,21 +116,15 @@ declare -ar _modifier_resources_values=(muchless less more muchmore most)
 [ -d "${VALHEIM_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SAVE_DIR}"
 
 # update, if allowed .
-if [[  "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then 
-  declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
-  ${STEAM_HOME}/valheim_server.update
-  export LD_LIBRARY_PATH=${tempLdLibPath}
-fi
+[[ "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]] && ${STEAM_HOME}/valheim_server.update
 
 # start Valheim Server .
-export LD_LIBRARY_PATH=${VALHEIM_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
-export SteamAppId=${VALHEIM_STEAMAPP_ID}
-
-/usr/local/bin/box64 ${VALHEIM_HOME}/valheim_server.x86_64 "${_options[@]}";
+export SteamAppId=${SteamAppId}
+export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
+/usr/local/bin/box64 ${STEAMAPP_HOME}/valheim_server.x86_64 "${_options[@]}";
+export LD_LIBRARY_PATH=${tempLdLibPath}
 
 trap "kill -SIGINT $!;" SIGTERM
 
 # Wait for server to exit
 while wait $!; [ $? != 0 ]; do true; done
-
-export LD_LIBRARY_PATH=${tempLdLibPath}
