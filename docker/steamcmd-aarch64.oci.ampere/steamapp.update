@@ -20,19 +20,19 @@ if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${S
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
 if ! declare -p DEBUGGER >/dev/null 2>&1; then declare -r DEBUGGER=`/usr/bin/which box86`; fi
-if ! declare -p PLATFORM_TYPE >/dev/null 2>&1; then declare -r PLATFORM_TYPE=linux; fi
+if ! declare -p STEAMAPP_PLATFORM_TYPE >/dev/null 2>&1; then declare -r STEAMAPP_PLATFORM_TYPE=linux; fi
 if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=; fi
 if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=${STEAMAPP_ID}; fi
 if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 
 declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
-declare -r platformType="$(if [ -n "${PLATFORM_TYPE:-}" ] && [[ ',linux,macos,windows,' =~ ",${PLATFORM_TYPE,,}," ]]; then echo "${PLATFORM_TYPE,,}"; else echo ''; fi)"
+declare -r platformType="$(if [ -n "${STEAMAPP_PLATFORM_TYPE:-}" ] && [[ ',linux,macos,windows,' =~ ",${STEAMAPP_PLATFORM_TYPE,,}," ]]; then echo "${STEAMAPP_PLATFORM_TYPE,,}"; else echo ''; fi)"
 
 ###
 # process
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
-${STEAMCMD_HOME}/steamcmd.sh$(if [ -n "${PLATFORM_TYPE}" ]; then echo " +@sSteamCmdForcePlatformType ${PLATFORM_TYPE,,}"; else echo ''; fi) +force_install_dir ${STEAMAPP_HOME} +login anonymous +app_update ${STEAMAPP_ID} validate +quit;
+${STEAMCMD_HOME}/steamcmd.sh$(if [ -n "${platformType}" ]; then echo " +@sSteamCmdForcePlatformType ${platformType}"; else echo ''; fi) +force_install_dir ${STEAMAPP_HOME} +login anonymous +app_update ${STEAMAPP_ID} validate +quit;
 
 ###
 # post process ( steam libs )
