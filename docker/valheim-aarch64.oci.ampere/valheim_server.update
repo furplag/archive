@@ -29,7 +29,7 @@ declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 # process
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath}
-declare result=$(${STEAMCMD_HOME}/steamcmd.sh$(if [[ ',macos,windows,' =~ "${PLATFORM_TYPE,,}" ]]; then [ -n "${PLATFORM_TYPE}" ] && echo " +@sSteamCmdForcePlatformType ${PLATFORM_TYPE,,}"; else echo ''; fi) +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit);
+declare result=$(${STEAMCMD_HOME}/steamcmd.sh$(if [[ ',macos,windows,' =~ ",${PLATFORM_TYPE,,}," ]]; then [ -n "${PLATFORM_TYPE}" ] && echo " +@sSteamCmdForcePlatformType ${PLATFORM_TYPE,,}"; else echo ''; fi) +force_install_dir ${VALHEIM_HOME} +login anonymous +app_update ${VALHEIM_APP_ID} validate +quit);
 
 ###
 # post process ( steam libs )
