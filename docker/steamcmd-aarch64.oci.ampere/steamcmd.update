@@ -15,6 +15,7 @@ set LC_ALL=C
 ###
 if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
+if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
@@ -28,9 +29,11 @@ export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath};
 
 # no one take care of the result, just there is only to avoid errors caused by anonymous access .
 declare result=`${STEAMCMD_HOME}/steamcmd.sh +quit`;
-mkdir -p ~/.steam/sdk32 ~/.steam/sdk64 ~/Steam;
-[ -d "${STEAM_LIBS_86}" ] && ln -fns ${STEAM_LIBS_86}/* ~/.steam/sdk32/.;
-[ -d "${STEAM_LIBS_64}" ] && ln -fns ${STEAM_LIBS_64}/* ~/.steam/sdk64/.;
+[ -f "${STEAM_LIBS_86}/steamclient.so" ] && ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
+[ -f "${STEAM_LIBS_64}/steamclient.so" ] && ln -fns ${STEAM_LIBS_64}/steamclient.so ${STEAM_LIBS_64}/steamservice.so
+mkdir -p ${HOME}/.steam/sdk{32,64} ${HOME}/Steam;
+[ -d "${STEAM_LIBS_86}" ] && ln -fns ${STEAM_LIBS_86}/* ${HOME}/.steam/sdk32/.;
+[ -d "${STEAM_LIBS_64}" ] && ln -fns ${STEAM_LIBS_64}/* ${HOME}/.steam/sdk64/.;
 
 ###
 # cleanup
