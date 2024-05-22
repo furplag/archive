@@ -124,6 +124,10 @@ export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath
 /usr/local/bin/box64 ${STEAMAPP_HOME}/valheim_server.x86_64 "${_options[@]}";
 export LD_LIBRARY_PATH=${tempLdLibPath}
 
+# world seed ( if enable to read ) .
+[ -f "${VALHEIM_SAVE_DIR}/worlds_local/${VALHEIM_WORLD}.fwl" ] && \
+  (head -c$(od -j$(od -j8 -N1 -An -t u1) -N1 -An -t u1);echo)<${VALHEIM_SAVE_DIR}/worlds_local/${VALHEIM_WORLD}.fwl >>${STEAMAPP_HOME}/${VALHEIM_NAME}_${VALHEIM_WORLD}.seed
+
 trap "kill -SIGINT $!;" SIGTERM
 
 # Wait for server to exit
