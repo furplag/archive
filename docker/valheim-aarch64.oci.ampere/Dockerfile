@@ -129,10 +129,9 @@ RUN for _script in 'valheim_server.aarch64' 'valheim_server.update'; do curl -fL
 
 # box64 environment
 RUN echo '[valheim_server.x86_64]' >${HOME}/.box64rc && \
-  echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}" >>${HOME}/.box64rc && \
+  echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-0}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
-  echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc && \
-  echo "BOX64_LOG=${BOX64_LOG}\n" >>${HOME}/.box64rc;
+  echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc;
 
 # cleanup image
 WORKDIR /
