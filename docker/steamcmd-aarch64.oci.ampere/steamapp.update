@@ -37,11 +37,13 @@ ${STEAMCMD_HOME}/steamcmd.sh$(if [ -n "${platformType}" ]; then echo " +@sSteamC
 ###
 # post process ( steam libs )
 ###
-[ -f "${STEAM_LIBS_86}/steamclient.so" ] && ln -fns ${STEAM_LIBS_86}/steamclient.so ${STEAM_LIBS_86}/steamservice.so
-[ -f "${STEAM_LIBS_64}/steamclient.so" ] && ln -fns ${STEAM_LIBS_64}/steamclient.so ${STEAM_LIBS_64}/steamservice.so
-mkdir -p ${HOME}/.steam/sdk{32,64} ${HOME}/Steam;
-[ -d "${STEAM_LIBS_86}" ] && ln -fns ${STEAM_LIBS_86}/* ${HOME}/.steam/sdk32/.;
-[ -d "${STEAM_LIBS_64}" ] && ln -fns ${STEAM_LIBS_64}/* ${HOME}/.steam/sdk64/.;
+for _libs in "${STEAM_LIBS_86}" "${STEAM_LIBS_64}"; do
+  [ -f "${_libs}/steamclient.so" ] && \
+  for _lib in 'steamservice.so' 'libsteam.so' 'libSDL3.so.0'; do [ -e ${_libs}/${_lib} ] || ln -fns ${_libs}/steamclient.so ${_libs}/${_lib}; done;
+fi
+mkdir -p ${HOME}/.steam ${HOME}/Steam;
+[ -d "${STEAM_LIBS_86}" ] && ln -fns ${STEAM_LIBS_86} ${HOME}/.steam/sdk32;
+[ -d "${STEAM_LIBS_64}" ] && ln -fns ${STEAM_LIBS_64} ${HOME}/.steam/sdk64;
 
 ###
 # cleanup
