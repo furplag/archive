@@ -30,6 +30,10 @@ declare -r box86Path=`/usr/bin/which box86`
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath};
 export DEBUGGER=${DEBUGGER:-$box86Path};
 ${STEAMCMD_HOME}/steamcmd.sh +quit;
+
+###
+# post process ( steam libs )
+###
 for _libs in "${STEAM_LIBS_86}" "${STEAM_LIBS_64}"; do
   [ -f "${_libs}/steamclient.so" ] && \
   for _lib in 'steamservice.so' 'libsteam.so' 'libSDL3.so.0'; do [ -e ${_libs}/${_lib} ] || ln -fns ${_libs}/steamclient.so ${_libs}/${_lib}; done;
