@@ -29,4 +29,4 @@ declare -r steamcmdArgs="$(if [ -n "${platformType}" ]; then echo " +@sSteamCmdF
 ###
 # process
 ###
-cat ${STEAM_HOME}/steamcmd.update | bash -s -- $(if [ -z "${STEAMAPP_ID}" ]; then echo ''; else echo ${steamcmdArgs}"; fi);
+cat ${STEAM_HOME}/steamcmd.update | bash -s -- $(if [ -z "${STEAMAPP_ID}" ]; then echo ''; else echo "${steamcmdArgs}"; fi);
