@@ -1,6 +1,7 @@
 #!/bin/bash
 set -o pipefail
-set LC_ALL=C
+LC_ALL=C.UTF-8
+
 ###
 # valheim-aarch64.oci.ampere/valheim_server.aarch64
 # https://github.com/furplag/archive/docker
@@ -17,21 +18,18 @@ if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; 
 
 # ENV / variable: steamcmd
 # SteamCMD directory .
-if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
 if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
 if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
-if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
-
-# valheim SteamApp directory
-if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=valheim; fi
-if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 
 # SteamApp ID ( Valheim dedicated server, may NOT be modify ) .
 if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=896660; fi
 # SteamApp ID ( Valheim, may NOT be modify ) .
 if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=892970; fi
+# valheim SteamApp directory
+if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=valheim; fi
+if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 # a toggle to update automatically or not if available .
 if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
 
@@ -39,7 +37,7 @@ if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r V
 # Server name to be display on server list .
 if ! declare -p VALHEIM_NAME >/dev/null 2>&1; then declare -r VALHEIM_NAME=Valheim; fi
 # world name to be display on server list .
-if ! declare -p VALHEIM_WORLD >/dev/null 2>&1; then declare -r VALHEIM_WORLD=Dedicated; fi
+if ! declare -p VALHEIM_WORLD >/dev/null 2>&1; then declare -r VALHEIM_WORLD=${VALHEIM_NAME^^}; fi
 # password to connecting server ( should be set the password your own ) .
 if ! declare -p VALHEIM_PASSWORD >/dev/null 2>&1; then declare -r VALHEIM_PASSWORD=s3CRet; fi
 # port to connecting server .
@@ -110,6 +108,8 @@ declare -ar _modifier_resources_values=(muchless less more muchmore most)
 [[ "${VALHEIM_MODIFIER_PASSIVEMOBS^^}" = 'TRUE' ]] && _options+=(-setkey passivemobs)
 [[ "${VALHEIM_MODIFIER_NOMAP^^}" = 'TRUE' ]] && _options+=(-setkey nomap)
 
+declare -r box64Path=`/usr/bin/which box64`
+
 ###
 # process
 ###
@@ -121,7 +121,7 @@ declare -ar _modifier_resources_values=(muchless less more muchmore most)
 # start Valheim Server .
 export SteamAppId=${SteamAppId}
 export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
-/usr/local/bin/box64 ${STEAMAPP_HOME}/valheim_server.x86_64 "${_options[@]}";
+$box64Path ${STEAMAPP_HOME}/valheim_server.x86_64 "${_options[@]}";
 export LD_LIBRARY_PATH=${tempLdLibPath}
 
 # world seed ( if enable to read ) .
