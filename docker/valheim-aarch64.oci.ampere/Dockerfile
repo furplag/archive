@@ -75,7 +75,6 @@ ARG VALHEIM_SERVER_UPDATE_ENABLED='TRUE'
 ARG BOX64_DYNAREC_BIGBLOCK=1
 ARG BOX64_DYNAREC_BLEEDING_EDGE=0
 ARG BOX64_DYNAREC_STRONGMEM=2
-ARG BOX64_LOG=0
 
 ENV TZ ${TZ}
 ENV LANG ${LANG}
@@ -129,7 +128,7 @@ RUN for _script in 'valheim_server.aarch64' 'valheim_server.update'; do curl -fL
 
 # box64 environment
 RUN echo '[valheim_server.x86_64]' >${HOME}/.box64rc && \
-  echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-0}" >>${HOME}/.box64rc && \
+  echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-1}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc;
 
@@ -142,6 +141,7 @@ RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 # ports
 EXPOSE ${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp
 
+# current user / directory
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 
