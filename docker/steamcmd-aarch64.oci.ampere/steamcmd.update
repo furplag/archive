@@ -20,7 +20,7 @@ if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${S
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
 if ! declare -p DEBUGGER >/dev/null 2>&1; then declare -r debuggerIsDefined='yep'; declare DEBUGGER=; fi
-if ! debuggerIsDefined -p DEBUGGER >/dev/null 2>&1; then declare -r debuggerIsDefined='nope'; fi
+if ! declare -p debuggerIsDefined >/dev/null 2>&1; then declare -r debuggerIsDefined='nope'; fi
 
 declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 declare -r box86Path=`/usr/bin/which box86`
@@ -30,7 +30,7 @@ declare -r box86Path=`/usr/bin/which box86`
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath};
 export DEBUGGER=${DEBUGGER:-$box86Path};
-${STEAMCMD_HOME}/steamcmd.sh$(if [[ ${@} =~ [[:space:]]\+quit ]]; then echo " ${@}"; else echo '+quit'; fi);
+${STEAMCMD_HOME}/steamcmd.sh$(if [[ ${@} =~ [[:space:]]\+quit ]]; then echo " ${@}"; else echo ' +quit'; fi);
 
 ###
 # post process ( steam libs )
@@ -38,7 +38,7 @@ ${STEAMCMD_HOME}/steamcmd.sh$(if [[ ${@} =~ [[:space:]]\+quit ]]; then echo " ${
 for _libs in "${STEAM_LIBS_86}" "${STEAM_LIBS_64}"; do
   [ -f "${_libs}/steamclient.so" ] && \
   for _lib in 'steamservice.so' 'libsteam.so' 'libSDL3.so.0'; do [ -e ${_libs}/${_lib} ] || ln -fns ${_libs}/steamclient.so ${_libs}/${_lib}; done;
-fi
+done
 mkdir -p ${HOME}/.steam ${HOME}/Steam;
 [ -d "${STEAM_LIBS_86}" ] && ln -fns ${STEAM_LIBS_86} ${HOME}/.steam/sdk32;
 [ -d "${STEAM_LIBS_64}" ] && ln -fns ${STEAM_LIBS_64} ${HOME}/.steam/sdk64;
@@ -47,4 +47,4 @@ mkdir -p ${HOME}/.steam ${HOME}/Steam;
 # cleanup
 ###
 export LD_LIBRARY_PATH=${tempLdLibPath};
-[[ ${debuggerIsDefined:-nope} = 'yep' ]] || unset DEBUGGER;
+[[ ${debuggerIsDefined:-yep} = 'nope' ]] || unset DEBUGGER;
