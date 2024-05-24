@@ -9,11 +9,11 @@ FROM ubuntu:noble
 # a base Dockerfile that enable to use steamcmd on arm64/v8 instance ( with Box86 / 64, especially for A1.Flex-ampere.OracleLinux ) .
 #
 # Usage
-# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd:ubuntu-latest
+# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile -t furplag/steamcmd:latest
 # B. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile \
 #     --build-arg STEAM_HOME='~/steam' \
 #     ...
-#     -t furplag/steamcmd:ubuntu-latest
+#     -t furplag/steamcmd:latest
 #
 
 ###
@@ -34,9 +34,9 @@ ARG STEAM_GROUP_ID=12001
 ARG BOX86_PACKAGE=box86-generic-arm
 ARG BOX64_PACKAGE=box64-generic-arm
 
+ENV TZ {TZ}
 ENV LANG ${LANG}
 ENV LANGUAGE ${LANGUAGE}
-ENV LC_ALL ${LC_ALL}
 
 ENV STEAM_HOME ${STEAM_HOME}
 ENV STEAMCMD_HOME ${STEAM_HOME}/steamcmd
