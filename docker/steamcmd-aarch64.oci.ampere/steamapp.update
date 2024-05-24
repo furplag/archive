@@ -23,7 +23,7 @@ if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=${S
 if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 if ! declare -p STEAMAPP_PLATFORM_TYPE >/dev/null 2>&1; then declare -r STEAMAPP_PLATFORM_TYPE=linux; fi
 
-[ -z "${STEAMAPP_ID}" ] && echo '[ERROR] undefined environment: "STEAMAPP_ID" .' && exit 1;
+[ -z "${STEAMAPP_ID}" ] && echo '[ERROR] "STEAMAPP_ID" must not be empty .' && exit 1;
 
 declare -r platformType="$(if [ -n "${STEAMAPP_PLATFORM_TYPE:-}" ] && [[ ',linux,macos,windows,' =~ ",${STEAMAPP_PLATFORM_TYPE,,}," ]]; then echo "${STEAMAPP_PLATFORM_TYPE,,}"; else echo ''; fi)"
 declare -r steamcmdArgs="$(if [ -n "${platformType}" ]; then echo " +@sSteamCmdForcePlatformType ${platformType}"; else echo ''; fi) +force_install_dir ${STEAMAPP_HOME} +login anonymous +app_update ${STEAMAPP_ID} validate +quit"
