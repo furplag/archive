@@ -1,6 +1,7 @@
 #!/bin/bash
 set -u -o pipefail
-set LC_ALL=C
+LC_ALL=C.UTF-8
+
 ###
 # steamcmd-aarch64.oci.ampere/steamcmd.update
 # https://github.com/furplag/archive/docker
