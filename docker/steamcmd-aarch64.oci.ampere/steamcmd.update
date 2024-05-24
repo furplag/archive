@@ -24,13 +24,14 @@ if ! debuggerIsDefined -p DEBUGGER >/dev/null 2>&1; then declare -r debuggerIsDe
 
 declare -r tempLdLibPath="${LD_LIBRARY_PATH}"
 declare -r box86Path=`/usr/bin/which box86`
+declare -r _args="${@}$(if [[ ${@} =~ [[:space:]]\+quit ]]; then echo ''; else echo ' +quit')"
 
 ###
 # process
 ###
 export LD_LIBRARY_PATH=${STEAM_LIBS_86}:${tempLdLibPath};
 export DEBUGGER=${DEBUGGER:-$box86Path};
-${STEAMCMD_HOME}/steamcmd.sh +quit;
+${STEAMCMD_HOME}/steamcmd.sh $_args;
 
 ###
 # post process ( steam libs )
