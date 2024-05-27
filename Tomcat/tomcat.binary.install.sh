@@ -293,7 +293,7 @@ else
     if [[ ! -d "${_workdir}/${_tomcat_native_extract}" ]]; then _log ERROR "could not extract Tomcat native source ."; result=1
     else
       _log INFO "installing Tomcat native ..."
-      if ! bash -c "${packagemanager:-dnf} install -y automake apr-devel gcc openssl-devel" 1>/dev/null; then _log ERROR "could not install dependencies ."; result=1
+      if ! bash -c "${packagemanager:-dnf} install -y automake apr-devel gcc openssl-devel redhat-rpm-config" 1>/dev/null; then _log ERROR "could not install dependencies ."; result=1
       else cat <<_EOT_|bash
 cd "${_workdir}/${_tomcat_native_extract}/native"
 ./configure \
