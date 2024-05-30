@@ -75,6 +75,7 @@ ARG VALHEIM_SERVER_UPDATE_ENABLED='TRUE'
 ARG BOX64_DYNAREC_BIGBLOCK=0
 ARG BOX64_DYNAREC_BLEEDING_EDGE=0
 ARG BOX64_DYNAREC_STRONGMEM=3
+ARG BOX64_LOG=0
 
 ENV TZ ${TZ}
 ENV LANG ${LANG}
@@ -131,8 +132,8 @@ RUN echo '[valheim_server.x86_64]' >${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-1}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc;
-RUN [ -z "${BOX64_LOG}" ] || echo "BOX64_LOG=${BOX64_LOG}" >>${HOME}/.box64rc;
-RUN [ -z "${BOX64_LOG}" ] || echo "BOX64_TRACE_FILE=${${VALHEIM_LOG_DIR}/BOX64-${VALHEIM_NAME}-${VALHEIM_WORLD}.log" >>${HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] || echo "BOX64_LOG=${BOX64_LOG}" >>${HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] || echo "BOX64_TRACE_FILE=${${VALHEIM_LOG_DIR}/BOX64-${VALHEIM_NAME}-${VALHEIM_WORLD}.log" >>${HOME}/.box64rc;
 
 # cleanup image
 WORKDIR /
@@ -146,6 +147,9 @@ EXPOSE ${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp
 # current user / directory
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
+
+# healthcheck ( WiP )
+HEALTHCHECK --start-period=1m --interval=30s --timeout=1s CMD [ `ps ax | grep 'valheim_server.x86_64' | grep -v grep | wc -l` -eq 1 ] || exit 1
 
 # entrypoint
 ENTRYPOINT [ "bash", "/opt/steam/valheim_server.aarch64" ]
