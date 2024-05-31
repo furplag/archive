@@ -126,7 +126,7 @@ export LD_LIBRARY_PATH=${tempLdLibPath}
 
 # world seed ( if enable to read ) .
 [ -f "${VALHEIM_SAVE_DIR}/worlds_local/${VALHEIM_WORLD}.fwl" ] && \
-  (head -c$(od -j$(od -j8 -N1 -An -t u1) -N1 -An -t u1);echo)<${VALHEIM_SAVE_DIR}/worlds_local/${VALHEIM_WORLD}.fwl >${STEAMAPP_HOME}/${VALHEIM_NAME}_${VALHEIM_WORLD}.seed
+  (head -c$(od -j$(od -j8 -N1 -An -t u1) -N1 -An -t u1);echo)<${VALHEIM_SAVE_DIR}/worlds_local/${VALHEIM_WORLD}.fwl >${STEAMAPP_HOME}/${VALHEIM_NAME}-${VALHEIM_WORLD}.seed
 
 trap "kill -SIGINT $!;" SIGTERM
 
