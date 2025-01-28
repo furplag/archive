@@ -3,7 +3,7 @@ services:
   server:
     build: .
     env_file: ./.env
-    container_name: soulmask
+    container_name: ${SOULMASK_SERVER_NAME}
     ports:
       - "0.0.0.0:${SOULMASK_PORT}:${SOULMASK_PORT}/udp"
       - "0.0.0.0:${SOULMASK_QUERY_PORT}:${SOULMASK_QUERY_PORT}/udp"
