@@ -1,0 +1,113 @@
+#!/bin/bash
+set -o pipefail
+LC_ALL=C.UTF-8
+
+###
+# soulmask-aarch64.oci.ampere/soulmask_server.aarch64
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "soulmask-aarch64.oci.ampere" .
+#
+
+###
+# ENV / variable
+###
+if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
+
+# ENV / variable: steamcmd
+# SteamCMD directory .
+if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
+if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
+if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
+if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
+
+# SteamApp ID ( Valheim dedicated server, may NOT be modify ) .
+if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=3017300; fi
+# SteamApp ID ( Valheim, may NOT be modify ) .
+if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=2646460; fi
+# Soulmask SteamApp directory
+if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=soulmask; fi
+if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
+# a toggle to update automatically or not if available .
+if ! declare -p SOULMASK_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r SOULMASK_SERVER_UPDATE_ENABLED='TRUE'; fi
+
+# ENV / variable: soulmask
+# server name to be display on server list .
+if ! declare -p SOULMASK_SERVER_NAME >/dev/null 2>&1; then declare -r SOULMASK_SERVER_NAME=Soulmask; fi
+# world name to be display on server list .
+if ! declare -p SOULMASK_STEAM_SERVER_NAME >/dev/null 2>&1; then declare -r SOULMASK_STEAM_SERVER_NAME=Dedicated; fi
+# the maximum number of players .
+if ! declare -p SOULMASK_MAX_PLAYERS >/dev/null 2>&1; then declare -r SOULMASK_MAX_PLAYERS=6; fi
+
+# the server to run in PVP mode, or not .
+if ! declare -p SOULMASK_IS_PVP >/dev/null 2>&1; then declare -r SOULMASK_IS_PVP=; fi
+# the region for the server ( 0: Test (events allowed any time), 1: Asia, 2: North America, 3: Europe, 4: Mainland China, 5: South America, 6: Oceania, 7: Africa ) .
+if ! declare -p SOULMASK_GAMEDISTINDEX >/dev/null 2>&1; then declare -r SOULMASK_GAMEDISTINDEX=0; fi
+# the server to bind to a specific local IP (do not modify if the computer has multiple adapters and you want to choose one specific one ) .
+if ! declare -p SOULMASK_MULTIHOME >/dev/null 2>&1; then declare -r SOULMASK_MULTIHOME=; fi
+
+# the interval for writing the game database to disk ( seconds ) .
+if ! declare -p SOULMASK_BACKUP >/dev/null 2>&1; then declare -r SOULMASK_BACKUP=900; fi
+# the interval for writing game objects to the database ( seconds ) .
+if ! declare -p SOULMASK_SAVING >/dev/null 2>&1; then declare -r SOULMASK_SAVING=600; fi
+# how often the world will save in minutes .
+if ! declare -p SOULMASK_BACKUPINTERVAL >/dev/null 2>&1; then declare -r SOULMASK_BACKUPINTERVAL=1440; fi
+# a toggle to backs up game saves when the game starts .
+if ! declare -p SOULMASK_IS_INITBACKUP >/dev/null 2>&1; then declare -r SOULMASK_IS_INITBACKUP=FALSE; fi
+
+# port to connecting server .
+if ! declare -p SOULMASK_PORT >/dev/null 2>&1; then declare -r SOULMASK_PORT=27050; fi
+# port to connecting server .
+if ! declare -p SOULMASK_QUERY_PORT >/dev/null 2>&1; then declare -r SOULMASK_QUERY_PORT=27051; fi
+# maintenance port, used for local telnet server maintenance, TCP, does not need to be open .
+if ! declare -p SOULMASK_ECHO_PORT >/dev/null 2>&1; then declare -r SOULMASK_ECHO_PORT=27052; fi
+
+# password to connecting server ( should be set the password your own ) .
+if ! declare -p SOULMASK_PSW >/dev/null 2>&1; then declare -r SOULMASK_PSW=s3CRet; fi
+# password to launch admin console ( should be set the password your own ) .
+if ! declare -p SOULMASK_ADMINPSW >/dev/null 2>&1; then declare -r SOULMASK_ADMINPSW=s3CRet; fi
+
+declare -a _options=(
+  "${SOULMASK_SERVER_NAME}"
+  -server
+  -SILENT
+  -log
+  -forcepassthrough
+  -UTF8Output
+  -online=Steam
+  -PORT=${SOULMASK_PORT}
+  -QueryPort=${SOULMASK_QUERY_PORT}
+  -EchoPort=${SOULMASK_ECHO_PORT}
+  -MaxPlayers=${SOULMASK_MAX_PLAYERS}
+  "$(if [[ "${SOULMASK_IS_PVP^^}" = 'TRUE' ]]; then echo '-pvp'; else echo '-pve'; fi)"
+  -saving=${SOULMASK_SAVING}
+  -backup=${SOULMASK_BACKUP}
+  -backupinterval=${SOULMASK_BACKUPINTERVAL}
+);
+[[ -n "${SOULMASK_STEAM_SERVER_NAME}" ]] && _options+=(-SteamServerName=${SOULMASK_STEAM_SERVER_NAME})
+[[ -n "${SOULMASK_MULTIHOME}" ]] && _options+=(-MULTIHOME=${SOULMASK_MULTIHOME})
+[[ -n "${SOULMASK_GAMEDISTINDEX}" ]] && _options+=(-gamedistindex=${SOULMASK_GAMEDISTINDEX})
+[[ -n "${SOULMASK_PSW}" ]] && _options+=(-PSW=${SOULMASK_PSW})
+[[ -n "${SOULMASK_ADMINPSW}" ]] && _options+=(-adminpsw=${SOULMASK_ADMINPSW})
+[[ "${SOULMASK_IS_INITBACKUP^^}" = 'TRUE' ]] && _options+=(-initbackup)
+
+declare -r box64Path=`/usr/bin/which box64`
+
+###
+# process
+###
+# update, if allowed .
+[[ "${SOULMASK_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]] && ${STEAM_HOME}/soulmask_server.update
+
+# start Soulmask Server .
+export SteamAppId=${SteamAppId}
+export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
+$box64Path ${STEAMAPP_HOME}/WS/Binaries/Linux/WSServer-Linux-Shipping WS "${_options[@]}";
+export LD_LIBRARY_PATH=${tempLdLibPath}
+
+trap "kill -SIGINT $!;" SIGTERM
+
+# Wait for server to exit
+while wait $!; [ $? != 0 ]; do true; done

@@ -1,0 +1,28 @@
+#!/bin/bash
+set -u -o pipefail
+LC_ALL=C.UTF-8
+
+###
+# soulmask-aarch64.oci.ampere/valheim_server.update
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "soulmask-aarch64.oci.ampere" .
+#
+
+###
+# variable
+###
+if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=3017300; fi
+if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=soulmask; fi
+if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
+if ! declare -p STEAMAPP_PLATFORM_TYPE >/dev/null 2>&1; then declare -r STEAMAPP_PLATFORM_TYPE=linux; fi
+
+cat <<_EOT_ | bash
+export STEAMAPP_ID=${STEAMAPP_ID}
+export STEAMAPP_NAME=${STEAMAPP_NAME}
+export STEAMAPP_HOME=${STEAMAPP_HOME}
+export STEAMAPP_PLATFORM_TYPE=${STEAMAPP_PLATFORM_TYPE}
+cat ${STEAM_HOME}/steamapp.update | bash
+_EOT_
