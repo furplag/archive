@@ -1,0 +1,22 @@
+# soulmask-aarch64.oci.ampere/docker-compose.yml
+services:
+  server:
+    build: .
+    env_file: ./.env
+    container_name: ${SOULMASK_SERVER_NAME}
+    ports:
+      - "0.0.0.0:${SOULMASK_PORT}:${SOULMASK_PORT}/udp"
+      - "0.0.0.0:${SOULMASK_QUERY_PORT}:${SOULMASK_QUERY_PORT}/udp"
+      - "0.0.0.0:${SOULMASK_ECHO_PORT}:${SOULMASK_ECHO_PORT}/tcp"
+    volumes:
+      - type: volume
+        source: soulmask_server_data
+        target: /opt/steam
+    stdin_open: true
+    tty: true
+
+# must be add permissions to STEAM_USER to handles data .
+volumes:
+  soulmask_server_data:
+    name: soulmask_server_data
+    external: true

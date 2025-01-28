@@ -1,0 +1,161 @@
+FROM furplag/steamcmd:latest
+###
+# soulmask-aarch64.oci.ampere/Dockerfile
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# running Soulmask dedicated server on arm64/v8 instance ( especially for A1.Flex-ampere.OracleLinux  ) .
+#
+# Requirement
+# [ ] a base image "furplag/steamcmd:latest" should be build before this image .
+# [ ] a Docker Volume to persists game data ( recommends to use docker compose ) .
+#
+# Usage
+# A. docker compose up -d --name {container} \
+#    -p 8777:8777/udp \
+#    -p 27015:27015/udp \
+#    -p 18888:18888/tcp \
+#    server
+#
+
+###
+# ENV / variable
+###
+# general
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TZ=Etc/UTC
+ARG LANG='en_US.UTF-8'
+ARG LANGUAGE='en_US:en'
+
+# steamcmd
+ARG STEAM_HOME=/opt/steam
+ARG STEAM_USER=steam
+ARG STEAM_USER_ID=12001
+ARG STEAM_GROUP_ID=12001
+ARG STEAMCMD_HOME="${STEAM_HOME}/steamcmd"
+ARG STEAM_LIBS_86="${STEAMCMD_HOME}/linux32"
+ARG STEAM_LIBS_64="${STEAMCMD_HOME}/linux64"
+
+# soulmask( steamapp )
+ARG STEAMAPP_ID=3017300
+ARG STEAMAPP_NAME=soulmask
+ARG STEAMAPP_HOME="${STEAM_HOME}/${STEAMAPP_NAME}"
+ARG STEAMAPP_PLATFORM_TYPE=
+ARG SteamAppId=2646460
+
+# soulmask ( server options )
+ARG SOULMASK_SERVER_NAME=Soulmask
+ARG SOULMASK_STEAM_SERVER_NAME=Dedicated
+ARG SOULMASK_MAX_PLAYERS=6
+ARG SOULMASK_IS_PVP=FALSE
+ARG SOULMASK_GAMEDISTINDEX=1
+
+ARG SOULMASK_MULTIHOME=0.0.0.0
+ARG SOULMASK_PORT=27050
+ARG SOULMASK_QUERY_PORT=27051
+ARG SOULMASK_ECHO_PORT=27052
+
+ARG SOULMASK_PSW=s3CRet
+ARG SOULMASK_ADMINPSW=s3CRet
+
+ARG SOULMASK_BACKUP=900
+ARG SOULMASK_SAVING=600
+ARG SOULMASK_BACKUPINTERVAL=1440
+ARG SOULMASK_IS_INITBACKUP=TRUE
+
+ARG SOULMASK_SERVER_UPDATE_ENABLED='TRUE'
+
+# soulmask ( box64 options )
+ARG BOX64_DYNAREC_BIGBLOCK=1
+ARG BOX64_DYNAREC_BLEEDING_EDGE=0
+ARG BOX64_DYNAREC_STRONGMEM=3
+ARG BOX64_LOG=1
+
+ARG BOX86_NOBANNER=1
+ARG BOX64_NOBANNER=1
+
+ENV TZ=${TZ}
+ENV LANG=${LANG}
+ENV LANGUAGE=${LANGUAGE}
+
+ENV STEAM_HOME=${STEAM_HOME}
+ENV STEAMCMD_HOME=${STEAMCMD_HOME}
+ENV STEAM_LIBS_86=${STEAM_LIBS_86}
+ENV STEAM_LIBS_64=${STEAM_LIBS_64}
+
+ENV STEAMAPP_ID=${STEAMAPP_ID}
+ENV STEAMAPP_NAME=${STEAMAPP_NAME}
+ENV STEAMAPP_HOME=${STEAMAPP_HOME}
+ENV SteamAppId=${SteamAppId}
+ENV STEAMAPP_LOG_DIR=${STEAMAPP_LOG_DIR}
+
+ENV SOULMASK_SERVER_NAME=${SOULMASK_SERVER_NAME}
+ENV SOULMASK_STEAM_SERVER_NAME=${SOULMASK_STEAM_SERVER_NAME}
+ENV SOULMASK_MAX_PLAYERS=${SOULMASK_MAX_PLAYERS}
+ENV SOULMASK_IS_PVP=${SOULMASK_IS_PVP}
+
+ENV SOULMASK_PORT=${SOULMASK_PORT}
+ENV SOULMASK_QUERY_PORT=${SOULMASK_QUERY_PORT}
+ENV SOULMASK_ECHO_PORT=${SOULMASK_ECHO_PORT}
+ENV SOULMASK_GAMEDISTINDEX=${SOULMASK_GAMEDISTINDEX}
+
+ENV SOULMASK_MULTIHOME=${SOULMASK_MULTIHOME}
+
+ENV SOULMASK_PSW=${SOULMASK_PSW}
+ENV SOULMASK_ADMINPSW=${SOULMASK_ADMINPSW}
+
+ENV SOULMASK_BACKUP=${SOULMASK_BACKUP}
+ENV SOULMASK_SAVING=${SOULMASK_SAVING}
+ENV SOULMASK_BACKUPINTERVAL=${SOULMASK_BACKUPINTERVAL}
+ENV SOULMASK_IS_INITBACKUP=${SOULMASK_IS_INITBACKUP}
+
+ENV SOULMASK_SERVER_UPDATE_ENABLED=${SOULMASK_SERVER_UPDATE_ENABLED}
+
+ENV BOX86_NOBANNER=${BOX86_NOBANNER}
+ENV BOX64_NOBANNER=${BOX64_NOBANNER}
+ENV BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}
+ENV BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE}
+ENV BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM}
+
+# packages
+WORKDIR /
+USER root
+RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
+RUN apt-get install -y curl sudo \
+  libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0;
+
+# scripts
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
+RUN for _script in 'soulmask_server.aarch64' 'soulmask_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/soulmask-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
+RUN sudo chmod +x ${STEAM_HOME}/soulmask_server.*
+
+# box64 environment
+RUN echo '[WSServer-Linux-Shipping]' >${HOME}/.box64rc && \
+  echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-1}" >>${HOME}/.box64rc && \
+  echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
+  echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] || echo "BOX64_LOG=${BOX64_LOG}" >>${HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] || echo "BOX64_TRACE_FILE=${STEAMAPP_LOG_DIR}/BOX64-${SOULMASK_SERVER_NAME}-${SOULMASK_STEAM_SERVER_NAME}.log" >>${HOME}/.box64rc;
+
+# cleanup image
+WORKDIR /
+USER root
+RUN apt-get autoremove --purge -y ;
+RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
+
+# ports
+EXPOSE ${SOULMASK_PORT}/udp
+EXPOSE ${SOULMASK_QUERY_PORT}/udp
+EXPOSE ${SOULMASK_ECHO_PORT}/tcp
+
+# current user / directory
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
+
+# healthcheck ( WiP )
+#HEALTHCHECK --start-period=1m --interval=30s --timeout=1s CMD [ `ps ax | grep 'valheim_server.x86_64' | grep -v grep | wc -l` -eq 1 ] || exit 1
+
+# entrypoint
+ENTRYPOINT [ "bash", "/opt/steam/soulmask_server.aarch64" ]
