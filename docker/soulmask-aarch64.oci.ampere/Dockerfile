@@ -129,7 +129,7 @@ ENV BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM}
 WORKDIR /
 USER root
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get install -y curl sudo \
+RUN apt-get install -y curl sudo telnet \
   libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 libsdl2-2.0-0;
 
 # scripts
