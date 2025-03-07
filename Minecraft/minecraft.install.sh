@@ -254,8 +254,8 @@ elif [[ ! -f "\${server_jar_path}" ]]; then echo "server JAR not found ( \"\${se
 if [[ \$(("\${result:-1}")) -ne 0 ]]; then exit \$((\${result:-1})); fi
 
 screen -UmdS \${instance_name} java -server \\
--Xms${server_xms:-2G} \\
--Xmx${server_xmx:-2G} \\
+-Xms\${server_xms:-2G} \\
+-Xmx\${server_xmx:-2G} \\
 -XX:+UseG1GC \\
 -XX:+ParallelRefProcEnabled \\
 -XX:MaxGCPauseMillis=200 \\
@@ -277,6 +277,7 @@ screen -UmdS \${instance_name} java -server \\
 -Dfile.encoding=UTF-8 \\
 -Duser.language=ja \\
 -Duser.country=JP \\
+-Dhttps.protocols=TLSv1.2 \\
 -Dusing.aikars.flags=https://mcflags.emc.gs \\
 -Daikars.new.flags=true \\
 -jar "\${server_jar_path}" \\
