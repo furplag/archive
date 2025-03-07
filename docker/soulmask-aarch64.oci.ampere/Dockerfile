@@ -147,7 +147,7 @@ RUN echo '[WSServer-Linux-Shipping]' >${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc;
 RUN [ ${BOX64_LOG:-0} -ne 0 ] && echo "BOX64_LOG=${BOX64_LOG}" >>${HOME}/.box64rc;
-RUN [ ${BOX64_LOG:-0} -ne 0 ] && echo "BOX64_TRACE_FILE=${STEAMAPP_LOG_DIR}/$(if [[ -n "${BOX64_TRACE_FILE}" ]]; then echo "${BOX64_TRACE_FILE}"; else echo "BOX64-${STEAMAPP_NAME}-${SOULMASK_STEAM_SERVER_NAME}.log" | sed -e 's/ /\./gi'; fi)" >>${HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] && echo "BOX64_TRACE_FILE=${BOX64_TRACE_FILE}" >>${HOME}/.box64rc;
 
 # cleanup image
 WORKDIR /
