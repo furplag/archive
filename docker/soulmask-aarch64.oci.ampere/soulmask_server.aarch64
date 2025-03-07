@@ -47,6 +47,8 @@ if ! declare -p SOULMASK_IS_PVP >/dev/null 2>&1; then declare -r SOULMASK_IS_PVP
 if ! declare -p SOULMASK_GAMEDISTINDEX >/dev/null 2>&1; then declare -r SOULMASK_GAMEDISTINDEX=0; fi
 # the server to bind to a specific local IP (do not modify if the computer has multiple adapters and you want to choose one specific one ) .
 if ! declare -p SOULMASK_MULTIHOME >/dev/null 2>&1; then declare -r SOULMASK_MULTIHOME=; fi
+# specifies the IP address to bind the RCON listener to, use SOULMASK_MULTIHOME by defaults .
+if ! declare -p SOULMASK_RCONADDR >/dev/null 2>&1; then declare -r SOULMASK_RCONADDR=; fi
 
 # the interval for writing the game database to disk ( seconds ) .
 if ! declare -p SOULMASK_BACKUP >/dev/null 2>&1; then declare -r SOULMASK_BACKUP=900; fi
@@ -58,16 +60,20 @@ if ! declare -p SOULMASK_BACKUPINTERVAL >/dev/null 2>&1; then declare -r SOULMAS
 if ! declare -p SOULMASK_IS_INITBACKUP >/dev/null 2>&1; then declare -r SOULMASK_IS_INITBACKUP=FALSE; fi
 
 # port to connecting server .
-if ! declare -p SOULMASK_PORT >/dev/null 2>&1; then declare -r SOULMASK_PORT=27050; fi
+if ! declare -p SOULMASK_PORT >/dev/null 2>&1; then declare -r SOULMASK_PORT=8777; fi
 # port to connecting server .
-if ! declare -p SOULMASK_QUERY_PORT >/dev/null 2>&1; then declare -r SOULMASK_QUERY_PORT=27051; fi
+if ! declare -p SOULMASK_QUERY_PORT >/dev/null 2>&1; then declare -r SOULMASK_QUERY_PORT=27015; fi
 # maintenance port, used for local telnet server maintenance, TCP, does not need to be open .
-if ! declare -p SOULMASK_ECHO_PORT >/dev/null 2>&1; then declare -r SOULMASK_ECHO_PORT=27052; fi
+if ! declare -p SOULMASK_ECHO_PORT >/dev/null 2>&1; then declare -r SOULMASK_ECHO_PORT=18888; fi
+# port to connecting server ( RCON ) .
+if ! declare -p SOULMASK_RCON_PORT >/dev/null 2>&1; then declare -r SOULMASK_RCON_PORT=19000; fi
 
 # password to connecting server ( should be set the password your own ) .
 if ! declare -p SOULMASK_PSW >/dev/null 2>&1; then declare -r SOULMASK_PSW=s3CRet; fi
 # password to launch admin console ( should be set the password your own ) .
 if ! declare -p SOULMASK_ADMINPSW >/dev/null 2>&1; then declare -r SOULMASK_ADMINPSW=s3CRet; fi
+# if specified, enables RCON on the server, allowing RCON clients to connect and issue some admin commands . 
+if ! declare -p SOULMASK_RCONPSW >/dev/null 2>&1; then declare -r SOULMASK_RCONPSW=; fi
 
 declare -a _options=(
   "${SOULMASK_SERVER_NAME}"
@@ -92,6 +98,11 @@ declare -a _options=(
 [[ -n "${SOULMASK_PSW}" ]] && _options+=(-PSW=${SOULMASK_PSW})
 [[ -n "${SOULMASK_ADMINPSW}" ]] && _options+=(-adminpsw=${SOULMASK_ADMINPSW})
 [[ "${SOULMASK_IS_INITBACKUP^^}" = 'TRUE' ]] && _options+=(-initbackup)
+if [[ -n "${SOULMASK_RCONPSW}" ]]; then
+  _options+=(-rconpsw=${SOULMASK_RCONPSW})
+  [[ -n "${SOULMASK_RCONADDR}" ]] && _options+=(-rconaddr=${SOULMASK_RCONADDR})
+  _options+=(-rconport=${SOULMASK_RCON_PORT})
+fi
 
 declare -r box64Path=`/usr/bin/which box64`
 
