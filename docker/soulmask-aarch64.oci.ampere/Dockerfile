@@ -146,7 +146,7 @@ RUN echo '[WSServer-Linux-Shipping]' >${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${HOME}/.box64rc;
 RUN [ ${BOX64_LOG:-0} -ne 0 ] && echo "BOX64_LOG=${BOX64_LOG}" >>${HOME}/.box64rc;
-RUN [ ${BOX64_LOG:-0} -ne 0 ] && [[ -n "${BOX64_LOG_DIR:-}" ]] && [[ -n "${BOX64_LOG_FILE:-}" ]] && echo "BOX64_TRACE_FILE=${BOX64_LOG_DIR}/${BOX64_LOG_FILE}.log" >>${HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] && [ -n "${BOX64_LOG_DIR:-}" ] && [ -n "${BOX64_LOG_FILE:-}" ] && echo "BOX64_TRACE_FILE=${BOX64_LOG_DIR}/${BOX64_LOG_FILE}.log" >>${HOME}/.box64rc;
 
 # cleanup image
 WORKDIR /
