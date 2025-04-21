@@ -8,7 +8,7 @@ export LC_ALL=C
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
 #
-# a shorthand for Old-Fashioned generate CSR ( for SSL Certificates on website ) .
+# a shorthand for Old-Fashioned generate CSR ( for SSL Certificates on website, generate RSA 2048 bit private key by default ) .
 #
 # Overview
 #   usage
