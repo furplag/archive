@@ -62,6 +62,7 @@ if ! declare -p st >/dev/null 2>&1; then declare -r st=; fi
 if ! declare -p o >/dev/null 2>&1; then declare -r o=; fi
 if ! declare -p ou >/dev/null 2>&1; then declare -r ou=; fi
 if ! declare -p subdomains >/dev/null 2>&1; then declare -r subdomains=; fi
+if ! declare -p genrsa >/dev/null 2>&1; then declare -r genrsa=0; fi
 if ! declare -p keylength >/dev/null 2>&1; then declare -r keylength=2048; fi
 
 if ! declare -p stamp >/dev/null 2>&1; then declare -r stamp=`date +'%Y-%m-%dT%H%M%S'`; fi
@@ -79,6 +80,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [ou]="${ou:-}"
   [subdomains]="`linearize ${subdomains:-}`"
   [keylength]="${keylength:-}"
+  [genrsa]="$(if [[ "${genrsa:-1}" = '0' ]]; then echo '0'; else echo '1'; fi)"
 
   [logging]=1
   [logdir]="${logdir:-}"
@@ -161,7 +163,8 @@ declare -r _csr="${workdir}/${config[cn]}.csr"
 
 # generate private key file
 for n in 0 1 2; do openssl rand ${config[keylength]}00 >${workdir}/rand${n}; done
-openssl genrsa -rand ${workdir}/rand0:${workdir}/rand1:${workdir}/rand2 ${config[keylength]} >"${_privkey}"
+if [[ $(( ${config[genrsa]:-1} )) -eq 0 ]]; then openssl genrsa -rand ${workdir}/rand0:${workdir}/rand1:${workdir}/rand2 ${config[keylength]} >"${_privkey}";
+else openssl ecparam -name secp384r1 -genkey -out ${_privkey}; fi
 
 [ ! -f "${_privkey}" ] && _log ERROR "${_privkey} could not generate ." && result=1;
 if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $(( ${result:-1} )); fi
