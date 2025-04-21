@@ -80,11 +80,11 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [subdomains]="`linearize ${subdomains:-}`"
   [keylength]="${keylength:-}"
 
-  [logging]=0
+  [logging]=1
   [logdir]="${logdir:-}"
   [log]="${log:-}"
   [log_console]=0
-  [debug]=0
+  [debug]=1
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
 if ! declare -p log_errors >/dev/null 2>&1; then declare -ar log_errors=(ERROR FATAL); fi
@@ -167,7 +167,6 @@ openssl genrsa -rand ${workdir}/rand0:${workdir}/rand1:${workdir}/rand2 ${config
 if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $(( ${result:-1} )); fi
 
 _log SUCCESS "private key \"${_privkey}\" successfully generated ."
-openssl rsa -noout -text -in "${_privkey}"
 
 declare _subject="/CN=${config[cn]}"
 [ -z "${config[c]}" ] || _subject="${_subject}/C=${config[c]}"
@@ -187,6 +186,5 @@ else openssl req -new -key ${_privkey} -sha256 -out "${_csr}" -subj "${_subject}
 if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $(( ${result:-1} )); fi
 
 _log SUCCESS "CSR \"${_csr}\" successfully generated ."
-openssl req -noout -text -in "${_csr}"
 
 exit $((${result:-1}))
