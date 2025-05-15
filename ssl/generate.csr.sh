@@ -86,7 +86,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [logdir]="${logdir:-}"
   [log]="${log:-}"
   [log_console]=0
-  [debug]=1
+  [debug]=
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
 if ! declare -p log_errors >/dev/null 2>&1; then declare -ar log_errors=(ERROR FATAL); fi
@@ -173,10 +173,10 @@ _log SUCCESS "private key \"${_privkey}\" successfully generated ."
 
 declare _subject="/CN=${config[cn]}"
 [ -z "${config[c]}" ] || _subject="${_subject}/C=${config[c]}"
+[ -z "${config[st]}" ] || _subject="${_subject}/ST=${config[st]}"
 [ -z "${config[l]}" ] || _subject="${_subject}/L=${config[l]}"
-[ -z "${config[st]}" ] || _subject="${_subject}/ST='${config[st]}'"
-[ -z "${config[o]}" ] || _subject="${_subject}/O='${config[o]}'"
-[ -z "${config[ou]}" ] || _subject="${_subject}/OU='${config[ou]}'"
+[ -z "${config[o]}" ] || _subject="${_subject}/O=${config[o]}"
+[ -z "${config[ou]}" ] || _subject="${_subject}/OU=${config[ou]}"
 if [ -n "${config[subdomains]}" ]; then
   cat <<_EOT_> ${workdir}/_extension.${config[cn]}.cnf
 [extension.${config[cn]}]
