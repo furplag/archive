@@ -1,5 +1,5 @@
-# !/bin/bash
-set -ue -o pipefail
+#!/bin/bash
+set -euo pipefail
 export LC_ALL=C
 
 ###
@@ -57,8 +57,8 @@ function sanitize() {
 # statics
 if ! declare -p cn >/dev/null 2>&1; then declare -r cn=; fi
 if ! declare -p c >/dev/null 2>&1; then declare -r c=; fi
-if ! declare -p l >/dev/null 2>&1; then declare -r l=; fi
 if ! declare -p st >/dev/null 2>&1; then declare -r st=; fi
+if ! declare -p l >/dev/null 2>&1; then declare -r l=; fi
 if ! declare -p o >/dev/null 2>&1; then declare -r o=; fi
 if ! declare -p ou >/dev/null 2>&1; then declare -r ou=; fi
 if ! declare -p subdomains >/dev/null 2>&1; then declare -r subdomains=; fi
@@ -86,7 +86,7 @@ if ! declare -p config >/dev/null 2>&1; then declare -A config=(
   [logdir]="${logdir:-}"
   [log]="${log:-}"
   [log_console]=0
-  [debug]=
+  [debug]=1
 ); fi
 if ! declare -p log_levels >/dev/null 2>&1; then declare -ar log_levels=(DEBUG INFO WARN ERROR FATAL SUCCESS IGNORE); fi
 if ! declare -p log_errors >/dev/null 2>&1; then declare -ar log_errors=(ERROR FATAL); fi
