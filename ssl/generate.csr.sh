@@ -171,12 +171,13 @@ if [[ $(( ${result:-1} )) -ne 0 ]]; then exit $(( ${result:-1} )); fi
 
 _log SUCCESS "private key \"${_privkey}\" successfully generated ."
 
-declare _subject="/CN=${config[cn]}"
-[ -z "${config[ou]}" ] || _subject="${_subject}/OU=${config[ou]}"
-[ -z "${config[o]}" ] || _subject="${_subject}/O=${config[o]}"
-[ -z "${config[l]}" ] || _subject="${_subject}/L=${config[l]}"
-[ -z "${config[st]}" ] || _subject="${_subject}/ST=${config[st]}"
+declare _subject=""
 [ -z "${config[c]}" ] || _subject="${_subject}/C=${config[c]}"
+[ -z "${config[st]}" ] || _subject="${_subject}/ST=${config[st]}"
+[ -z "${config[l]}" ] || _subject="${_subject}/L=${config[l]}"
+[ -z "${config[o]}" ] || _subject="${_subject}/O=${config[o]}"
+[ -z "${config[ou]}" ] || _subject="${_subject}/OU=${config[ou]}"
+_subject="${_subject}/CN=${config[cn]}"
 if [ -n "${config[subdomains]}" ]; then
   cat <<_EOT_> ${workdir}/_extension.${config[cn]}.cnf
 [extension.${config[cn]}]
