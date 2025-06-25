@@ -30,6 +30,7 @@ ARG STEAM_HOME=/opt/steam
 ARG STEAM_USER=steam
 ARG STEAM_USER_ID=12001
 ARG STEAM_GROUP_ID=12001
+ARG STEAM_USER_OPTS=
 
 ARG BOX86_PACKAGE=box86-generic-arm
 ARG BOX64_PACKAGE=box64-generic-arm
@@ -73,7 +74,7 @@ RUN apt-get install -y \
   ${BOX86_PACKAGE:-box86-generic-arm} ${BOX64_PACKAGE:-box64-generic-arm};
 
 # user / group
-RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -m -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -d ${STEAM_HOME} -s /bin/bash ${STEAM_USER} && usermod -aG sudo ${STEAM_USER};
+RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -m ${STEAM_USER_OPTS} -d ${STEAM_HOME} -s /sbin/nologin ${STEAM_USER} && usermod -aG sudo ${STEAM_USER};
 RUN echo '%sudo ALL=NOPASSWD:ALL' >/etc/sudoers.d/999_${STEAM_USER};
 
 # steamcmd
