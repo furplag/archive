@@ -1,0 +1,69 @@
+#!/bin/bash
+set -o pipefail
+LC_ALL=C.UTF-8
+
+###
+# conan-exiles-aarch64.oci.ampere/conan_exiles_server.aarch64
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "conan-exiles-aarch64.oci.ampere" .
+#
+
+###
+# ENV / variable
+###
+if ! declare -p LD_LIBRARY_PATH >/dev/null 2>&1; then declare LD_LIBRARY_PATH=; fi
+
+# ENV / variable: steamcmd
+# SteamCMD directory .
+if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
+if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
+if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
+if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
+
+# SteamApp ID ( Conan Exiles dedicated server, may NOT be modify ) .
+if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=443030; fi
+# SteamApp ID ( Conan Exiles, may NOT be modify ) .
+if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=440900; fi
+# Conan Exiles SteamApp directory
+if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=conanExiles; fi
+if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
+# a toggle to update automatically or not if available .
+if ! declare -p CONAN_EXILES_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_UPDATE_ENABLED='TRUE'; fi
+
+# ENV / variable: Conan Exiles
+# server name to be display on server list .
+if ! declare -p CONAN_EXILES_SERVER_NAME >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_NAME=Dedicated; fi
+
+# password to connecting server ( should be set the password your own ) .
+if ! declare -p CONAN_EXILES_SERVER_PW >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_PW=s3CRet; fi
+
+declare -a _options=(
+  -game
+  -server
+  -log
+);
+[[ -n "${CONAN_EXILES_SERVER_NAME}" ]] && _options+=(-ServerName=${CONAN_EXILES_SERVER_NAME})
+[[ -n "${CONAN_EXILES_SERVER_PW}" ]] && _options+=(-ServerPassword=${CONAN_EXILES_SERVER_PW})
+
+declare -r winePath=`/usr/bin/which wine`
+
+###
+# process
+###
+# first time download .
+if [ ! -d "${STEAMAPP_HOME}" ]; then ${STEAM_HOME}/conan_exiles_server.update;
+# update, if allowed .
+elif [[ "${CONAN_EXILES_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then ${STEAM_HOME}/conan_exiles_server.update; fi
+
+# start Conan Exiles Server .
+export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
+xvfb-run -a $winePath ${STEAMAPP_HOME}/ConanSandbox/Binaries/Win64/ConanSandboxServer-Win64-Shipping.exe $(echo "${_options[@]}" | xargs echo);
+export LD_LIBRARY_PATH=${tempLdLibPath}
+
+trap "kill -SIGINT $!;" SIGTERM
+
+# Wait for server to exit
+while wait $!; [ $? != 0 ]; do true; done
