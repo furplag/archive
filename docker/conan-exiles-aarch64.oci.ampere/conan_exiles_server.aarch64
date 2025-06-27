@@ -32,22 +32,11 @@ if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=con
 if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 # a toggle to update automatically or not if available .
 if ! declare -p CONAN_EXILES_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_UPDATE_ENABLED='TRUE'; fi
-
-# ENV / variable: Conan Exiles
-# server name to be display on server list .
-if ! declare -p CONAN_EXILES_SERVER_NAME >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_NAME=Dedicated; fi
-
-# password to connecting server ( should be set the password your own ) .
-if ! declare -p CONAN_EXILES_SERVER_PW >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_PW=s3CRet; fi
-
 declare -a _options=(
   -game
   -server
   -log
 );
-[[ -n "${CONAN_EXILES_SERVER_NAME}" ]] && _options+=(-ServerName=${CONAN_EXILES_SERVER_NAME})
-[[ -n "${CONAN_EXILES_SERVER_PW}" ]] && _options+=(-ServerPassword=${CONAN_EXILES_SERVER_PW})
-
 declare -r winePath=`/usr/bin/which wine`
 
 ###
