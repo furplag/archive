@@ -53,7 +53,7 @@ declare -r winePath=`/usr/bin/which wine`
 ###
 # process
 ###
-# first time download .
+# install if not exists .
 if [ ! -d "${STEAMAPP_HOME}" ]; then ${STEAM_HOME}/conan_exiles_server.update;
 # update, if allowed .
 elif [[ "${CONAN_EXILES_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then ${STEAM_HOME}/conan_exiles_server.update; fi
