@@ -1,0 +1,38 @@
+#!/bin/bash
+set -u -o pipefail
+LC_ALL=C.UTF-8
+
+###
+# conan-exiles-aarch64.oci.ampere/conan_exiles_server.update
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a part of Docker container "conan-exiles-aarch64.oci.ampere" .
+#
+
+###
+# variable
+###
+if ! declare -p STEAM_HOME >/dev/null 2>&1; then declare -r STEAM_HOME=/opt/steam; fi
+if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
+if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
+if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
+if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
+if ! declare -p DEBUGGER >/dev/null 2>&1; then declare -r debuggerIsDefined='yep'; declare DEBUGGER=; fi
+if ! declare -p debuggerIsDefined >/dev/null 2>&1; then declare -r debuggerIsDefined='nope'; fi
+
+if ! declare -p STEAMAPP_ID >/dev/null 2>&1; then declare -r STEAMAPP_ID=443030; fi
+if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=440900; fi
+if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=conanExiles; fi
+if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
+if ! declare -p STEAMAPP_PLATFORM_TYPE >/dev/null 2>&1; then declare -r STEAMAPP_PLATFORM_TYPE=windows; fi
+
+declare -r platformType="$(if [ -n "${STEAMAPP_PLATFORM_TYPE:-}" ] && [[ ',linux,macos,windows,' =~ ",${STEAMAPP_PLATFORM_TYPE,,}," ]]; then echo "${STEAMAPP_PLATFORM_TYPE,,}"; else echo 'windows'; fi)"
+declare -r steamcmdArgs="$(if [ -n "${platformType}" ]; then echo " +@sSteamCmdForcePlatformType ${platformType}"; else echo ''; fi) +force_install_dir ${STEAMAPP_HOME} +login anonymous +app_update ${STEAMAPP_ID} validate +quit"
+
+# update Conan Exiles Server .
+cat ${STEAM_HOME}/steamapp.update | bash
+
+# retrieve workshop content ( almostly Mods ) .
+cat ${STEAM_HOME}/steamcmd.update | bash -s -- +login anonymous +@sSteamCmdForcePlatformType ${platformType} $(find ${STEAM_HOME}/Steam/steamapps/workshop/content/$_id -name *.pak | sed -e "s/^.*\/\(${_id}\/.*\)\/.*$/+workshop_item_download \\1/gi" -e 's/\// /gi' | xargs echo) +quit
