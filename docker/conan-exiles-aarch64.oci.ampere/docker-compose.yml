@@ -1,0 +1,31 @@
+# conan-exiles-aarch64.oci.ampere/docker-compose.yml
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # General
+        TZ: ${TZ:Etc/UTC}
+        STEAMAPP_NAME: conan-exiles
+    env_file: ./.env
+    container_name: exiles
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:${PORT:-7777}:7777/tcp"
+      - "0.0.0.0:${RCON_PORT:-25575}:25575/tcp"
+      - "0.0.0.0:${PORT:-7777}:7777/udp"
+      - "0.0.0.0:${PORT_ASIDE:-7778}:7778/udp"
+      - "0.0.0.0:${QUERY_PORT:-27015}:27015/udp"
+    volumes:
+      - type: volume
+        source: steam_data
+        target: /opt/steam
+    stdin_open: true
+    tty: true
+
+# must be add permissions to STEAM_USER to handles data .
+volumes:
+  steam_data:
+    name: conan_exiles_server_data
+    external: true
