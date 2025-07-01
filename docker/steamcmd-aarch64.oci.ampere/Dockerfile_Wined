@@ -50,6 +50,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y ca-certificates c
   screen sudo tar tzdata winbind xfce4 xfce4-session xvfb xz-utils;
 
 # packages ( Box86 / 64 dependencies )
+RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
 RUN apt-get install -y \
   gcc-arm-linux-gnueabihf libc6-dev-armhf-cross \
   libc6:armhf libcal3d12t64:armhf libcups2t64:armhf libcurl4t64:armhf libncurses6:armhf \
