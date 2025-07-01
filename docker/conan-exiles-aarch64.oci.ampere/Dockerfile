@@ -22,7 +22,7 @@ FROM furplag/steamcmd:latest
 
 ###
 # ENV / variable
-###
+###e
 # general
 ARG TZ=Etc/UTC
 ARG LANG='en_US.UTF-8'
@@ -102,6 +102,7 @@ RUN echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-1}" >>${STEAM_HOME}/.
 RUN echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${STEAM_HOME}/.box64rc;
 RUN echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${STEAM_HOME}/.box64rc;
 RUN [ ${BOX64_LOG:-0} -ne 0 ] && echo "BOX64_LOG=${BOX64_LOG}" >>${STEAM_HOME}/.box64rc;
+RUN [ ${BOX64_LOG:-0} -ne 0 ] && [ -n "${BOX64_LOG_DIR:-}" ] && mkdir -p "${BOX64_LOG_DIR}";
 RUN [ ${BOX64_LOG:-0} -ne 0 ] && [ -n "${BOX64_LOG_DIR:-}" ] && [ -n "${BOX64_LOG_FILE:-}" ] && echo "BOX64_TRACE_FILE=${BOX64_LOG_DIR}/${BOX64_LOG_FILE}.log" >>${HOME}/.box64rc;
 
 # startup
