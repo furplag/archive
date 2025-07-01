@@ -35,4 +35,4 @@ declare -r steamcmdArgs="$(if [ -n "${platformType}" ]; then echo " +@sSteamCmdF
 cat ${STEAM_HOME}/steamapp.update | bash
 
 # retrieve workshop content ( almostly Mods ) .
-cat ${STEAM_HOME}/steamcmd.update | bash -s -- +login anonymous +@sSteamCmdForcePlatformType ${platformType} $(find ${STEAM_HOME}/Steam/steamapps/workshop/content/$_id -name *.pak | sed -e "s/^.*\/\(${_id}\/.*\)\/.*$/+workshop_item_download \\1/gi" -e 's/\// /gi' | xargs echo) +quit
+cat ${STEAM_HOME}/steamcmd.update | bash -s -- +login anonymous +@sSteamCmdForcePlatformType ${platformType} $(find ${STEAM_HOME}/Steam/steamapps/workshop/content/${SteamAppId} -name *.pak | sed -e "s/^.*\/\(${SteamAppId}\/.*\)\/.*$/+workshop_download_item \\1/gi" -e 's/\// /gi' | xargs echo) +quit
