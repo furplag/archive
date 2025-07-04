@@ -1,4 +1,5 @@
-FROM ubuntu:noble
+FROM furplag/steamcmd:latest
+
 ###
 # steamcmd-aarch64.oci.ampere/Dockerfile_Wined
 # https://github.com/furplag/archive/docker
@@ -10,13 +11,13 @@ FROM ubuntu:noble
 # Usage
 # A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_Wined -t furplag/steamcmd-wined:latest
 # B. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_Wined \
-#     --build-arg STEAM_HOME='~/steam' \
-#     ...
-#     -t furplag/steamcmd-wined:latest
+#    --build-arg STEAM_HOME='~/steam' \
+#    ...
+#    -t furplag/steamcmd-wined:latest
 #
 
 ###
-# ENV / variable
+# ENV / variable definitions
 ###
 # general
 ARG DEBIAN_FRONTEND=noninteractive
@@ -24,11 +25,15 @@ ARG TZ=Etc/UTC
 ARG LANG='en_US.UTF-8'
 ARG LANGUAGE='en_US:en'
 
-# steamcmd
+# steamcmd ( inherited from base images )
 ARG STEAM_HOME=/opt/steam
 ARG STEAM_USER=steam
-ARG STEAM_USER_ID=12001
-ARG STEAM_GROUP_ID=12001
+
+# wine
+ARG WINE_VERSION=9.17
+ARG WINE_BASE=/opt
+ARG WINE_HOME=${WINE_BASE}/wine-${WINE_VERSION}
+ARG WINE_PREFIX=${STEAM_HOME}/.wine
 
 ENV TZ=${TZ}
 ENV LANG=${LANG}
@@ -42,63 +47,54 @@ ENV STEAM_LIBS_64=${STEAMCMD_HOME}/linux64
 ###
 # process
 ###
-# packages ( general )
+
 WORKDIR /
 USER root
-RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y ca-certificates curl dialog gnupg locales \
-  screen sudo tar tzdata winbind xfce4 xfce4-session xvfb xz-utils;
 
-# packages ( Box86 / 64 dependencies )
-RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y;
-RUN apt-get install -y \
-  gcc-arm-linux-gnueabihf libc6-dev-armhf-cross \
-  libc6:armhf libcal3d12t64:armhf libcups2t64:armhf libcurl4t64:armhf libncurses6:armhf \
-  libegl1:armhf libgdk-pixbuf2.0-0:armhf libgl1:armhf libgles2:armhf libglx-mesa0:armhf \
-  libgssapi-krb5-2:armhf libgtk-3-0t64:armhf libgtk2.0-0t64:armhf libjpeg62:armhf libkrb5-3:armhf \
-  libopenal1:armhf libpng16-16t64:armhf libsdl-image1.2:armhf libsdl-mixer1.2:armhf \
-  libsdl-net1.2:armhf libsdl-sound1.2:armhf libsdl-ttf2.0-0:armhf libsdl1.2debian:armhf \
-  libsdl2-2.0-0:armhf libsdl2-image-2.0-0:armhf libsdl2-net-2.0-0:armhf libsdl2-ttf-2.0-0:armhf \
-  libsmpeg0t64:armhf libssh-gcrypt-4:armhf libssl3t64:armhf libstdc++6:armhf libudev1:armhf \
-  libvorbisfile3:armhf libx11-6:armhf mesa-va-drivers:armhf osspd:armhf;
+# packages ( general )
+RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
+  DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends \
+  7zip cabextract dialog libxml2 libxml2:armhf p7zip-full unzip winbind x11-utils xserver-xorg-core xvfb xz-utils zip && \
+  # cleanup
+  apt-get autoremove -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
-# user / group
-RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -m ${STEAM_USER_OPTS} -d ${STEAM_HOME} -s /sbin/nologin ${STEAM_USER};
-RUN  usermod -aG sudo ${STEAM_USER} && echo '%sudo ALL=NOPASSWD:ALL' >/etc/sudoers.d/999_${STEAM_USER};
-
-# Pi-Apps
-WORKDIR ${STEAM_HOME}
-USER ${STEAM_USER}
-RUN echo 'xfce4-session' >${STEAM_HOME}/.xsession;
-RUN curl -fLsS https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash;
-# box86
-RUN xvfb-run -a pi-apps/manage install 'Box86';
-# box64
-RUN xvfb-run -a pi-apps/manage install 'Box64';
 # wine
-RUN xvfb-run -a pi-apps/manage install 'Wine (x64)';
+RUN mkdir -p ${WINE_BASE} && \
+  # wine
+  curl -fsSqL https://github.com/Pi-Apps-Coders/files/releases/download/large-files/wine-${WINE_VERSION}.tar.gz | tar zxf - -C ${WINE_BASE} && \
+  sed -i 's/winemenubuilder.exe -a -r/winemenubuilder.exe -r/' ${WINE_HOME}/share/wine/wine.inf && \
+  # to executable wine commands
+  echo '#!/bin/bash' >/usr/local/bin/wine && \
+  echo '' >>/usr/local/bin/wine && \
+  echo "BOX64_NOBANNER=1 BOX64_LOG=0 WINEPREFIX=\${HOME:-~}/.wine WINEDLLOVERRIDES=mshtml= WINEDEBUG=-all `which box64` ${WINE_HOME}/bin/wine"' "$@"' >>/usr/local/bin/wine && \
+  chmod +x /usr/local/bin/wine && \
+  for _bin in wineboot winecfg wineserver; do ln -fns ${WINE_HOME}/bin/${_bin} /usr/local/bin/${_bin}; done && \
+  # winetricks
+  curl -fsSqL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -o ${WINE_HOME}/bin/winetricks && \
+  chmod +x ${WINE_HOME}/bin/winetricks && \
+  # to executable winetricks commands
+  echo '#!/bin/bash' >/usr/local/bin/winetricks && \
+  echo '' >>/usr/local/bin/winetricks && \
+  echo "BOX64_NOBANNER=1 BOX64_LOG=0 W_OPT_UNATTENDED=1 ${WINE_HOME}/bin/winetricks"' "$@"' >>/usr/local/bin/winetricks && \
+  chmod +x /usr/local/bin/winetricks && \
+  # wine-mono
+  mkdir -p ${WINE_HOME}/share/wine/mono && \
+  curl -fsSqL https://dl.winehq.org/wine/wine-mono/9.3.0/wine-mono-9.3.0-x86.tar.xz | tar Jxf - -C ${WINE_HOME}/share/wine/mono && \
+  # wine-gecko
+  mkdir -p ${WINE_HOME}/share/wine/gecko && \
+  curl -fsSqL https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz | tar Jxf - -C ${WINE_HOME}/share/wine/gecko;
 
-
-# steamcmd
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
-RUN for _script in steamcmd.update steamapp.update; do curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/${_script} -o ${STEAM_HOME}/${_script} && chmod +x ${STEAM_HOME}/${_script}; done;
-RUN mkdir -p ${STEAMCMD_HOME};
-
-WORKDIR ${STEAMCMD_HOME}
-USER ${STEAM_USER}
-RUN curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf -;
-
-WORKDIR ${STEAM_HOME}
-USER ${STEAM_USER}
-RUN cat ${STEAM_HOME}/steamcmd.update | bash;
+# setup wine
+RUN xvfb-run -a wine wineboot --init; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done;
+RUN for _f in corefonts fontfix 'sound=disabled'; do xvfb-run -a winetricks -q $_f; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done; done;
+RUN xvfb-run -a wine wineboot -u;
 
 # cleanup
 WORKDIR /
 USER root
-RUN apt-get autoremove -y;
-RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
+RUN apt-get autoremove -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
-# current user / directory
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
