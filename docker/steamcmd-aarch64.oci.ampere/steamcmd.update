@@ -20,6 +20,10 @@ if ! declare -p HOME >/dev/null 2>&1; then declare -r HOME=${STEAM_HOME}; fi
 if ! declare -p STEAMCMD_HOME >/dev/null 2>&1; then declare -r STEAMCMD_HOME=${STEAM_HOME}/steamcmd; fi
 if ! declare -p STEAM_LIBS_86 >/dev/null 2>&1; then declare -r STEAM_LIBS_86=${STEAMCMD_HOME}/linux32; fi
 if ! declare -p STEAM_LIBS_64 >/dev/null 2>&1; then declare -r STEAM_LIBS_64=${STEAMCMD_HOME}/linux64; fi
+if ! declare -p BOX86_NOBANNER >/dev/null 2>&1; then declare -r BOX86_NOBANNER=1; fi
+if ! declare -p BOX64_NOBANNER >/dev/null 2>&1; then declare -r BOX64_NOBANNER=1; fi
+if ! declare -p BOX86_LOG >/dev/null 2>&1; then declare -r BOX86_LOG=0; fi
+if ! declare -p BOX64_LOG >/dev/null 2>&1; then declare -r BOX64_LOG=0; fi
 if ! declare -p DEBUGGER >/dev/null 2>&1; then declare -r debuggerIsDefined='yep'; declare DEBUGGER=; fi
 if ! declare -p debuggerIsDefined >/dev/null 2>&1; then declare -r debuggerIsDefined='nope'; fi
 
