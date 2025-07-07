@@ -1,3 +1,0 @@
-#!/bin/bash
-# /usr/bin/wine
-WINEPREFIX=${STEAM_HOME:-/opt/steam}/.wine WINEARCH=win64 BOX64_NOBANNER=1 box64 "$@"
