@@ -1,4 +1,4 @@
-FROM furplag/steamcmd:latest
+FROM furplag/steamcmd-wined:latest
 ###
 # conan-exiles-aarch64.oci.ampere/Dockerfile
 # https://github.com/furplag/archive/docker
@@ -44,9 +44,6 @@ ARG SteamAppId=440900
 ARG STEAMAPP_PLATFORM_TYPE=windows
 ARG STEAMAPP_LOG_DIR="${STEAM_HOME}/_logs"
 ARG STEAMAPP_UPDATE_ENABLED='TRUE'
-
-ARG BOX86_NOBANNER=1
-ARG BOX64_NOBANNER=1
 
 ENV TZ=${TZ}
 ENV LANG=${LANG}
