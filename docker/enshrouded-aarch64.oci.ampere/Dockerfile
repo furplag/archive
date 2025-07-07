@@ -35,19 +35,8 @@ ARG STEAMAPP_NAME=enshrouded
 ARG STEAMAPP_HOME="${STEAM_HOME}/${STEAMAPP_NAME}"
 ARG SteamAppId=1203620
 ARG STEAMAPP_PLATFORM_TYPE=windows
-ARG STEAMAPP_LOG_DIR="${STEAM_HOME}/_logs"
+ARG STEAMAPP_LOG_DIR="${STEAMAPP_HOME}/logs"
 ARG STEAMAPP_UPDATE_ENABLED='TRUE'
-
-# Conan Exiles ( box64 ( wine ) options )
-ARG BOX64_DYNAREC_BIGBLOCK=1
-ARG BOX64_DYNAREC_BLEEDING_EDGE=0
-ARG BOX64_DYNAREC_STRONGMEM=2
-ARG BOX64_LOG=1
-ARG BOX64_LOG_DIR="${STEAMAPP_LOG_DIR}"
-ARG BOX64_LOG_FILE="Box64-${STEAMAPP_NAME}.log"
-
-ARG BOX86_NOBANNER=1
-ARG BOX64_NOBANNER=1
 
 ENV TZ=${TZ}
 ENV LANG=${LANG}
@@ -73,13 +62,6 @@ ENV STEAMAPP_UPDATE_ENABLED=${STEAMAPP_UPDATE_ENABLED}
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
-
-RUN echo '[/usr/local/bin/wine]' >${STEAM_HOME}/.box64rc;
-RUN echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-1}" >>${STEAM_HOME}/.box64rc;
-RUN echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${STEAM_HOME}/.box64rc;
-RUN echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${STEAM_HOME}/.box64rc;
-RUN [ ${BOX64_LOG:-0} -ne 0 ] && echo "BOX64_LOG=${BOX64_LOG}" >>${STEAM_HOME}/.box64rc;
-RUN [ ${BOX64_LOG:-0} -ne 0 ] && [ -n "${BOX64_LOG_DIR:-}" ] && [ -n "${BOX64_LOG_FILE:-}" ] && echo "BOX64_TRACE_FILE=${BOX64_LOG_DIR}/${BOX64_LOG_FILE}.log" >>${HOME}/.box64rc;
 
 # startup
 RUN for _script in 'enshrouded_server.aarch64' 'enshrouded_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/enshrouded-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
