@@ -35,5 +35,5 @@ declare -r steamcmdArgs="$(if [ -n "${platformType}" ]; then echo " +@sSteamCmdF
 cat ${STEAM_HOME}/steamapp.update | bash
 
 # retrieve workshop content ( almostly Mods ) .
-[ -e '${STEAMAPP_HOME}/ConanSandbox/Mods/modlist.txt' ] && \
+[ -e ${STEAMAPP_HOME}/ConanSandbox/Mods/modlist.txt ] && \
   cat ${STEAM_HOME}/steamcmd.update | bash -s -- +login anonymous +@sSteamCmdForcePlatformType ${platformType} $(cat ${STEAMAPP_HOME}/ConanSandbox/Mods/modlist.txt | sed -e "s/^.*\/\(${SteamAppId}\/.*\)\/.*$/+workshop_download_item \\1/gi" -e 's/\// /gi' | xargs echo) +quit
