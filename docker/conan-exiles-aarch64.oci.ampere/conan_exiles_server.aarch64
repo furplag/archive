@@ -31,7 +31,7 @@ if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=440900; f
 if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=conanExiles; fi
 if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 # a toggle to update automatically or not if available .
-if ! declare -p CONAN_EXILES_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r CONAN_EXILES_SERVER_UPDATE_ENABLED='TRUE'; fi
+if ! declare -p STEAMAPP_UPDATE_ENABLED >/dev/null 2>&1; then declare -r STEAMAPP_UPDATE_ENABLED='TRUE'; fi
 declare -a _options=(
   -game
   -server
@@ -45,7 +45,7 @@ declare -r winePath=`/usr/bin/which wine`
 # install if not exists .
 if [ ! -d "${STEAMAPP_HOME}" ]; then ${STEAM_HOME}/conan_exiles_server.update;
 # update, if allowed .
-elif [[ "${CONAN_EXILES_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]]; then ${STEAM_HOME}/conan_exiles_server.update; fi
+elif [[ "${STEAMAPP_UPDATE_ENABLED^^}" = 'TRUE' ]]; then ${STEAM_HOME}/conan_exiles_server.update; fi
 
 # start Conan Exiles Server .
 export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
