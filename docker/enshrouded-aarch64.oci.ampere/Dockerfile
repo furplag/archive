@@ -18,6 +18,7 @@ FROM furplag/steamcmd-wined:latest
 # ENV / variable
 ###
 # general
+ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=Etc/UTC
 ARG LANG='en_US.UTF-8'
 ARG LANGUAGE='en_US:en'
@@ -60,17 +61,16 @@ ENV STEAMAPP_UPDATE_ENABLED=${STEAMAPP_UPDATE_ENABLED}
 # process
 ###
 
-WORKDIR ${STEAM_HOME}
-USER ${STEAM_USER}
-
-# startup
-RUN for _script in 'enshrouded_server.aarch64' 'enshrouded_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/enshrouded-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
-
-# cleanup
+# packages ( general )
 WORKDIR /
 USER root
-RUN apt-get autoremove -y;
-RUN apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
+RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
+  apt-get autoremove -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
+
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
+# startup
+RUN for _script in 'enshrouded_server.aarch64' 'enshrouded_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/enshrouded-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
 
 # ports
 EXPOSE 15636/tcp
@@ -78,7 +78,7 @@ EXPOSE 15637/tcp
 EXPOSE 15636/udp
 EXPOSE 15637/udp
 
-# current user / directory
+# user / directory
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 
