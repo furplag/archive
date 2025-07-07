@@ -72,6 +72,8 @@ USER root
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
   apt-get autoremove -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
 # startup
 RUN for _script in 'conan_exiles_server.aarch64' 'conan_exiles_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/conan-exiles-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
 
