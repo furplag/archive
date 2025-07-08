@@ -86,7 +86,7 @@ RUN for _box in 86 64; do \
   libopenal1:armhf libpng16-16t64:armhf libsdl-image1.2:armhf libsdl-mixer1.2:armhf \
   libsdl-net1.2:armhf libsdl-sound1.2:armhf libsdl-ttf2.0-0:armhf libsdl1.2debian:armhf \
   libsdl2-2.0-0 libsdl2-2.0-0:armhf libsdl2-image-2.0-0:armhf libsdl2-net-2.0-0:armhf libsdl2-ttf-2.0-0:armhf \
-  libsmpeg0t64:armhf libssh-gcrypt-4:armhf libssl3t64:armhf libstdc++6:armhf libudev1:armhf libusbx \
+  libsmpeg0t64:armhf libssh-gcrypt-4:armhf libssl3t64:armhf libstdc++6:armhf libudev1:armhf \
   libvorbisfile3:armhf libx11-6:armhf mesa-va-drivers:armhf osspd:armhf \
   ${BOX86_PACKAGE:-box86-generic-arm} ${BOX64_PACKAGE:-box64-generic-arm} && \
 # cleanup
