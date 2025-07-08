@@ -87,7 +87,7 @@ RUN for _box in 86 64; do \
   libvorbisfile3:armhf libx11-6:armhf mesa-va-drivers:armhf osspd:armhf \
   ${BOX86_PACKAGE:-box86-generic-arm} ${BOX64_PACKAGE:-box64-generic-arm} && \
 # cleanup
-  apt-get autoremove -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
+  apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists;
 
 # create user / group ( sudoable )
 RUN groupadd -g ${STEAM_GROUP_ID} ${STEAM_USER} && useradd -u ${STEAM_USER_ID} -g ${STEAM_GROUP_ID} -m ${STEAM_USER_OPTS} -d ${STEAM_HOME} -s /sbin/nologin ${STEAM_USER} && \
