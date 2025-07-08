@@ -62,7 +62,7 @@ USER root
 # packages ( general )
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
   DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends \
-  7zip cabextract dialog libxml2 libxml2:armhf p7zip-full unzip winbind x11-utils xserver-xorg-core xvfb xz-utils zip && \
+  7zip cabextract dialog libusb-1.0-0 libusb-1.0-0:armhf libxml2 libxml2:armhf p7zip-full unzip winbind x11-utils xserver-xorg-core xvfb xz-utils zip && \
   # cleanup
   apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
