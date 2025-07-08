@@ -60,6 +60,9 @@ ENV BOX86_LOG=${BOX64_LOG}
 ###
 # process
 ###
+
+WORKDIR /
+USER root
 # packages ( general )
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
   DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y ca-certificates curl gnupg locales sudo tar tzdata && \
@@ -101,4 +104,6 @@ RUN for _script in steamcmd.update steamapp.update; do curl -fL https://github.c
 
 RUN mkdir -p ${STEAMCMD_HOME} && \
   curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf - -C ${STEAMCMD_HOME} && \
-  cat ${STEAM_HOME}/steamcmd.update | bash;
+  cat ${STEAM_HOME}/steamcmd.update | bash && \
+#cleanup
+  rm -rf ${STEAM_HOME}/Steam/appcache/* && ${STEAM_HOME}/Steam/depotcache/* && ${STEAM_HOME}/Steam/logs/*;
