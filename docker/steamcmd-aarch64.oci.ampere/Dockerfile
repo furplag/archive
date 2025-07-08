@@ -103,7 +103,7 @@ USER ${STEAM_USER}
 RUN for _script in steamcmd.update steamapp.update; do curl -fL https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/${_script} -o ${STEAM_HOME}/${_script} && chmod +x ${STEAM_HOME}/${_script}; done;
 
 RUN mkdir -p ${STEAMCMD_HOME} && \
-  curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf - -C ${STEAMCMD_HOME} && \
+  curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxf - -C ${STEAMCMD_HOME} && \
   cat ${STEAM_HOME}/steamcmd.update | bash && \
 #cleanup
   for _d in appcache depotcache logs; do [ -d "${STEAM_HOME}/Steam/${_d}" ] && rm -rf "${STEAM_HOME}/Steam/${_d}"; done;
