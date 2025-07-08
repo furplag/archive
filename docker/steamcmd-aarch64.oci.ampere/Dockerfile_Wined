@@ -79,7 +79,7 @@ RUN mkdir -p ${WINE_BASE} && \
   echo 'if ! declare -p BOX64_DYNAREC_STRONGMEM >/dev/null 2>&1; then declare -r BOX64_DYNAREC_STRONGMEM='${BOX64_DYNAREC_STRONGMEM}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_LOG >/dev/null 2>&1; then declare -r BOX64_LOG='${BOX64_LOG}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_TRACE_FILE >/dev/null 2>&1; then declare -r BOX64_TRACE_FILE='${BOX64_TRACE_FILE}'; fi' >>/usr/local/bin/wine && \
-  echo 'WINEPREFIX=${HOME:-~}/.wine WINEDLLOVERRIDES=mshtml= WINEDEBUG=-all `which box64` '${WINE_HOME}'/bin/wine "$@"' >>/usr/local/bin/wine && \
+  echo "WINEPREFIX=\${HOME:-~}/.wine WINEDLLOVERRIDES=mshtml= WINEDEBUG=-all `which box64` ${WINE_HOME}/bin/wine"' "$@"' >>/usr/local/bin/wine && \
   chmod +x /usr/local/bin/wine && \
   for _bin in wineboot winecfg wineserver; do ln -fns ${WINE_HOME}/bin/${_bin} /usr/local/bin/${_bin}; done && \
   # winetricks
