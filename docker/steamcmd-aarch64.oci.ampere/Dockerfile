@@ -106,4 +106,4 @@ RUN mkdir -p ${STEAMCMD_HOME} && \
   curl -fsSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf - -C ${STEAMCMD_HOME} && \
   cat ${STEAM_HOME}/steamcmd.update | bash && \
 #cleanup
-  rm -rf ${STEAM_HOME}/Steam/appcache/* && ${STEAM_HOME}/Steam/depotcache/* && ${STEAM_HOME}/Steam/logs/*;
+  for _d in appcache depotcache logs; do [ -d "${STEAM_HOME}/Steam/${_d}" ] && rm -rf "${STEAM_HOME}/Steam/${_d}"; done;
