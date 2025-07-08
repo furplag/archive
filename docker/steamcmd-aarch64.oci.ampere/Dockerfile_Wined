@@ -74,7 +74,7 @@ RUN mkdir -p ${WINE_BASE} && \
   # to executable wine commands
   echo '#!/bin/bash' >/usr/local/bin/wine && \
   echo '' >>/usr/local/bin/wine && \
-  echo "if ! declare -p BOX64_NOBANNER >/dev/null 2>&1; then declare -r BOX64_NOBANNER='${BOX64_NOBANNER}'; fi' >>/usr/local/bin/wine && \
+  echo 'if ! declare -p BOX64_NOBANNER >/dev/null 2>&1; then declare -r BOX64_NOBANNER='${BOX64_NOBANNER}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_DYNAREC_BIGBLOCK >/dev/null 2>&1; then declare -r BOX64_DYNAREC_BIGBLOCK='${BOX64_DYNAREC_BIGBLOCK}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_DYNAREC_BLEEDING_EDGE >/dev/null 2>&1; then declare -r BOX64_DYNAREC_BLEEDING_EDGE='${BOX64_DYNAREC_BLEEDING_EDGE}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_DYNAREC_STRONGMEM >/dev/null 2>&1; then declare -r BOX64_DYNAREC_STRONGMEM='${BOX64_DYNAREC_STRONGMEM}'; fi' >>/usr/local/bin/wine && \
