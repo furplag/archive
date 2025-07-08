@@ -103,14 +103,16 @@ RUN mkdir -p ${WINE_BASE} && \
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 # setup wine
-RUN xvfb-run -a wine wineboot --init; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done;
-RUN for _f in corefonts fontfix 'sound=disabled'; do xvfb-run -a winetricks -q $_f; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done; done;
-RUN xvfb-run -a wine wineboot -u;
+RUN xvfb-run -a wine wineboot --init; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done && \
+  for _f in corefonts fontfix 'sound=disabled'; do xvfb-run -a winetricks -q $_f; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done; done && \
+  xvfb-run -a wine wineboot -u && \
+# cleanup
+  [ -d "${STEAM_HOME}/.cache" ] && rm -rf "${STEAM_HOME}/cache"/*
 
 # cleanup
 WORKDIR /
 USER root
-RUN apt-get autoremove -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
+RUN apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
 WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
