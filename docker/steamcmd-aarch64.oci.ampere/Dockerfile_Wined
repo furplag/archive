@@ -81,7 +81,7 @@ RUN mkdir -p ${WINE_BASE} && \
   echo 'if ! declare -p BOX64_LOG >/dev/null 2>&1; then declare -r BOX64_LOG='${BOX64_LOG}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_TRACE_FILE >/dev/null 2>&1; then declare -r BOX64_TRACE_FILE='${BOX64_TRACE_FILE}'; fi' >>/usr/local/bin/wine && \
   echo 'export BOX64_NOBANNER BOX64_DYNAREC_BIGBLOCK BOX64_DYNAREC_BLEEDING_EDGE BOX64_DYNAREC_STRONGMEM BOX64_LOG;' >>/usr/local/bin/wine && \
-  echo 'if [[ "${BOX64_LOG}" = '1' ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_TRACE_FILE; fi' >>/usr/local/bin/wine && \
+  echo 'if [[ "${BOX64_LOG:-0}" = "1" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_TRACE_FILE; fi' >>/usr/local/bin/wine && \
   echo "WINEPREFIX=\${HOME:-~}/.wine WINEDLLOVERRIDES=mshtml= WINEDEBUG=-all `which box64` ${WINE_HOME}/bin/wine"' "$@"' >>/usr/local/bin/wine && \
   chmod +x /usr/local/bin/wine && \
   for _bin in wineboot winecfg wineserver; do ln -fns ${WINE_HOME}/bin/${_bin} /usr/local/bin/${_bin}; done && \
