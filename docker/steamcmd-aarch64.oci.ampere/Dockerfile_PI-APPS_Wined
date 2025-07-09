@@ -59,7 +59,7 @@ WORKDIR /
 USER root
 # packages ( general )
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends dialog xfce4 xfce4-session && \
+  DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends dialog xfce4 xfce4-session xvfb && \
   # cleanup
   apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
