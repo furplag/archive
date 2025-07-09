@@ -78,8 +78,8 @@ RUN echo "export BOX64_NOBANNER=${BOX64_NOBANNER}" >>${STEAM_HOME}/.bashrc && \
   echo "export BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}" >>${STEAM_HOME}/.bashrc && \
   echo "export BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE}" >>${STEAM_HOME}/.bashrc && \
   echo "export BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM}" >>${STEAM_HOME}/.bashrc && \
-  echo "export BOX64_LOG=${BOX64_LOG}" >>${STEAM_HOME}/.bashrc && \
-  echo "BOX64_TRACE_FILE=${BOX64_TRACE_FILE:-} if [ -n \"\${BOX64_TRACE_FILE:-}\" ]; then export BOX64_TRACE_FILE; fi" >>${STEAM_HOME}/.bashrc;
+  echo "export BOX64_TRACE_FILE=${BOX64_TRACE_FILE}" >>${STEAM_HOME}/.bashrc && \
+  echo "if [[ \"${BOX64_LOG:-0}\" = \"1\" ]] && [ -n \"\${BOX64_TRACE_FILE:-}\" ]; then export BOX64_LOG=${BOX64_LOG}; fi" >>${STEAM_HOME}/.bashrc;
 
 # cleanup
 WORKDIR /
