@@ -58,8 +58,8 @@ ENV STEAM_LIBS_64=${STEAMCMD_HOME}/linux64
 WORKDIR /
 USER root
 # packages ( general )
-RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends dialog xfce4 xfce4-session \
+RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
+  DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends dialog xfce4 xfce4-session && \
   # cleanup
   apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
