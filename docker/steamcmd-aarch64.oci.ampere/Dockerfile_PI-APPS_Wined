@@ -1,7 +1,7 @@
 FROM furplag/steamcmd:latest
 
 ###
-# steamcmd-aarch64.oci.ampere/Dockerfile_Wined
+# steamcmd-aarch64.oci.ampere/Dockerfile_PI-APPS_Wined
 # https://github.com/furplag/archive/docker
 #
 # Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
@@ -9,8 +9,8 @@ FROM furplag/steamcmd:latest
 # a base Dockerfile that enable to use steamcmd on arm64/v8 instance ( also includes Wine64 via Pi-Apps to runs server app for Windows platform ), especially for A1.Flex-ampere.OracleLinux .#
 #
 # Usage
-# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_Wined -t furplag/steamcmd-wined:latest
-# B. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_Wined \
+# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_PI-APPS_Wined -t furplag/steamcmd-pi-apps-wined:latest
+# B. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_PI-APPS_Wined \
 #    --build-arg STEAM_HOME='~/steam' \
 #    ...
 #    -t furplag/steamcmd-wined:latest
