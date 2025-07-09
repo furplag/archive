@@ -17,7 +17,7 @@ FROM furplag/steamcmd:latest
 #
 
 ###
-# ENV / variable definitions
+# ENV / variable
 ###
 # general
 ARG DEBIAN_FRONTEND=noninteractive
@@ -33,7 +33,6 @@ ARG STEAM_USER=steam
 ARG WINE_VERSION=9.17
 ARG WINE_BASE=/opt
 ARG WINE_HOME=${WINE_BASE}/wine-${WINE_VERSION}
-ARG WINE_PREFIX=${STEAM_HOME}/.wine
 
 # box64
 ARG BOX64_NOBANNER=1
@@ -58,7 +57,6 @@ ENV STEAM_LIBS_64=${STEAMCMD_HOME}/linux64
 
 WORKDIR /
 USER root
-
 # packages ( general )
 RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
   DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends \
