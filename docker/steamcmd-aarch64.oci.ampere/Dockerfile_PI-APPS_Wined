@@ -1,0 +1,90 @@
+FROM furplag/steamcmd:latest
+
+###
+# steamcmd-aarch64.oci.ampere/Dockerfile_Wined
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a base Dockerfile that enable to use steamcmd on arm64/v8 instance ( also includes Wine64 via Pi-Apps to runs server app for Windows platform ), especially for A1.Flex-ampere.OracleLinux .#
+#
+# Usage
+# A. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_Wined -t furplag/steamcmd-wined:latest
+# B. docker build https://github.com/furplag/archive/raw/master/docker/steamcmd-aarch64.oci.ampere/Dockerfile_Wined \
+#    --build-arg STEAM_HOME='~/steam' \
+#    ...
+#    -t furplag/steamcmd-wined:latest
+#
+
+###
+# ENV / variable
+###
+# general
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TZ=Etc/UTC
+ARG LANG='en_US.UTF-8'
+ARG LANGUAGE='en_US:en'
+
+# steamcmd ( inherited from base images )
+ARG STEAM_HOME=/opt/steam
+ARG STEAM_USER=steam
+
+# wine
+ARG WINE_VERSION=9.17
+ARG WINE_BASE=/opt
+ARG WINE_HOME=${WINE_BASE}/wine-${WINE_VERSION}
+
+# box64
+ARG BOX64_NOBANNER=1
+ARG BOX64_DYNAREC_BIGBLOCK=0
+ARG BOX64_DYNAREC_BLEEDING_EDGE=1
+ARG BOX64_DYNAREC_STRONGMEM=1
+ARG BOX64_LOG=0
+ARG BOX64_TRACE_FILE=
+
+ENV TZ=${TZ}
+ENV LANG=${LANG}
+ENV LANGUAGE=${LANGUAGE}
+
+ENV STEAM_HOME=${STEAM_HOME}
+ENV STEAMCMD_HOME=${STEAM_HOME}/steamcmd
+ENV STEAM_LIBS_86=${STEAMCMD_HOME}/linux32
+ENV STEAM_LIBS_64=${STEAMCMD_HOME}/linux64
+
+###
+# process
+###
+
+WORKDIR /
+USER root
+# packages ( general )
+RUN dpkg --add-architecture armhf && apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
+  DEBIAN_FRONTEND=noninteractive TZ=${TZ} apt-get install -y --no-install-recommends dialog xfce4 xfce4-session \
+  # cleanup
+  apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
+
+# pi-apps
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
+RUN echo 'xfce4-session' >${STEAM_HOME}/.xsession && \
+  curl -fLsS https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash && \
+# wine
+  xvfb-run -a pi-apps/manage install 'Wine (x64)' && \
+  # cleanup
+  apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
+
+# Box86 / 64 options
+RUN echo "export BOX64_NOBANNER=${BOX64_NOBANNER}" >>${STEA<HOME}/.bashrc && \
+  echo "export BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}" >>${STEA<HOME}/.bashrc && \
+  echo "export BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE}" >>${STEA<HOME}/.bashrc && \
+  echo "export BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM}" >>${STEA<HOME}/.bashrc && \
+  echo "export BOX64_LOG=${BOX64_LOG}" >>${STEA<HOME}/.bashrc && \
+  echo "BOX64_TRACE_FILE=${BOX64_TRACE_FILE:-} if [ -n \"\${BOX64_TRACE_FILE:-}\" ]; then export BOX64_TRACE_FILE; fi" >>${STEA<HOME}/.bashrc;
+
+# cleanup
+WORKDIR /
+USER root
+RUN apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
+
+WORKDIR ${STEAM_HOME}
+USER ${STEAM_USER}
