@@ -88,11 +88,11 @@ RUN mkdir -p ${WINE_BASE} && \
   echo 'if ! declare -p BOX64_DYNAREC_FASTROUND >/dev/null 2>&1; then declare -r BOX64_DYNAREC_FASTROUND='${BOX64_DYNAREC_FASTROUND}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_DYNAREC_SAFEFLAGS >/dev/null 2>&1; then declare -r BOX64_DYNAREC_SAFEFLAGS='${BOX64_DYNAREC_SAFEFLAGS}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_DYNAREC_X87DOUBLE >/dev/null 2>&1; then declare -r BOX64_DYNAREC_X87DOUBLE='${BOX64_DYNAREC_X87DOUBLE}'; fi' >>/usr/local/bin/wine && \
-  echo 'if ! declare -p BOX64_LOG >/dev/null 2>&1; then declare -r BOX64_LOG='${BOX64_LOG}'; fi' >>/usr/local/bin/wine && \
   echo 'if ! declare -p BOX64_TRACE_FILE >/dev/null 2>&1; then declare -r BOX64_TRACE_FILE='${BOX64_TRACE_FILE}'; fi' >>/usr/local/bin/wine && \
+  echo 'if ! declare -p BOX64_LOG >/dev/null 2>&1; then declare -r BOX64_LOG="$(if [ -n "${BOX64_TRACE_FILE:-}" ]; then echo '${BOX64_LOG}'; else echo "0"; fi)"; fi' >>/usr/local/bin/wine && \
   echo 'export BOX64_NOBANNER BOX64_DYNAREC_BIGBLOCK BOX64_DYNAREC_BLEEDING_EDGE BOX64_DYNAREC_STRONGMEM;' >>/usr/local/bin/wine && \
   echo 'export BOX64_DYNAREC_CALLRET BOX64_DYNAREC_FASTNAN BOX64_DYNAREC_FASTROUND BOX64_DYNAREC_SAFEFLAGS BOX64_DYNAREC_X87DOUBLE;' >>/usr/local/bin/wine && \
-  echo 'if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_LOG; else export BOX64_LOG=0; fi' >>/usr/local/bin/wine && \
+  echo 'if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_LOG; fi' >>/usr/local/bin/wine && \
   echo 'if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_TRACE_FILE; fi' >>/usr/local/bin/wine && \
   echo '' >>/usr/local/bin/wine && \
   echo 'if ! declare -p WINEDEBUG >/dev/null 2>&1; then declare -r WINEDEBUG='${WINEDEBUG}'; fi' >>/usr/local/bin/wine && \
