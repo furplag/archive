@@ -33,7 +33,6 @@ if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${S
 # a toggle to update automatically or not if available .
 if ! declare -p STEAMAPP_UPDATE_ENABLED >/dev/null 2>&1; then declare -r STEAMAPP_UPDATE_ENABLED='TRUE'; fi
 declare -a _options=(
-  -game
   -server
   -log
 );
@@ -53,7 +52,7 @@ elif [[ "${STEAMAPP_UPDATE_ENABLED^^}" = 'TRUE' ]]; then ${STEAM_HOME}/conan_exi
 
 # start Conan Exiles Server .
 export LD_LIBRARY_PATH=${STEAMAPP_HOME}/linux64:${STEAM_LIBS_64}:${tempLdLibPath}
-xvfb-run -a $winePath ${STEAMAPP_HOME}/ConanSandbox/Binaries/Win64/ConanSandboxServer-Win64-Shipping.exe $(echo "${_options[@]}" | xargs echo);
+xvfb-run -a $winePath ${STEAMAPP_HOME}/ConanSandboxServer.exe $(echo "${_options[@]}" | xargs echo);
 export LD_LIBRARY_PATH=${tempLdLibPath}
 
 trap "kill -SIGINT $!;" SIGTERM
