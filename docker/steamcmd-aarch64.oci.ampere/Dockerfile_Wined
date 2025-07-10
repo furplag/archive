@@ -99,7 +99,7 @@ RUN mkdir -p ${WINE_BASE} && \
   echo 'if ! declare -p WINEDLLOVERRIDES >/dev/null 2>&1; then declare -r WINEDLLOVERRIDES='${WINEDLLOVERRIDES}'; fi' >>/usr/local/bin/wine && \
   echo 'export WINEDEBUG WINEDLLOVERRIDES;' >>/usr/local/bin/wine && \
   echo '' >>/usr/local/bin/wine && \
-  echo "WINEPREFIX=\${HOME:-~}/.wine WINEDLLOVERRIDES=mshtml= WINEDEBUG=-all `which box64` ${WINE_HOME}/bin/wine"' "$@"' >>/usr/local/bin/wine && \
+  echo "WINEPREFIX=\${HOME:-~}/.wine `which box64` ${WINE_HOME}/bin/wine"' "$@"' >>/usr/local/bin/wine && \
   chmod +x /usr/local/bin/wine && \
   for _bin in wineboot winecfg wineserver; do ln -fns ${WINE_HOME}/bin/${_bin} /usr/local/bin/${_bin}; done && \
   # winetricks
