@@ -42,6 +42,9 @@ declare -r winePath=`/usr/bin/which wine`
 ###
 # process
 ###
+# savedata backup .
+[ -d "${STEAM_HOME}/.backups" ] || mkdir -p "${STEAM_HOME}/.backups";
+[ -d "${STEAMAPP_HOME}/ConanSandbox/Saved" ] && tar zcf ConanSandbox.Saved-`date +%Y%m%d-%H%M`.tar.gz -C ${STEAMAPP_HOME}/ConanSandbox Saved Mods
 # install if not exists .
 if [ ! -d "${STEAMAPP_HOME}" ]; then ${STEAM_HOME}/conan_exiles_server.update;
 # update, if allowed .
