@@ -102,7 +102,7 @@ WORKDIR ${STEAM_HOME}
 USER ${STEAM_USER}
 # setup wine
 RUN xvfb-run -a wine wineboot --init; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done && \
-  for _f in corefonts fontfix 'sound=disabled'; do xvfb-run -a winetricks -q $_f; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done; done && \
+  for _f in corefonts fontfix 'sound=disabled' vcrun2022 dxvk; do xvfb-run -a winetricks -q $_f; sleep 2 && while pgrep -i 'wine C:' || pgrep -i 'explorer.exe'; do sleep 1; done; done && \
   xvfb-run -a wine wineboot -u && \
 # cleanup
   [ -d "${STEAM_HOME}/.cache" ] && rm -rf "${STEAM_HOME}/.cache"/*
