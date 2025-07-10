@@ -29,11 +29,6 @@ ARG LANGUAGE='en_US:en'
 ARG STEAM_HOME=/opt/steam
 ARG STEAM_USER=steam
 
-# wine
-ARG WINE_VERSION=9.17
-ARG WINE_BASE=/opt
-ARG WINE_HOME=${WINE_BASE}/wine-${WINE_VERSION}
-
 # box64
 ARG BOX64_NOBANNER=1
 ARG BOX64_DYNAREC_BIGBLOCK=0
@@ -46,6 +41,13 @@ ARG BOX64_DYNAREC_SAFEFLAGS=1
 ARG BOX64_DYNAREC_X87DOUBLE=0
 ARG BOX64_LOG=0
 ARG BOX64_TRACE_FILE=
+
+# wine
+ARG WINE_VERSION=9.17
+ARG WINE_BASE=/opt
+ARG WINE_HOME=${WINE_BASE}/wine-${WINE_VERSION}
+ARG WINEDEBUG="-all"
+ARG WINEDLLOVERRIDES="mshtml="
 
 ENV TZ=${TZ}
 ENV LANG=${LANG}
@@ -92,6 +94,11 @@ RUN mkdir -p ${WINE_BASE} && \
   echo 'export BOX64_DYNAREC_CALLRET BOX64_DYNAREC_FASTNAN BOX64_DYNAREC_FASTROUND BOX64_DYNAREC_SAFEFLAGS BOX64_DYNAREC_X87DOUBLE;' >>/usr/local/bin/wine && \
   echo 'if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_LOG; else export BOX64_LOG=0; fi' >>/usr/local/bin/wine && \
   echo 'if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then export BOX64_TRACE_FILE; fi' >>/usr/local/bin/wine && \
+  echo '' >>/usr/local/bin/wine && \
+  echo 'if ! declare -p WINEDEBUG >/dev/null 2>&1; then declare -r WINEDEBUG='${WINEDEBUG}'; fi' >>/usr/local/bin/wine && \
+  echo 'if ! declare -p WINEDLLOVERRIDES >/dev/null 2>&1; then declare -r WINEDLLOVERRIDES='${WINEDLLOVERRIDES}'; fi' >>/usr/local/bin/wine && \
+  echo 'export WINEDEBUG WINEDLLOVERRIDES;' >>/usr/local/bin/wine && \
+  echo '' >>/usr/local/bin/wine && \
   echo "WINEPREFIX=\${HOME:-~}/.wine WINEDLLOVERRIDES=mshtml= WINEDEBUG=-all `which box64` ${WINE_HOME}/bin/wine"' "$@"' >>/usr/local/bin/wine && \
   chmod +x /usr/local/bin/wine && \
   for _bin in wineboot winecfg wineserver; do ln -fns ${WINE_HOME}/bin/${_bin} /usr/local/bin/${_bin}; done && \
