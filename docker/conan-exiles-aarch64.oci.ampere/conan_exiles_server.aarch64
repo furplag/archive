@@ -35,6 +35,7 @@ if ! declare -p STEAMAPP_UPDATE_ENABLED >/dev/null 2>&1; then declare -r STEAMAP
 declare -a _options=(
   -server
   -log
+  -useallavailablecores
 );
 declare -r winePath=`/usr/bin/which wine`
 
