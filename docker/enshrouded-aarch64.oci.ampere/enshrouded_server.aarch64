@@ -32,11 +32,6 @@ if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=ens
 if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 # a toggle to update automatically or not if available .
 if ! declare -p STEAMAPP_UPDATE_ENABLED >/dev/null 2>&1; then declare -r STEAMAPP_UPDATE_ENABLED='TRUE'; fi
-declare -a _options=(
-  -game
-  -server
-  -log
-);
 declare -r winePath=`/usr/bin/which wine`
 
 ###
