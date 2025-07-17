@@ -31,7 +31,7 @@ if ! declare -p SteamAppId >/dev/null 2>&1; then declare -r SteamAppId=892970; f
 if ! declare -p STEAMAPP_NAME >/dev/null 2>&1; then declare -r STEAMAPP_NAME=valheim; fi
 if ! declare -p STEAMAPP_HOME >/dev/null 2>&1; then declare -r STEAMAPP_HOME=${STEAM_HOME}/${STEAMAPP_NAME}; fi
 # a toggle to update automatically or not if available .
-if ! declare -p VALHEIM_SERVER_UPDATE_ENABLED >/dev/null 2>&1; then declare -r VALHEIM_SERVER_UPDATE_ENABLED='TRUE'; fi
+if ! declare -p STEAMAPP_UPDATE_ENABLED >/dev/null 2>&1; then declare -r STEAMAPP_UPDATE_ENABLED='TRUE'; fi
 
 # ENV / variable: valheim
 # Server name to be display on server list .
@@ -116,7 +116,7 @@ declare -r box64Path=`/usr/bin/which box64`
 [ -d "${VALHEIM_SAVE_DIR:-/}" ] || mkdir -p "${VALHEIM_SAVE_DIR}"
 
 # update, if allowed .
-[[ "${VALHEIM_SERVER_UPDATE_ENABLED^^}" = 'TRUE' ]] && ${STEAM_HOME}/valheim_server.update
+[[ "${STEAMAPP_UPDATE_ENABLED^^}" = 'TRUE' ]] && ${STEAM_HOME}/valheim_server.update
 
 # start Valheim Server .
 export SteamAppId=${SteamAppId}
