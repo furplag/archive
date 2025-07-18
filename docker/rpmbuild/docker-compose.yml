@@ -1,26 +1,12 @@
-# rpmbuild/el9/docker-compose.yml
+###
+# rpmbuild/docker-compose.yml
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a disposable workbench to build RPM package .
+#
 services:
-  el9:
-    build:
-      context: .
-      dockerfile: Dockerfile_EL9
-      args:
-        RPMBUILD_GROUP: ${RPMBUILD_GROUP}
-        RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
-        RPMBUILD_USER: ${RPMBUILD_USER}
-        RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
-        REPO_URL: ${REPO_URL_EL9}
-        REPO_NAME: ${REPO_NAME}
-        GPG_KEY: ${GPG_KEY}
-        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
-        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
-    container_name: rpmbuild-el9
-    volumes:
-      - type: volume
-        source: rpmbuild_el9_data
-        target: /home/rpmbuild
-    stdin_open: true
-    tty: true
   el8:
     build:
       context: .
@@ -36,9 +22,33 @@ services:
         GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
         GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
     container_name: rpmbuild-el8
+    restart: no
     volumes:
       - type: volume
         source: rpmbuild_el8_data
+        target: /home/rpmbuild
+    stdin_open: true
+    tty: true
+
+  el9:
+    build:
+      context: .
+      dockerfile: Dockerfile_EL9
+      args:
+        RPMBUILD_GROUP: ${RPMBUILD_GROUP}
+        RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
+        RPMBUILD_USER: ${RPMBUILD_USER}
+        RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
+        REPO_URL: ${REPO_URL_EL9}
+        REPO_NAME: ${REPO_NAME}
+        GPG_KEY: ${GPG_KEY}
+        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
+        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
+    container_name: rpmbuild-el9
+    restart: no
+    volumes:
+      - type: volume
+        source: rpmbuild_el9_data
         target: /home/rpmbuild
     stdin_open: true
     tty: true
