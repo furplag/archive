@@ -157,7 +157,7 @@ RUN echo '[valheim_server.x86_64]' >${HOME}/.box64rc && \
   echo "BOX64_DYNAREC_FASTROUND=${BOX64_DYNAREC_FASTROUND:-1}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_SAFEFLAGS=${BOX64_DYNAREC_SAFEFLAGS:-1}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_X87DOUBLE=${BOX64_DYNAREC_X87DOUBLE:-0}" >>${STEAM_HOME}/.box64rc && \
-  if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ -n "${BOX64_TRACE_FILE:-}" ]; then echo "BOX64_LOG=${BOX64_LOG}" >>${STEAM_HOME}/.box64rc; echo "BOX64_TRACE_FILE=${BOX64_TRACE_FILE}" >>${STEAM_HOME}/.box64rc; fi;
+  if [[ ! "${BOX64_LOG:-0}" = "0" ]] && [ ! -n "${BOX64_TRACE_FILE:-}" ]; then echo "BOX64_LOG=${BOX64_LOG}" >>${STEAM_HOME}/.box64rc; echo "BOX64_TRACE_FILE=${BOX64_TRACE_FILE}" >>${STEAM_HOME}/.box64rc; else echo "BOX64_LOG=0" >>${STEAM_HOME}/.box64rc; fi;
 
 # cleanup image
 WORKDIR /
