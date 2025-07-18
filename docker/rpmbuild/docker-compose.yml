@@ -1,0 +1,49 @@
+# rpmbuild/el9/docker-compose.yml
+services:
+  el9:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        RPMBUILD_GROUP: ${RPMBUILD_GROUP}
+        RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
+        RPMBUILD_USER: ${RPMBUILD_USER}
+        RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
+        GPG_KEY: ${GPG_KEY}
+        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
+        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
+    container_name: rpmbuild-el9
+    volumes:
+      - type: volume
+        source: rpmbuild_el9_data
+        target: /home/rpmbuild
+    stdin_open: true
+    tty: true
+  el8:
+    build:
+      context: .
+      dockerfile: Dockerfile_EL8
+      args:
+        RPMBUILD_GROUP: ${RPMBUILD_GROUP}
+        RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
+        RPMBUILD_USER: ${RPMBUILD_USER}
+        RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
+        GPG_KEY: ${GPG_KEY}
+        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
+        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
+    container_name: rpmbuild-el8
+    volumes:
+      - type: volume
+        source: rpmbuild_el8_data
+        target: /home/rpmbuild
+    stdin_open: true
+    tty: true
+
+# must be add permissions to RPMBUILD_USER to handles data .
+volumes:
+  rpmbuild_el8_data:
+    name: rpmbuild_el8_data
+    external: true
+  rpmbuild_el9_data:
+    name: rpmbuild_el9_data
+    external: true
