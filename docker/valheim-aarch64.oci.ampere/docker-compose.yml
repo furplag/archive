@@ -8,13 +8,13 @@ services:
       - "0.0.0.0:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}:${VALHEIM_PORT}-${VALHEIM_PORT_ASIDE}/udp"
     volumes:
       - type: volume
-        source: valheim_server_data
+        source: steamapp_data
         target: /opt/steam
     stdin_open: true
     tty: true
 
 # must be add permissions to STEAM_USER to handles data .
 volumes:
-  valheim_server_data:
+  steamapp_data:
     name: valheim_server_data
     external: true
