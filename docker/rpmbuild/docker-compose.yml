@@ -3,7 +3,7 @@ services:
   el9:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_EL9
       args:
         RPMBUILD_GROUP: ${RPMBUILD_GROUP}
         RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
