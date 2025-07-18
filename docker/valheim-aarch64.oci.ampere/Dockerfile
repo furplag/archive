@@ -120,7 +120,6 @@ ENV VALHEIM_MODIFIER_NOBUILDCOST=${VALHEIM_MODIFIER_NOBUILDCOST}
 ENV VALHEIM_MODIFIER_PLAYEREVENTS=${VALHEIM_MODIFIER_PLAYEREVENTS}
 ENV VALHEIM_MODIFIER_PASSIVEMOBS=${VALHEIM_MODIFIER_PASSIVEMOBS}
 ENV VALHEIM_MODIFIER_NOMAP=${VALHEIM_MODIFIER_NOMAP}
-ENV VALHEIM_SERVER_UPDATE_ENABLED=${VALHEIM_SERVER_UPDATE_ENABLED}
 
 ENV BOX64_NOBANNER=${BOX64_NOBANNER}
 ENV BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK}
@@ -138,7 +137,7 @@ ENV BOX64_TRACE_FILE=${BOX64_TRACE_FILE}
 WORKDIR /
 USER root
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && \
-  libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 && \
+  apt-get install -y libasyncns0 libatomic1 libglib2.0-0 libpulse0 libpulse-dev libpulse-mainloop-glib0 && \
   # cleanup
   apt-get autoremove --purge -y && apt-get clean autoclean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*;
 
@@ -148,11 +147,11 @@ USER ${STEAM_USER}
 RUN for _script in 'valheim_server.aarch64' 'valheim_server.update'; do curl -fL "https://github.com/furplag/archive/raw/master/docker/valheim-aarch64.oci.ampere/${_script}" -o "${STEAM_HOME}/${_script}" && chmod +x "${STEAM_HOME}/${_script}"; done;
 
 # box64 environment
-RUN echo '[valheim_server.x86_64]' >${HOME}/.box64rc && \
+RUN echo '[valheim_server.x86_64]' >${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BIGBLOCK=${BOX64_DYNAREC_BIGBLOCK:-0}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_BLEEDING_EDGE=${BOX64_DYNAREC_BLEEDING_EDGE:-0}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_STRONGMEM=${BOX64_DYNAREC_STRONGMEM:-2}" >>${STEAM_HOME}/.box64rc && \
-  echo "BOX64_DYNAREC_CALLRET=${BOX64_DYNAREC_CALLRET;-1}" >>${STEAM_HOME}/.box64rc && \
+  echo "BOX64_DYNAREC_CALLRET=${BOX64_DYNAREC_CALLRET:-1}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_FASTNAN=${BOX64_DYNAREC_FASTNAN:-1}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_FASTROUND=${BOX64_DYNAREC_FASTROUND:-1}" >>${STEAM_HOME}/.box64rc && \
   echo "BOX64_DYNAREC_SAFEFLAGS=${BOX64_DYNAREC_SAFEFLAGS:-1}" >>${STEAM_HOME}/.box64rc && \
