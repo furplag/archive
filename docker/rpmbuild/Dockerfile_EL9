@@ -1,5 +1,12 @@
 FROM oraclelinux:9
-# el9.rpmbuild
+###
+# rpmbuild/Dockerfile_EL9
+# https://github.com/furplag/archive/docker
+#
+# Licensed under CC-BY-NC-SA 4.0 ( https://creativecommons.org/licenses/by-nc-sa/4.0/ )
+#
+# a disposable workbench to build RPM package .
+#
 
 ###
 # ENV / variable
@@ -41,6 +48,7 @@ RUN groupadd -g ${RPMBUILD_GROUP_ID} ${RPMBUILD_GROUP} && \
 WORKDIR /home/${RPMBUILD_USER}
 USER ${RPMBUILD_USER}
 
+# signing key
 COPY ${GPG_KEY} /home/${RPMBUILD_USER}/
 COPY ${GPG_PRIVATEKEY} /home/${RPMBUILD_USER}/
 
@@ -55,7 +63,7 @@ RUN echo -e "\n\
   __gpg_name="$(gpg -k | grep -E '^\s' | sed -e 's/^\s\+//g' -e 's/^.*\///g' -e 's/\s.*$//g')" && \
   sed -i -e "s/@_@GPG_KEY_ID@_@/${__gpg_name}/" ~/.rpmmacros;
 
-# Cleanup
+# cleanup
 WORKDIR /
 USER root
 RUN dnf clean all && rm -rf /tmp/*;
