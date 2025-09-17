@@ -460,10 +460,11 @@ chmod -R 0775 /var/lib/tomcat${_ver}s
 ln -fns "/var/lib/tomcat${_ver}s" ${_home}/instances
 
 # pid(s)
-[[ -d "/var/run/tomcat" ]] || mkdir -p "/var/run/tomcat"
-chown -R "${_user}:${_group}" /var/run/tomcat
-chmod -R 0775 /var/run/tomcat
-ln -fns "/var/run/tomcat" "${_home}/run"
+[[ -d /run/tomcat ]] || mkdir -p /run/tomcat
+chown -R "root:${_group}" /run/tomcat
+chmod -R 0775 /run/tomcat
+ln -fns /run/tomcat "${_home}/run"
+[[ -d /var/run/tomcat ]] || ln -fns /run/tomcat /var/run/tomcat
 
 # manager GUI
 if [[ ! "${config[manager]}" = '' ]] && [[ -f "${_home}/conf/tomcat-users.xml" ]]; then
