@@ -5,6 +5,7 @@ skip_if_unavailable=1
 enabled=0
 gpgcheck=1
 gpgkey=https://raw.githubusercontent.com/furplag/archive/rpm/RPM-GPG-KEY-furplag.github.io
+priority=1
 
 [furplag.github.io-source]
 name=https://github.com/furplag/archive/rpm
@@ -13,3 +14,4 @@ skip_if_unavailable=1
 enabled=0
 gpgcheck=1
 gpgkey=https://raw.githubusercontent.com/furplag/archive/rpm/RPM-GPG-KEY-furplag.github.io
+priority=1
