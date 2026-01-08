@@ -7,25 +7,30 @@
 # a disposable workbench to build RPM package .
 #
 services:
-  el8:
+  el10:
     build:
       context: .
-      dockerfile: Dockerfile_EL8
+      dockerfile: Dockerfile
       args:
+        EL_VERSION: 10
         RPMBUILD_GROUP: ${RPMBUILD_GROUP}
         RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
         RPMBUILD_USER: ${RPMBUILD_USER}
         RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
-        REPO_URL: ${REPO_URL_EL8}
+        REPO_URL: ${REPO_URL_EL10}
         REPO_NAME: ${REPO_NAME}
-        GPG_KEY: ${GPG_KEY}
-        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
-        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
-    container_name: rpmbuild-el8
+        GPG_KEY: _gpg_key
+        GPG_PRIVATEKEY: _gpg_privatekey
+        GPG_PRIVATEKEY_PASSPHRASE: _gpg_privatekey_passphrase
+      secrets:
+        - _gpg_key
+        - _gpg_privatekey
+        - _gpg_privatekey_passphrase
+    container_name: rpmbuild-el10
     restart: no
     volumes:
       - type: volume
-        source: rpmbuild_el8_data
+        source: rpmbuild_el10_data
         target: /home/rpmbuild
     stdin_open: true
     tty: true
@@ -33,17 +38,22 @@ services:
   el9:
     build:
       context: .
-      dockerfile: Dockerfile_EL9
+      dockerfile: Dockerfile
       args:
+        EL_VERSION: 9
         RPMBUILD_GROUP: ${RPMBUILD_GROUP}
         RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
         RPMBUILD_USER: ${RPMBUILD_USER}
         RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
         REPO_URL: ${REPO_URL_EL9}
         REPO_NAME: ${REPO_NAME}
-        GPG_KEY: ${GPG_KEY}
-        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
-        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
+        GPG_KEY: _gpg_key
+        GPG_PRIVATEKEY: _gpg_privatekey
+        GPG_PRIVATEKEY_PASSPHRASE: _gpg_privatekey_passphrase
+      secrets:
+        - _gpg_key
+        - _gpg_privatekey
+        - _gpg_privatekey_passphrase
     container_name: rpmbuild-el9
     restart: no
     volumes:
@@ -53,28 +63,41 @@ services:
     stdin_open: true
     tty: true
 
-  el10:
-    build:
-      context: .
-      dockerfile: Dockerfile_EL10
-      args:
-        RPMBUILD_GROUP: ${RPMBUILD_GROUP}
-        RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
-        RPMBUILD_USER: ${RPMBUILD_USER}
-        RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
-        REPO_URL: ${REPO_URL_EL10}
-        REPO_NAME: ${REPO_NAME}
-        GPG_KEY: ${GPG_KEY}
-        GPG_PRIVATEKEY: ${GPG_PRIVATEKEY}
-        GPG_PRIVATEKEY_PASSPHRASE: ${GPG_PRIVATEKEY_PASSPHRASE}
-    container_name: rpmbuild-el10
-    restart: no
-    volumes:
-      - type: volume
-        source: rpmbuild_el10_data
-        target: /home/rpmbuild
-    stdin_open: true
-    tty: true
+# el8:
+#   build:
+#     context: .
+#     dockerfile: Dockerfile
+#     args:
+#       EL_VERSION: 8
+#       RPMBUILD_GROUP: ${RPMBUILD_GROUP}
+#       RPMBUILD_GROUP_ID: ${RPMBUILD_GROUP_ID}
+#       RPMBUILD_USER: ${RPMBUILD_USER}
+#       RPMBUILD_USER_ID: ${RPMBUILD_USER_ID}
+#       REPO_URL: ${REPO_URL_EL8}
+#       REPO_NAME: ${REPO_NAME}
+#       GPG_KEY: _gpg_key
+#       GPG_PRIVATEKEY: _gpg_privatekey
+#       GPG_PRIVATEKEY_PASSPHRASE: _gpg_privatekey_passphrase
+#     secrets:
+#       - _gpg_key
+#       - _gpg_privatekey
+#       - _gpg_privatekey_passphrase
+#   container_name: rpmbuild-el8
+#   restart: no
+#   volumes:
+#     - type: volume
+#       source: rpmbuild_el8_data
+#       target: /home/rpmbuild
+#   stdin_open: true
+#   tty: true
+
+secrets:
+  _gpg_key:
+    file: "${GPG_KEY}"
+  _gpg_privatekey:
+    file: "${GPG_PRIVATEKEY}"
+  _gpg_privatekey_passphrase:
+    file: "${GPG_PRIVATEKEY_PASSPHRASE}"
 
 # must be add permissions to RPMBUILD_USER to handles data .
 volumes:
