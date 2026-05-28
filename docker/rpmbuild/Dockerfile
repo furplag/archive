@@ -74,3 +74,4 @@ WORKDIR /home/${RPMBUILD_USER}
 USER ${RPMBUILD_USER}
 
 ENTRYPOINT [ "entrypoint.sh" ]
+CMD [ "/bin/bash" ]
