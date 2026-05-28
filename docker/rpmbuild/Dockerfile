@@ -1,5 +1,3 @@
-ARG EL_VERSION
-
 FROM oraclelinux:${EL_VERSION}
 ###
 # rpmbuild/Dockerfile
@@ -24,10 +22,6 @@ ARG RPMBUILD_USER_ID
 
 ARG REPO_URL
 ARG REPO_NAME
-
-ARG GPG_KEY
-ARG GPG_PRIVATEKEY
-ARG GPG_PRIVATEKEY_PASSPHRASE
 
 ###
 # process
@@ -59,8 +53,8 @@ RUN --mount=type=secret,id=_gpg_key,uid=${RPMBUILD_USER_ID} \
   sudo rpm --import /run/secrets/_gpg_key && \
   rpmdev-setuptree && \
   echo -e "\n%_signature gpg\n%_gpg_name $(gpg --no-tty --no-use-agent --batch -k --with-colons | grep '^fpr:' | cut -d: -f10 | head -n 1)" >>~/.rpmmacros && \
-  curl -fLO "https://github.com/furplag/archive/raw/master/docker/rpmbuild/entrypoint.sh" && \
-  chmod +x /home/${RPMBUILD_USER}/entrypoint.sh;
+  echo '' >>/home/${RPMBUILD_USER}/.bashrc && \
+  echo '(gpgconf --kill gpg-agent || true) && find ~/.gnupg -name "*.lock" -delete;' >>/home/${RPMBUILD_USER}/.bashrc;
 
 # cleanup
 WORKDIR /
@@ -73,5 +67,4 @@ VOLUME [ "/home/${RPMBUILD_USER}" ]
 WORKDIR /home/${RPMBUILD_USER}
 USER ${RPMBUILD_USER}
 
-ENTRYPOINT [ "entrypoint.sh" ]
-CMD [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/bash" ]
