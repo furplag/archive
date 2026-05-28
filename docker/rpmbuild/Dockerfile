@@ -59,8 +59,8 @@ RUN --mount=type=secret,id=_gpg_key,uid=${RPMBUILD_USER_ID} \
   sudo rpm --import /run/secrets/_gpg_key && \
   rpmdev-setuptree && \
   echo -e "\n%_signature gpg\n%_gpg_name $(gpg --no-tty --no-use-agent --batch -k --with-colons | grep '^fpr:' | cut -d: -f10 | head -n 1)" >>~/.rpmmacros && \
-  (gpgconf --kill gpg-agent || true) && \
-  find ~/.gnupg -name "*.lock" -delete;
+  curl -fLO "https://github.com/furplag/archive/raw/master/docker/rpmbuild/entrypoint.sh" && \
+  chmod +x /home/${RPMBUILD_USER}/entrypoint.sh;
 
 # cleanup
 WORKDIR /
@@ -73,4 +73,4 @@ VOLUME [ "/home/${RPMBUILD_USER}" ]
 WORKDIR /home/${RPMBUILD_USER}
 USER ${RPMBUILD_USER}
 
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "entrypoint.sh" ]
